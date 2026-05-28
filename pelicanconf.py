@@ -32,7 +32,7 @@ STATIC_PATHS = ['images'] + [
     # Newer articles
     'Digger-Finger', 'Throwdini', 'Inertia-Wheel-Pendulum',
     'PaperSignals', 'Credit-Communities', 'COVID-Activism',
-    'Massage-Parlor-Classifier', 'Path-Planning-Algorithms', 'Ocean-Buoy-Planning',
+    'PhD-Thesis', 'Path-Planning-Algorithms', 'Ocean-Buoy-Planning',
     'RoCo-Website-Redesign', 'EECS-Robot-Kit', 'Personal-Websites',
     'Laser-Pancakes', 'Translation-Apron', 'Robot-Arm-Assistant',
     'Waveshare-RP2040-LCD', 'Nyancake',
