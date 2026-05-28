@@ -16,4 +16,5 @@ jobs:
       id-token: "write"
     with:
       settings: "publishconf.py"
-      requirements: "pelican[markdown]>=4.9"
+      requirements: "."
+
