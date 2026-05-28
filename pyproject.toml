@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nrobot-portfolio"
+version = "1.0.0"
+description = "Nancy Ouyang's personal portfolio (nrobot.dev), a static site built with Pelican."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Nancy Ouyang" }]
+
+# Runtime/build dependencies needed to generate the site with `pelican`.
+dependencies = [
+    "pelican[markdown]>=4.9",
+]
+
+[project.optional-dependencies]
+# Optional: only needed for the manual "build locally and push output/" deploy
+# path (`make github`). The default deploy uses GitHub Actions and doesn't need this.
+deploy = [
+    "ghp-import>=2.1",
+]
+
+[project.urls]
+Homepage = "https://nrobot.dev"
+Repository = "https://github.com/nro-bot/nro-bot.github.io"
+
+# This is a website project, not an importable Python library. Tell setuptools
+# there are no packages to build; pyproject is used purely for declaring and
+# installing the build dependencies. Install the environment with any of:
+#   pip install .               (reads [project.dependencies])
+#   pip install -r requirements.txt
+#   uv sync                     (if using uv)
+[tool.setuptools]
+py-modules = []

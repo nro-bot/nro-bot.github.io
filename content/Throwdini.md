@@ -6,10 +6,11 @@ Slug: Throwdini
 Summary: A robotic arm throwing setup built on a UR5. The plan was a reinforcement-learning residual model on top of ballistic physics, but under time constraints the throw was hardcoded. Unpublished work with Ondrej Biza.
 Featured_Image: throwdini.jpg
 Card_Video: throwdini_realtime.mp4
+Card_Video_Loop: false
 
 *Nancy Ouyang, Ondrej Biza (unpublished)*
 
-<video controls muted loop playsinline style="width:100%;border-radius:6px;">
+<video controls muted playsinline style="width:100%;border-radius:6px;">
   <source src="/Throwdini/throwdini_realtime.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>

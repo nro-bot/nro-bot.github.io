@@ -159,8 +159,12 @@ jobs:
     permissions: { contents: read, pages: write, id-token: write }
     with:
       settings: "publishconf.py"
-      requirements: "pelican[markdown]>=4.9"
+      requirements: "."          # installs deps from pyproject.toml
 ```
+
+Dependencies live in **`pyproject.toml`** (`[project.dependencies]`), and the
+workflow installs them with `pip install .` — so CI and a local
+`pip install .` use the exact same versions. Bump the dependency in one place.
 
 So the everyday workflow is just:
 
