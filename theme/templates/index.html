@@ -97,9 +97,10 @@
               <a href="{{ SITEURL }}/{{ article.url }}" class="card-link" aria-label="{{ article.title }}">
                 <div class="card-image{% if article.card_video and article.card_video_autoplay == 'false' %} video-paused{% endif %}">
                   {% if article.card_video %}
-                    <video class="card-video"{% if article.card_video_autoplay != 'false' %} autoplay{% endif %} muted{% if article.card_video_loop != 'false' %} loop{% endif %} playsinline preload="metadata"
+                  <video class="card-video"{% if article.card_video_autoplay != 'false' %} autoplay{% endif %} muted{% if article.card_video_loop != 'false' %} loop{% endif %} playsinline preload="metadata"
                            poster="{{ SITEURL }}/{{ img_path }}"
                            onclick="event.preventDefault(); event.stopPropagation(); if(this.paused){this.play();this.closest('.card-image').classList.remove('video-paused');}else{this.pause();this.closest('.card-image').classList.add('video-paused');}"
+                           onended="this.closest('.card-image').classList.add('video-paused')"
                            title="Click to play/pause"
                            onerror="this.closest('.card-image').classList.add('no-image')">
                       <source src="{{ SITEURL }}/{{ slug }}/{{ article.card_video }}" type="video/mp4">
