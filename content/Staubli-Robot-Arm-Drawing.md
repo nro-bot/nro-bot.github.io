@@ -1,4 +1,5 @@
 Title: Staubli Robot Arm Drawing
+Starred: true
 Date: 2016-01-27 15:59
 Category: Computer Science
 Slug: Staubli-Robot-Arm-Drawing
