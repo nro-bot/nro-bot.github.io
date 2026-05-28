@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{% block title %}{{ SITENAME }} — Portfolio{% endblock %}
+
+{# ─── HEADER FILTER BAR (search + year ranges + clear) ─── #}
+{% block header_filters %}
+<div class="header-filters" id="filterBar" role="search">
+  <div class="filter-search-wrap">
+    <svg class="search-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="12.5" y1="12.5" x2="17" y2="17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input type="search" id="searchInput" class="filter-search" placeholder="Search projects…"
+           aria-label="Search projects" autocomplete="off">
+    <button type="button" class="filter-clear" id="clearSearch" aria-label="Clear search" hidden>✕</button>
+  </div>
+
+  <div class="filter-group" role="group" aria-label="Filter by year range">
+    <span class="filter-label" id="yearLabel">Year</span>
+    <div class="filter-chips" aria-labelledby="yearLabel">
+      <button type="button" class="chip chip--active" data-from="0"    data-to="9999" aria-pressed="true">All</button>
+      <button type="button" class="chip" data-from="2022" data-to="2026" aria-pressed="false">’22–’26</button>
+      <button type="button" class="chip" data-from="2018" data-to="2021" aria-pressed="false">’18–’21</button>
+      <button type="button" class="chip" data-from="2014" data-to="2017" aria-pressed="false">’14–’17</button>
+      <button type="button" class="chip" data-from="2010" data-to="2013" aria-pressed="false">’10–’13</button>
+    </div>
+  </div>
+
+  <button type="button" class="chip chip--star" id="starToggle" data-starred="off"
+          aria-pressed="false" aria-label="Show only starred projects">
+    <span class="star-icon" aria-hidden="true">★</span> Starred
+  </button>
+
+  <button type="button" class="clear-all" id="clearAll" hidden>Clear all</button>
+
+  <p class="filter-count" id="filterCount" aria-live="polite"></p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="all-intro" id="allIntro">
+  <p>Hi! I'm Nancy — a roboticist and engineer who builds things that are useful, weird, or both. Below are projects spanning robotics research, hardware and mechatronics, community leadership, and assorted fun. Use the tabs, search, and year filters above to explore.</p>
+</section>
+
+<!-- ─── CATEGORY SECTIONS ───────────────────────────────── -->
+{% set cat_descs = {
+  'Computer Science':        'Research, robotics, and software — published papers, graduate coursework, and systems that see, learn, and move.',
+  'Hardware/Mechatronics':   'Mechanical design, embedded systems, and fabrication — robots and hardware built from scratch.',
+  'Leadership':              'Workshops, conferences, and seminar series organized to bring people into making and engineering.',
+  'Fun':                     'Playful side projects — laser-etched pancakes, CNC Nyan Cat molds, rainbow food, sewing, sailing, and other adventures.',
+  'Press and Other Events':  'Talks, media coverage, awards, activism, and miscellaneous projects that don\'t fit a neat engineering box.'
+} %}
+
+{% set ordered_cats = ['Computer Science', 'Hardware/Mechatronics', 'Leadership', 'Fun', 'Press and Other Events'] %}
+
+<div id="portfolioCategories">
+  {% for cat in ordered_cats %}
+    {% set ns = namespace(count=0) %}
+    {% for article in articles_page.object_list if article.featured_image is defined and article.category == cat %}
+      {% set ns.count = ns.count + 1 %}
+    {% endfor %}
+
+    <section class="cat-section" data-cat="{{ cat | lower }}" id="cat-{{ cat | lower | replace(' ', '-') | replace('/', '-') }}">
+      <div class="cat-header">
+        {% set cat_id = 'cat-' + (cat | lower | replace(' ', '-') | replace('/', '-')) %}
+        <h2 class="cat-title">
+          <a href="#{{ cat_id }}" class="cat-permalink" aria-label="Permalink to {{ cat }}">{{ cat }}<span class="permalink-icon" aria-hidden="true">#</span></a>
+        </h2>
+        {% if cat in cat_descs %}
+          <p class="cat-desc">{{ cat_descs[cat] }}</p>
+        {% endif %}
+        <span class="cat-count">{{ ns.count }} project{{ 's' if ns.count != 1 else '' }}</span>
+      </div>
+
+      <div class="cat-row-wrap">
+        <button type="button" class="row-nav row-nav--prev" aria-label="Scroll {{ cat }} left" tabindex="-1" hidden>‹</button>
+        <div class="cat-row" tabindex="0" role="list" aria-label="{{ cat }} projects">
+          {% for article in articles_page.object_list | sort(attribute='date', reverse=true)
+             if article.featured_image is defined and article.category == cat %}
+            {% set slug = article.slug %}
+            {% set img_path = slug + '/' + article.featured_image %}
+            {% set is_starred = article.starred is defined and article.starred | lower == 'true' %}
+            {% set links = [] %}
+            {% if article.arxiv %}{% set _ = links.append(('arXiv', article.arxiv)) %}{% endif %}
+            {% if article.code %}{% set _ = links.append(('Code', article.code)) %}{% endif %}
+            {% if article.website %}{% set _ = links.append(('Site', article.website)) %}{% endif %}
+            {% if article.press %}{% set _ = links.append(('Press', article.press)) %}{% endif %}
+            {% if article.slides %}{% set _ = links.append(('Slides', article.slides)) %}{% endif %}
+            {% if article.video %}{% set _ = links.append(('Video', article.video)) %}{% endif %}
+            {% if article.paper and not article.arxiv %}{% set _ = links.append(('Paper', article.paper)) %}{% endif %}
+            <div class="card" role="listitem"
+               data-title="{{ article.title | lower }}"
+               data-category="{{ article.category | lower }}"
+               data-blurb="{{ (article.summary | striptags | lower) if article.summary else '' }}"
+               data-year="{{ article.date.strftime('%Y') }}"
+               data-starred="{{ 'true' if is_starred else 'false' }}">
+              <a href="{{ SITEURL }}/{{ article.url }}" class="card-link" aria-label="{{ article.title }}">
+                <div class="card-image{% if article.card_video and article.card_video_autoplay == 'false' %} video-paused{% endif %}">
+                  {% if article.card_video %}
+                    <video class="card-video"{% if article.card_video_autoplay != 'false' %} autoplay{% endif %} muted loop playsinline preload="metadata"
+                           poster="{{ SITEURL }}/{{ img_path }}"
+                           onclick="event.preventDefault(); event.stopPropagation(); if(this.paused){this.play();this.closest('.card-image').classList.remove('video-paused');}else{this.pause();this.closest('.card-image').classList.add('video-paused');}"
+                           title="Click to play/pause"
+                           onerror="this.closest('.card-image').classList.add('no-image')">
+                      <source src="{{ SITEURL }}/{{ slug }}/{{ article.card_video }}" type="video/mp4">
+                    </video>
+                    <span class="video-play-icon" aria-hidden="true">▶</span>
+                  {% else %}
+                    <img src="{{ SITEURL }}/{{ img_path }}" alt="{{ article.title }}" loading="lazy"
+                         onerror="this.closest('.card-image').classList.add('no-image')">
+                  {% endif %}
+                  {% if is_starred %}
+                    <span class="card-star" title="Starred project" aria-label="Starred">★</span>
+                  {% endif %}
+                </div>
+                <div class="card-body">
+                  <h3 class="card-title">{{ article.title }}</h3>
+                  {% if article.summary %}
+                    <p class="card-blurb">{{ article.summary | striptags }}</p>
+                  {% endif %}
+                </div>
+              </a>
+              <div class="card-footer">
+                <span class="card-date">{{ article.date.strftime('%Y') }}</span>
+                {% if links %}
+                  <div class="card-links">
+                    {% for label, url in links[:3] %}
+                      <a href="{{ url }}" class="card-link-btn" target="_blank" rel="noopener"
+                         onclick="event.stopPropagation()">{{ label }}</a>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="row-nav row-nav--next" aria-label="Scroll {{ cat }} right" tabindex="-1" hidden>›</button>
+      </div>
+    </section>
+  {% endfor %}
+</div>
+
+<p class="no-results" id="noResults" hidden>No projects match your filters.</p>
+
+<script>
+(function () {
+  const searchInput  = document.getElementById('searchInput');
+  const clearBtn     = document.getElementById('clearSearch');
+  const clearAllBtn  = document.getElementById('clearAll');
+  const noResults    = document.getElementById('noResults');
+  const countEl      = document.getElementById('filterCount');
+  const yearChips    = Array.from(document.querySelectorAll('.chip[data-from]'));
+  const starToggle   = document.getElementById('starToggle');
+  const catContainer = document.getElementById('portfolioCategories');
+  const allSections  = Array.from(document.querySelectorAll('.cat-section'));
+  const allCards     = Array.from(document.querySelectorAll('.card'));
+  const total        = allCards.length;
+
+  // Active filter state
+  let yearFrom       = 0;
+  let yearTo         = 9999;
+  let activeCategory = 'all';
+  let starredOnly    = false;
+
+  // ── State exposed for the header nav tabs (in base.html) ──
+  window._portfolioSetCategory = function(cat) {
+    activeCategory = cat;
+    applyLayoutMode();
+    applyFilters();
+  };
+  window._portfolioSetStarred = function(on) {
+    starredOnly = !!on;
+    syncStarToggle();
+    applyFilters();
+  };
+
+  function syncStarToggle() {
+    starToggle.dataset.starred = starredOnly ? 'on' : 'off';
+    starToggle.setAttribute('aria-pressed', starredOnly ? 'true' : 'false');
+    starToggle.classList.toggle('chip--star-active', starredOnly);
+  }
+
+  // ── Layout mode: carousel rows on "All", full wrap-grid for a single category ──
+  function applyLayoutMode() {
+    const single = activeCategory !== 'all';
+    catContainer.classList.toggle('mode-grid', single);
+    const intro = document.getElementById('allIntro');
+    if (intro) intro.hidden = single;
+    if (single) allSections.forEach(hideRowNav);
+  }
+
+  function hideRowNav(sec) {
+    const prev = sec.querySelector('.row-nav--prev');
+    const next = sec.querySelector('.row-nav--next');
+    if (prev) { prev.hidden = true; prev.tabIndex = -1; }
+    if (next) { next.hidden = true; next.tabIndex = -1; }
+  }
+
+  function applyFilters() {
+    const query = searchInput.value.trim().toLowerCase();
+    let visible = 0;
+
+    allCards.forEach(card => {
+      const yr = parseInt(card.dataset.year, 10);
+      const matchSearch  = !query ||
+        card.dataset.title.includes(query) ||
+        card.dataset.category.includes(query) ||
+        card.dataset.blurb.includes(query);
+      const matchYear    = yr >= yearFrom && yr <= yearTo;
+      const matchCat     = activeCategory === 'all' || card.dataset.category === activeCategory;
+      const matchStarred = !starredOnly || card.dataset.starred === 'true';
+      const show = matchSearch && matchYear && matchCat && matchStarred;
+      card.hidden = !show;
+      if (show) visible++;
+    });
+
+    allSections.forEach(sec => {
+      const anyVisible = Array.from(sec.querySelectorAll('.card')).some(c => !c.hidden);
+      sec.hidden = !anyVisible;
+    });
+
+    noResults.hidden = visible > 0;
+    countEl.textContent = (visible === total) ? '' : visible + ' of ' + total + ' projects';
+    clearBtn.hidden = !query;
+
+    // "Clear all" appears whenever any filter is active
+    const anyFilter = query || yearFrom !== 0 || yearTo !== 9999 || activeCategory !== 'all' || starredOnly;
+    clearAllBtn.hidden = !anyFilter;
+
+    if (!catContainer.classList.contains('mode-grid')) {
+      allSections.forEach(updateRowNav);
+    }
+  }
+
+  // ── Search ──
+  searchInput.addEventListener('input', applyFilters);
+  clearBtn.addEventListener('click', () => { searchInput.value = ''; searchInput.focus(); applyFilters(); });
+
+  // ── Year-range chips ──
+  yearChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      yearChips.forEach(c => { c.classList.remove('chip--active'); c.setAttribute('aria-pressed', 'false'); });
+      chip.classList.add('chip--active');
+      chip.setAttribute('aria-pressed', 'true');
+      yearFrom = parseInt(chip.dataset.from, 10);
+      yearTo   = parseInt(chip.dataset.to, 10);
+      applyFilters();
+    });
+  });
+
+  // ── Starred toggle ──
+  starToggle.addEventListener('click', () => {
+    starredOnly = !starredOnly;
+    syncStarToggle();
+    applyFilters();
+  });
+
+  // ── Clear all ──
+  clearAllBtn.addEventListener('click', () => {
+    // search
+    searchInput.value = '';
+    // year -> All
+    yearChips.forEach(c => { c.classList.remove('chip--active'); c.setAttribute('aria-pressed', 'false'); });
+    const allYear = yearChips.find(c => c.dataset.from === '0');
+    if (allYear) { allYear.classList.add('chip--active'); allYear.setAttribute('aria-pressed', 'true'); }
+    yearFrom = 0; yearTo = 9999;
+    // starred off
+    starredOnly = false; syncStarToggle();
+    // category -> All (and reflect in the nav tabs)
+    activeCategory = 'all';
+    if (window._portfolioSetActiveTab) window._portfolioSetActiveTab('all');
+    applyLayoutMode();
+    applyFilters();
+    searchInput.focus();
+  });
+
+  // ── Horizontal row navigation (Netflix-style, "All" view only) ──
+  function updateRowNav(sec) {
+    const row  = sec.querySelector('.cat-row');
+    const prev = sec.querySelector('.row-nav--prev');
+    const next = sec.querySelector('.row-nav--next');
+    if (!row || !prev || !next) return;
+    const overflow = row.scrollWidth - row.clientWidth > 4;
+    const atStart  = row.scrollLeft <= 4;
+    const atEnd    = row.scrollLeft >= (row.scrollWidth - row.clientWidth - 4);
+    prev.hidden = !overflow || atStart;
+    next.hidden = !overflow || atEnd;
+    prev.tabIndex = prev.hidden ? -1 : 0;
+    next.tabIndex = next.hidden ? -1 : 0;
+  }
+
+  allSections.forEach(sec => {
+    const row  = sec.querySelector('.cat-row');
+    const prev = sec.querySelector('.row-nav--prev');
+    const next = sec.querySelector('.row-nav--next');
+    if (!row) return;
+    const step = () => Math.max(row.clientWidth * 0.8, 240);
+    prev.addEventListener('click', () => row.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => row.scrollBy({ left:  step(), behavior: 'smooth' }));
+    row.addEventListener('scroll', () => {
+      if (!catContainer.classList.contains('mode-grid')) updateRowNav(sec);
+    }, { passive: true });
+  });
+
+  window.addEventListener('resize', () => {
+    if (!catContainer.classList.contains('mode-grid')) allSections.forEach(updateRowNav);
+  });
+  window.addEventListener('load', () => {
+    if (!catContainer.classList.contains('mode-grid')) allSections.forEach(updateRowNav);
+  });
+
+  applyLayoutMode();
+  applyFilters();
+})();
+</script>
+{% endblock %}

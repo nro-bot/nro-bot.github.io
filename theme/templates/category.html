@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category }} — {{ SITENAME }}{% endblock %}
+
+{% block content %}
+<div class="category-header">
+  <h1>{{ category }}</h1>
+  <a href="{{ SITEURL }}/" class="back-link">← All projects</a>
+</div>
+
+<section class="portfolio-grid">
+  {% for article in articles %}
+    {% set slug = article.slug %}
+    {% set img_path = slug + '/' + article.featured_image if article.featured_image is defined else '' %}
+    <a href="{{ SITEURL }}/{{ article.url }}" class="card">
+      <div class="card-image">
+        {% if img_path %}
+          <img src="{{ SITEURL }}/{{ img_path }}" alt="{{ article.title }}" loading="lazy"
+               onerror="this.closest('.card-image').classList.add('no-image')">
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <span class="card-category">{{ article.category }}</span>
+        <h2 class="card-title">{{ article.title }}</h2>
+        {% if article.summary %}
+          <p class="card-blurb">{{ article.summary | striptags }}</p>
+        {% endif %}
+        <span class="card-date">{{ article.date.strftime('%Y') }}</span>
+      </div>
+    </a>
+  {% endfor %}
+</section>
+{% endblock %}

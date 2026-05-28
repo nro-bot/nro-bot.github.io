@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }} — {{ SITENAME }}{% endblock %}
+
+{% block content %}
+<article class="post">
+  <header class="post-header">
+    <div class="post-meta">
+      <a href="{{ SITEURL }}/category/{{ article.category.slug }}.html" class="post-category">
+        {{ article.category }}
+      </a>
+      <span class="post-date">{{ article.date.strftime('%Y %B') }}</span>
+    </div>
+    <h1 class="post-title">{{ article.title }}</h1>
+    {% if article.summary %}
+      <p class="post-blurb">{{ article.summary | striptags }}</p>
+    {% endif %}
+    {% set plinks = [] %}
+    {% if article.arxiv %}{% set _ = plinks.append(('arXiv', article.arxiv)) %}{% endif %}
+    {% if article.code %}{% set _ = plinks.append(('Code', article.code)) %}{% endif %}
+    {% if article.website %}{% set _ = plinks.append(('Website', article.website)) %}{% endif %}
+    {% if article.press %}{% set _ = plinks.append(('Press', article.press)) %}{% endif %}
+    {% if article.slides %}{% set _ = plinks.append(('Slides', article.slides)) %}{% endif %}
+    {% if article.video %}{% set _ = plinks.append(('Video', article.video)) %}{% endif %}
+    {% if article.paper and not article.arxiv %}{% set _ = plinks.append(('Paper', article.paper)) %}{% endif %}
+    {% if plinks %}
+      <div class="post-links">
+        {% for label, url in plinks %}
+          <a href="{{ url }}" class="post-link-btn" target="_blank" rel="noopener">{{ label }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="post-content">
+    {{ article.content }}
+  </div>
+
+  {% if article.featured_image is defined %}
+    <div class="post-hero post-hero--bottom">
+      <img src="{{ SITEURL }}/{{ article.slug }}/{{ article.featured_image }}"
+           alt="{{ article.title }}"
+           onerror="this.style.display='none'">
+    </div>
+  {% endif %}
+
+  <footer class="post-footer">
+    <a href="{{ SITEURL }}/" class="back-link">← All projects</a>
+  </footer>
+</article>
+{% endblock %}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ SITENAME }}{% endblock %}</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ SITEURL }}/images/favicon-32.png">
+  <link rel="icon" type="image/png" href="{{ SITEURL }}/images/favicon.png">
+  <link rel="apple-touch-icon" href="{{ SITEURL }}/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap">
+  <link rel="stylesheet" href="{{ SITEURL }}/theme/css/style.css">
+</head>
+<body>
+  <a href="#mainContent" class="skip-link">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <img src="{{ SITEURL }}{{ AVATAR }}" alt="{{ AUTHOR }}" class="header-avatar">
+        <div class="header-id">
+          <div class="header-nameline">
+            <a href="{{ SITEURL }}/" class="site-name">Hi, I'm {{ AUTHOR }}.</a>
+            {% for pg in pages %}
+              <a href="{{ SITEURL }}/{{ pg.url }}" class="about-link">{{ pg.title }}</a>
+            {% endfor %}
+          </div>
+          <p class="site-subtitle">{{ SITESUBTITLE }}</p>
+          <nav class="header-contact" aria-label="Contact links">
+            {% if EMAIL %}<a href="mailto:{{ EMAIL }}" class="contact-link" aria-label="Email">✉ Email</a>{% endif %}
+            {% if GITHUB_URL %}<a href="{{ GITHUB_URL }}" class="contact-link" target="_blank" rel="noopener">GitHub</a>{% endif %}
+            {% if LINKEDIN_URL %}<a href="{{ LINKEDIN_URL }}" class="contact-link" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
+            {% if BLOG_URL %}<a href="{{ BLOG_URL }}" class="contact-link" target="_blank" rel="noopener">Blog</a>{% endif %}
+          </nav>
+        </div>
+      </div>
+      <nav class="site-nav" id="siteNav" aria-label="Project categories">
+        <div class="nav-tabs" role="tablist" aria-label="Filter projects by category">
+          <a href="{{ SITEURL }}/" class="nav-tab nav-tab--active" data-filter="all" role="tab" aria-selected="true">All</a>
+          <a href="{{ SITEURL }}/" class="nav-tab" data-filter="computer science" role="tab" aria-selected="false">Computer Science</a>
+          <a href="{{ SITEURL }}/" class="nav-tab" data-filter="hardware/mechatronics" role="tab" aria-selected="false">Hardware</a>
+          <a href="{{ SITEURL }}/" class="nav-tab" data-filter="leadership" role="tab" aria-selected="false">Leadership</a>
+          <a href="{{ SITEURL }}/" class="nav-tab" data-filter="fun" role="tab" aria-selected="false">Fun</a>
+          <a href="{{ SITEURL }}/" class="nav-tab" data-filter="press and other events" role="tab" aria-selected="false">Press &amp; Events</a>
+        </div>
+        {% block header_filters %}{% endblock %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main" id="mainContent">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <p>© {{ AUTHOR }} · Built with <a href="https://getpelican.com">Pelican</a></p>
+  </footer>
+
+  <script>
+  (function () {
+    // Only wire up filter tabs on the homepage (where the filter API exists)
+    const nav = document.getElementById('siteNav');
+    if (!nav || !window._portfolioSetCategory) return;
+
+    const tabs = Array.from(nav.querySelectorAll('.nav-tab[data-filter]'));
+
+    function activate(tab, updateHash) {
+      const filter = tab.dataset.filter;
+      tabs.forEach(t => {
+        const on = t === tab;
+        t.classList.toggle('nav-tab--active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      window._portfolioSetCategory(filter);
+      // "All" defaults to showing starred highlights; a specific category shows
+      // everything in that category (clearing the starred-only filter).
+      window._portfolioSetStarred(filter === 'all');
+
+      // Update the URL hash as a shareable permalink for the selected tab.
+      if (updateHash !== false) {
+        const hash = filter === 'all' ? 'all' : 'cat-' + filter.replace(/[ /]+/g, '-');
+        if (history.replaceState) history.replaceState(null, '', '#' + hash);
+        else location.hash = hash;
+      }
+    }
+
+    // Let the filter logic flip the active tab too (e.g. on "Clear all")
+    window._portfolioSetActiveTab = function (filter) {
+      const match = tabs.find(t => t.dataset.filter === filter);
+      tabs.forEach(t => {
+        const on = t === match;
+        t.classList.toggle('nav-tab--active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', function (e) {
+        e.preventDefault();
+        activate(this);
+      });
+      // Roving keyboard support for the tablist
+      tab.addEventListener('keydown', function (e) {
+        let target = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') target = tabs[(i + 1) % tabs.length];
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') target = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === 'Home') target = tabs[0];
+        else if (e.key === 'End') target = tabs[tabs.length - 1];
+        if (target) { e.preventDefault(); target.focus(); activate(target); }
+      });
+    });
+
+    // ── On load: honor a #cat-… / #all permalink, else default to the
+    //    starred view on the "All" tab. ──
+    function tabForHash(hash) {
+      hash = (hash || '').replace(/^#/, '');
+      if (!hash) return null;
+      if (hash === 'all') return tabs.find(t => t.dataset.filter === 'all');
+      if (hash.indexOf('cat-') === 0) {
+        const key = hash.slice(4).replace(/-/g, ' ');
+        return tabs.find(t => t.dataset.filter.replace(/[/]/g, ' ') === key)
+            || tabs.find(t => t.dataset.filter === hash.slice(4).replace(/-/g, '/'));
+      }
+      return null;
+    }
+
+    const initialTab = tabForHash(location.hash);
+    if (initialTab) {
+      activate(initialTab, false);
+    } else {
+      // default landing: All tab, starred-only highlights
+      window._portfolioSetStarred(true);
+    }
+
+    // React to back/forward hash changes
+    window.addEventListener('hashchange', function () {
+      const t = tabForHash(location.hash);
+      if (t) activate(t, false);
+    });
+  })();
+  </script>
+</body>
+</html>
