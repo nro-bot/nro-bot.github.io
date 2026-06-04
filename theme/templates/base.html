@@ -72,9 +72,9 @@
         t.setAttribute('aria-selected', on ? 'true' : 'false');
       });
       window._portfolioSetCategory(filter);
-      // "All" defaults to showing starred highlights; a specific category shows
-      // everything in that category (clearing the starred-only filter).
-      window._portfolioSetStarred(filter === 'all');
+      // Every tab (including "All") shows everything by default; the starred
+      // filter is only enabled when the user explicitly toggles it.
+      window._portfolioSetStarred(false);
 
       // Update the URL hash as a shareable permalink for the selected tab.
       if (updateHash !== false) {
@@ -111,7 +111,7 @@
     });
 
     // ── On load: honor a #cat-… / #all permalink, else default to the
-    //    starred view on the "All" tab. ──
+    //    "All" tab showing every project. ──
     function tabForHash(hash) {
       hash = (hash || '').replace(/^#/, '');
       if (!hash) return null;
@@ -128,8 +128,8 @@
     if (initialTab) {
       activate(initialTab, false);
     } else {
-      // default landing: All tab, starred-only highlights
-      window._portfolioSetStarred(true);
+      // default landing: All tab, all projects (starred filter off)
+      window._portfolioSetStarred(false);
     }
 
     // React to back/forward hash changes
