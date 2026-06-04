@@ -1,7 +1,7 @@
 Title: Sampling-Based Path Planning Algorithms
 Starred: false
 Date: 2020-09-01 12:00
-Category: Computer Science
+Category: Research and Software
 Slug: Path-Planning-Algorithms
 Summary: Implementing and evaluating RRT and PRM motion planning algorithms from scratch in Julia, with analysis of how clutter affects success rates. Rotation project reviewing FMT*.
 Featured_Image: path_planning.jpg

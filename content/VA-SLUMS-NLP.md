@@ -1,7 +1,7 @@
 Title: Extracting Cognitive SLUMS Scores from VA Clinical Notes
 Starred: false
 Date: 2025-01-01 12:00
-Category: Computer Science
+Category: Research and Software
 Slug: VA-SLUMS-NLP
 Summary: Rule-based NLP pipeline to extract Saint Louis University Mental Status (SLUMS) scores from ~3 million unstructured VA clinical notes. 83% accuracy, 99% precision, 20,000+ notes/minute on a single laptop. Presented at GSA 2025.
 Featured_Image: va_slums.jpg

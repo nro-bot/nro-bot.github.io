@@ -1,7 +1,7 @@
 Title: Robot Compiler (RoCo) Website Redesign
 Starred: false
 Date: 2019-09-01 12:00
-Category: Computer Science
+Category: Research and Software
 Slug: RoCo-Website-Redesign
 Summary: Redesign of the UCLA LEMUR Lab RoCo webapp to use Bootstrap for mobile/desktop responsiveness, plus bash/Python/OpenSCAD scripting to generate STL thumbnails for the carousel.
 Featured_Image: roco_website.jpg

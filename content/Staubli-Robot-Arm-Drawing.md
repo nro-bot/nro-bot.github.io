@@ -1,7 +1,7 @@
 Title: Staubli Robot Arm Drawing
 Starred: true
 Date: 2016-01-27 15:59
-Category: Computer Science
+Category: Robotics
 Slug: Staubli-Robot-Arm-Drawing
 Summary: Staubli robot arm, programmed to stipple with vcode -> gcode -> processing (or alternatively via SVG Inkscape to gcode converter).
 Featured_Image: arm_self_portrait.jpg

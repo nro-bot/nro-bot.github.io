@@ -1,7 +1,7 @@
 Title: 6.832: Inertia Wheel Inverted Pendulum
 Starred: true
 Date: 2019-05-01 12:00
-Category: Computer Science
+Category: Robotics
 Slug: Inertia-Wheel-Pendulum
 Summary: Using a flywheel to balance an inverted pendulum. LQR and region-of-attraction analysis in simulation; swingup and stabilization on real hardware using PD and bang-bang control. MIT Underactuated Robotics.
 Featured_Image: pendulum.jpg

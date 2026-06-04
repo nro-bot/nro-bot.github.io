@@ -44,21 +44,19 @@
 
 <!-- ─── CATEGORY SECTIONS ───────────────────────────────── -->
 {% set cat_descs = {
-  'Computer Science':        'Research, robotics, and software — published papers, graduate coursework, and systems that see, learn, and move.',
-  'Hardware/Mechatronics':   'Mechanical design, embedded systems, and fabrication — robots and hardware built from scratch.',
+  'Research and Software':    'Published research and software — papers, graduate coursework, NLP, motion planning, and tools built from scratch.',
+  'Robotics':                'Robot arms, manipulators, walking machines, and autonomous systems — from tactile-sensing research to rideable hexapods.',
+  'Hardware/Mechatronics':   'Mechanical design, embedded systems, and fabrication — devices and hardware built from scratch.',
   'Leadership':              'Workshops, conferences, and seminar series organized to bring people into making and engineering.',
   'Fun':                     'Playful side projects — laser-etched pancakes, CNC Nyan Cat molds, rainbow food, sewing, sailing, and other adventures.',
   'Press and Other Events':  'Talks, media coverage, awards, activism, and miscellaneous projects that don\'t fit a neat engineering box.'
 } %}
 
-{% set ordered_cats = ['Computer Science', 'Hardware/Mechatronics', 'Leadership', 'Fun', 'Press and Other Events'] %}
+{% set ordered_cats = ['Research and Software', 'Robotics', 'Hardware/Mechatronics', 'Leadership', 'Fun', 'Press and Other Events'] %}
 
 <div id="portfolioCategories">
   {% for cat in ordered_cats %}
-    {% set ns = namespace(count=0) %}
-    {% for article in articles_page.object_list if article.featured_image is defined and article.category == cat %}
-      {% set ns.count = ns.count + 1 %}
-    {% endfor %}
+    {% set cat_count = articles_page.object_list | selectattr('featured_image', 'defined') | selectattr('category', 'equalto', cat) | list | length %}
 
     <section class="cat-section" data-cat="{{ cat | lower }}" id="cat-{{ cat | lower | replace(' ', '-') | replace('/', '-') }}">
       <div class="cat-header">
@@ -69,14 +67,16 @@
         {% if cat in cat_descs %}
           <p class="cat-desc">{{ cat_descs[cat] }}</p>
         {% endif %}
-        <span class="cat-count">{{ ns.count }} project{{ 's' if ns.count != 1 else '' }}</span>
+        <span class="cat-count">{{ cat_count }} project{{ 's' if cat_count != 1 else '' }}</span>
       </div>
 
       <div class="cat-row-wrap">
         <button type="button" class="row-nav row-nav--prev" aria-label="Scroll {{ cat }} left" tabindex="-1" hidden>‹</button>
         <div class="cat-row" tabindex="0" role="list" aria-label="{{ cat }} projects">
-          {% for article in articles_page.object_list | sort(attribute='date', reverse=true)
-             if article.featured_image is defined and article.category == cat %}
+          {% set cat_articles = articles_page.object_list | selectattr('featured_image', 'defined') | selectattr('category', 'equalto', cat) | list %}
+          {% set starred_cards = cat_articles | selectattr('starred', 'equalto', 'true') | sort(attribute='date', reverse=true) | list %}
+          {% set other_cards   = cat_articles | rejectattr('starred', 'equalto', 'true') | sort(attribute='date', reverse=true) | list %}
+          {% for article in starred_cards + other_cards %}
             {% set slug = article.slug %}
             {% set img_path = slug + '/' + article.featured_image %}
             {% set is_starred = article.starred is defined and article.starred | lower == 'true' %}

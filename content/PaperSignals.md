@@ -1,7 +1,7 @@
 Title: CS279r: PaperSignals Parameterized
 Starred: false
 Date: 2018-12-01 12:00
-Category: Computer Science
+Category: Research and Software
 Slug: PaperSignals
 Summary: An open-source browser-based UI (Python/Flask) for customizing Google's voice-controlled printable paper robots. Harvard PL/HCI Graduate Seminar.
 Featured_Image: papersignals.jpg

@@ -1,6 +1,6 @@
 Title: Strobe Lab: Schlieren Technique
 Date: 2012-05-27 15:56
-Category: Computer Science
+Category: Fun
 Slug: Strobe-Lab-Schlieren-Technique
 Summary: For 6.163 Strobe Lab final project, attempted to implement : Background-oriented schlieren imaging
 Featured_Image: schlieren_candle_diff.jpg

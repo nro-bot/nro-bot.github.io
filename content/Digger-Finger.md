@@ -1,7 +1,7 @@
 Title: Digger Finger: GelSight Tactile Sensor
 Starred: true
 Date: 2020-05-26 12:00
-Category: Computer Science
+Category: Research and Software
 Slug: Digger-Finger
 Summary: A miniature wedge-shaped GelSight visual-tactile sensor specialized for identifying objects buried in granular media. Published at ISER 2020. Featured on MIT News.
 Featured_Image: digger_finger.jpg

@@ -1,7 +1,7 @@
 Title: Rideable Hexapod
 Starred: true
 Date: 2011-05-27 15:56
-Category: Hardware/Mechatronics
+Category: Robotics
 Slug: Rideable-Hexapod
 Summary: Demo'd at NYC Maker Faire. Welded steel frame, two wheelchair motors, 24V battery pack.
 Featured_Image: techfair.jpg

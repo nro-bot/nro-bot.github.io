@@ -1,7 +1,7 @@
 Title: ICRA Paper: Six-Axis Force-Torque Sensor
 Starred: true
 Date: 2020-03-07 19:43
-Category: Computer Science
+Category: Research and Software
 Slug: Six-Axis-Force-Torque-Sensor
 Summary: My paper on designing an inexpensive six-axis force-torque sensor was accepted to ICRA 2020. 🎉
 Featured_Image: photo_sensor_intro_labelled.png

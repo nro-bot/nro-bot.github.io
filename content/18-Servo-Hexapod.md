@@ -1,7 +1,7 @@
 Title: 18 Servo Hexapod
 Starred: true
 Date: 2011-09-27 15:55
-Category: Hardware/Mechatronics
+Category: Robotics
 Slug: 18-Servo-Hexapod
 Summary: ABS plastic, 18 RC servos, Pololu serial servo controller. Tripod gait.
 Featured_Image: complete.jpg

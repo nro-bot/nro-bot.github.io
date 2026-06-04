@@ -1,7 +1,7 @@
 Title: Robot Arm Assistant: Voice + Vision Cube Pickup
 Starred: false
 Date: 2022-01-01 12:00
-Category: Computer Science
+Category: Robotics
 Slug: Robot-Arm-Assistant
 Summary: A 6-DoF robot arm assistant that picks up cubes using ArUco tag detection and color thresholding in OpenCV, with voice interaction via Mozilla TTS and Vosk speech recognition.
 Featured_Image: robot_arm_assistant.jpg

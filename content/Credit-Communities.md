@@ -1,7 +1,7 @@
 Title: CS223: Credit Community Graph Algorithms
 Starred: false
 Date: 2018-11-01 12:00
-Category: Computer Science
+Category: Research and Software
 Slug: Credit-Communities
 Summary: Investigating trust-score propagation in social lending networks to establish creditworthiness without traditional data. Harvard Random Processes and Algorithms.
 Featured_Image: credit_graph.jpg

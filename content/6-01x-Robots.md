@@ -1,6 +1,6 @@
 Title: 6.01x Robots
 Date: 2014-05-27 15:58
-Category: Computer Science
+Category: Hardware/Mechatronics
 Slug: 6-01x-Robots
 Summary: Created $200 robots to replace 6.01 robots, which cost several thousand dollars.
 Featured_Image: complete.jpg

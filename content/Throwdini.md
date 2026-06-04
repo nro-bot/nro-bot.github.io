@@ -1,7 +1,7 @@
 Title: Throwdini: Throwing with Orientation
 Starred: true
 Date: 2020-01-01 12:00
-Category: Hardware/Mechatronics
+Category: Robotics
 Slug: Throwdini
 Summary: A robotic arm throwing setup built on a UR5. The plan was a reinforcement-learning residual model on top of ballistic physics, but under time constraints the throw was hardcoded. Unpublished work with Ondrej Biza.
 Featured_Image: throwdini.jpg

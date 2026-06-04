@@ -1,7 +1,7 @@
 Title: PhD Thesis: NLP for Uncovering the Illicit Massage Industry
 Starred: true
 Date: 2023-09-05 12:00
-Category: Computer Science
+Category: Research and Software
 Slug: PhD-Thesis
 Summary: PhD thesis (Harvard, Sep 2023) applying NLP and finetuned BERT models to classify online massage parlor reviews, enabling geographic analysis of illicit activity to support counter-trafficking research.
 Featured_Image: thesis_thumb.jpg
