@@ -11,11 +11,14 @@ per-project pages with link buttons, images, and self-hosted video.
 ## Quickstart
 
 ```bash
-pip install -r requirements.txt   # pelican[markdown] >= 4.9
+python3 -m venv .venv && source .venv/bin/activate
+pip install .            # build deps: pelican[markdown] >= 4.9
+pip install ".[editor]"  # optional: + Flask, for the project editor GUI
 
 make html        # build to output/
 make serve       # preview at http://localhost:8000
 make devserver   # build + auto-reload on changes (port 8000)
+make edit        # open the project editor GUI at http://localhost:5001
 make clean       # remove output/
 ```
 
@@ -40,8 +43,9 @@ portfolio-pelican/
 │   ├── templates/                   # base, index, article, category, page
 │   └── static/css/style.css         # all styling
 ├── pelicanconf.py                   # config (author, links, static paths)
-├── Makefile                         # build / serve / deploy targets
-└── requirements.txt
+├── Makefile                         # build / serve / deploy / edit targets
+├── manage.py                        # local browser editor for projects
+└── pyproject.toml                   # dependencies (pip install ".[editor]")
 ```
 
 Each project is a markdown file in `content/` plus a same-named asset folder
@@ -51,6 +55,33 @@ or their images/videos won't be copied to the build.
 
 ## Adding or editing a project
 
+You can use the **GUI editor** (below) or edit the markdown **by hand**.
+
+### GUI editor
+
+A small local web app (`manage.py`) that speaks this site's exact Pelican
+metadata format, so you can add and edit projects in a browser without
+hand-editing front matter:
+
+```bash
+pip install ".[editor]"   # one-time: installs Flask
+make edit                 # or: python manage.py  →  http://127.0.0.1:5001
+```
+
+It lists projects grouped by category (starred-first), gives a form with a
+category dropdown, a Starred checkbox, link/media fields, and a Markdown body
+box, then writes back `content/*.md` **byte-for-byte** in the same format
+(opening and saving a file with no edits produces zero diff). "+ New project"
+scaffolds the markdown file and its asset folder; a "Build site" button runs
+Pelican. It only touches `content/` — commit when you're ready, just like
+hand-editing.
+
+> After creating a project, add its asset folder to `STATIC_PATHS` in
+> `pelicanconf.py` (the editor makes the folder but does not edit config), or
+> its images/videos won't be copied to the build.
+
+### By hand
+
 Projects use Pelican metadata in the markdown front matter. Custom keys
 (everything past `Summary`) are read by the templates to build cards and
 link buttons.
@@ -58,7 +89,7 @@ link buttons.
 ```markdown
 Title: Digger Finger: GelSight Tactile Sensor
 Date: 2020-05-26 12:00
-Category: Computer Science
+Category: Research and Software
 Slug: Digger-Finger
 Summary: One- or two-sentence blurb shown on the card and project page.
 Featured_Image: digger_finger.jpg      # filename inside the project folder
@@ -90,10 +121,11 @@ Field reference:
 | `Card_Video` | Optional MP4 (in the project folder) that autoplays muted/looped as the card thumbnail, with `Featured_Image` as the poster. |
 | `Arxiv` `Code` `Website` `Press` `Slides` `Video` `Paper` | Each renders a link button on the card (max 3, in that priority order) and on the project page. |
 
-**Categories** in use: `Computer Science`, `Hardware/Mechatronics`,
-`Leadership`, `Fun`, `Press and Other Events`. To add a category, add it to
-the tab list in `theme/templates/base.html` and to `ordered_cats` /
-`cat_descs` in `theme/templates/index.html`.
+**Categories** in use: `Research and Software`, `Robotics`,
+`Hardware/Mechatronics`, `Leadership`, `Fun`, `Press and Other Events`. To add
+a category, add it to the tab list in `theme/templates/base.html` and to
+`ordered_cats` / `cat_descs` in `theme/templates/index.html`. (The GUI editor's
+dropdown reads its list from `CATEGORIES` in `manage.py` — update it there too.)
 
 **Videos**: keep them small. Re-encode with ffmpeg, e.g.:
 
@@ -194,6 +226,12 @@ files in GitHub's web UI and the commit will trigger a deploy.
 > The bundled `make github` target (push `output/` to a `gh-pages` branch) is
 > an alternative "build-locally" path. It is **not** needed with the Actions
 > workflow above and isn't used for nrobot.dev.
+
+## Credits
+
+The site reorganization (category structure, starred-first ordering) and the
+project editor (`manage.py`) were developed with
+[Claude Opus 4.8](https://claude.com/claude-code) (Anthropic).
 
 ## License
 

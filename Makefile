@@ -13,6 +13,7 @@ help:
 	@echo '  make clean         remove the generated files'
 	@echo '  make serve         serve the site locally on port 8000'
 	@echo '  make devserver     auto-reload on changes (port 8000)'
+	@echo '  make edit          open the project editor GUI (port 5001)'
 	@echo '  make github        deploy to GitHub Pages (gh-pages branch)'
 
 html:
@@ -26,6 +27,9 @@ serve:
 
 devserver:
 	$(PELICAN) --listen --autoreload $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE)
+
+edit:
+	.venv/bin/python manage.py
 
 github: html
 	ghp-import -m "Publish site" -b gh-pages $(OUTPUTDIR)

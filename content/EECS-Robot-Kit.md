@@ -19,6 +19,6 @@ of the class to ship affordable kits to students.
 **What I did:** Hardware design and systems integration code (Arduino:
 wiring and coordinating photoresistors, distance sensors, and motors).
 
-![ ](/6-01x-Robots/internals.jpg)
+![ ](/EECS-Robot-Kit/internals.jpg)
 
-![ ](/6-01x-Robots/CAD.jpg)
+![ ](/EECS-Robot-Kit/CAD.jpg)

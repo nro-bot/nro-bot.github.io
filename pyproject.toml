@@ -17,6 +17,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Optional: the local project editor GUI (`make edit` / `python manage.py`).
+editor = [
+    "flask>=3",
+]
 # Optional: only needed for the manual "build locally and push output/" deploy
 # path (`make github`). The default deploy uses GitHub Actions and doesn't need this.
 deploy = [

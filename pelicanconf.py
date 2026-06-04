@@ -20,11 +20,11 @@ ARTICLE_SAVE_AS = '{date:%Y}/{date:%m}/{slug}/index.html'
 
 # Static asset directories — copy post asset folders alongside articles
 STATIC_PATHS = ['images'] + [
-    '18-Servo-Hexapod', '6-01x-Robots', 'Countertop-Vending-Machine',
+    '18-Servo-Hexapod', 'Countertop-Vending-Machine',
     'DIY-Menstrual-Cup', 'EL-Wire-Workshop', 'Feminism-Hackathon-Hack4Fem',
     'Food-Fun', 'Hexapod-Conference-Hexacon', 'LED-Graduation-Cap',
     'MITERS-Seminar-Series', 'NarwhalEdu-Kickstarter', 'POV-yoyo',
-    'Portfolio-Website', 'Projects-I-didn-t-get-around-to-documenting',
+    'Projects-I-didn-t-get-around-to-documenting',
     'Rideable-Hexapod', 'Sailboat-Repairs', 'Sailboat-Rudder',
     'Sailing-and-Other-Adventures', 'Sewing-and-Crafts',
     'Six-Axis-Force-Torque-Sensor', 'Staubli-Robot-Arm-Drawing',
