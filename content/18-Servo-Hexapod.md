@@ -16,7 +16,7 @@ Inspired by videos of dancing hexapod competitions, I built an 18-servo hexapod 
 </video> 
 </center>
 
-The robot was made of ABS plastic, 18 servos, an Arduino nano, and a Pololu serial servo controller. With Prof. Dan Frey's permission, I substited this independent project for the normal coursework for Design and Manufacturing I. The hexapod used the tripod gait to walk and turn around.
+The robot was made of ABS plastic, 18 servos, an Arduino nano, and a Pololu serial servo controller. With Prof. Dan Frey's permission, I substituted this independent project for the normal coursework for Design and Manufacturing I. The hexapod used the tripod gait to walk and turn around.
 
 **What I did**: This project was my own design, fabrication, and programming.
 

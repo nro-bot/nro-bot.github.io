@@ -1,7 +1,7 @@
-Title: Intro to EECS Robot Kit Prototype 
+Title: Intro to EECS Robot Kit Prototype
 Date: 2014-05-27 15:58
 Category: Hardware/Mechatronics
-Slug: EECS-Robot-Kit 
+Slug: EECS-Robot-Kit
 Summary: Created $200 robots to replace 6.01 robots, which cost several thousand dollars.
 A low-cost small robot platform with multiple distance sensors, designed as a plug-and-play replacement for the expensive ADEPT robots in MIT's intro EECS class — intended for use in an online course. Contract work for MIT.
 Featured_Image: complete.jpg

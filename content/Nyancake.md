@@ -9,6 +9,4 @@ Website: https://www.instructables.com/CNC-Nyancat-Food-Mold-nyancake/
 
 *2011*
 
-A CNC-milled mold for casting Nyan Cat-shaped food. Because why not. The mold design was cut on a CNC router and used to make jellies, chocolates, and other Nyan Cat–shaped treats.
-
-Taste the rainbow?
+A CNC-milled mold for casting Nyan Cat-shaped food. Because why not. The foam negative was cut on a CNC router, two-part food-safe silicone positive mold created from that  and used to make jellies, chocolates, and other Nyan Cat–shaped treats.  

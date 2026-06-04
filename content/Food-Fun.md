@@ -16,5 +16,3 @@ Featured_Image: rainbow_challah_cooked.jpg
 
 Rainbow challah, challah animals, cute robot pumpkin, rainbow cookies
 
-2011
-blurb: CNC foam and 2 part food-safe silicone mold for Nyancakes.

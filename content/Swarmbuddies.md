@@ -3,7 +3,7 @@ Starred: true
 Date: 2014-05-27 15:58
 Category: Leadership
 Slug: Swarmbuddies
-Summary: Created multi-robots with overhead tracking, intended for second kickstarer.
+Summary: Created multi-robots with overhead tracking, intended for second Kickstarter.
 Featured_Image: swarmbuddies.jpg
 
 # Swarmbuddies

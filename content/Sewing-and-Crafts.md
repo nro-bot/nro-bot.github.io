@@ -9,7 +9,7 @@ Infinity dresses, Cosplay, OSHW dress, skirt, shirt + tatt, pom poms
 ### pompoms
 http://www.orangenarwhals.com/2018/01/pom-poms-galore/
 ![Pom pom design (spherical projection) -- iterations of letter "A"](/Sewing-and-Crafts/pompom_alphabet_failures_aaaaaa.jpg)
-![Cute pom pom (much eaiser)](/Sewing-and-Crafts/neko_cat.jpg)
+![Cute pom pom (much easier)](/Sewing-and-Crafts/neko_cat.jpg)
 
 ## Clothing
 
