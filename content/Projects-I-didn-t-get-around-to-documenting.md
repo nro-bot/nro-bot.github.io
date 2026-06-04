@@ -5,8 +5,6 @@ Slug: Projects-I-didn-t-get-around-to-documenting
 Summary: Flask webapps, H Bridge motor controllers, lasercutter mini projects, etc.
 Featured_Image: populated_controller.jpg
 
-Flask webapps, 
-
 ## Hbridge
 What: Final project, 6.163 Power Electronics, to drive rideable hexapod's motors.
 Who: Based heavily off of designs documented by Charles Guan and Shane Colton.
