@@ -1,6 +1,6 @@
 AUTHOR = 'Nancy Ouyang'
 SITENAME = 'Nancy Ouyang'
-SITESUBTITLE = 'Harvard CS PhD '23 · MIT MechE BS '13 · Boston, MA'
+SITESUBTITLE = 'Harvard CS PhD \'23 · MIT MechE BS \'13 · Boston, MA'
 SITEURL = ''
 
 # Contact / social links shown in the header
