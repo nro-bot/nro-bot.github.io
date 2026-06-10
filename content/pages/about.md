@@ -7,7 +7,7 @@ Slug: about
 
 <h1>Hi, I'm Nancy Ouyang.</h1>
 
-<p class="about-tagline">MIT mechanical engineer and Harvard computer scientist. I've built rideable hexapods, open-source robot sensors, and NLP systems to study hidden industries. I care about making things that are useful, weird, or both.</p>
+<p class="about-tagline">MIT mechanical engineer (BS '13) and Harvard computer scientist (PhD '23). I completed my PhD researching both vision-based touch sensors for robotics and applications of machine learning to counter-trafficking.</p>
 
 <div class="about-links">
 <a href="https://orangenarwhals.com">Blog</a>
@@ -18,9 +18,9 @@ Slug: about
 </div>
 </div>
 
-I'm a PhD graduate from **Harvard SEAS** (Computer Science, 2023), and before that earned a BS in **Mechanical Engineering from MIT** (2013). My research focused on natural language processing applied to counter-trafficking.
+I'm a PhD graduate from **Harvard SEAS** (Computer Science, 2023), and before that earned a BS in **Mechanical Engineering from MIT** (2013). My thesis focused on natural language processing applied to counter-trafficking.
 
-I've also worked in tactile sensing and robot manipulation with Prof. Robert Howe at Harvard, Prof. Robert Platt at Northeastern, and Prof. Edward Adelson at MIT, and in bio-inspired robotics at the MIT Biomimetics Lab under Dr. Albert Wang.
+In robotics, I worked in tactile sensing and robot manipulation with Prof. Robert Howe at Harvard, Prof. Robert Platt at Northeastern, and Prof. Edward Adelson at MIT. Prior to grad school I worked in bio-inspired robotics at the MIT Biomimetics Lab under Dr. Albert Wang.
 
 Between degrees I co-founded **NarwhalEdu**, shipping a drawing robot arm kit to ~100 students across six countries, and served as president of **MITERS**, MIT's student-run machine shop. I'm based in Boston, MA.
 

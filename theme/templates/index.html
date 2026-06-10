@@ -39,17 +39,22 @@
 
 {% block content %}
 <section class="all-intro" id="allIntro">
-  <p>Hi! I'm Nancy — a roboticist and engineer who builds things that are useful, weird, or both. Below are projects spanning robotics research, hardware and mechatronics, community leadership, and assorted fun. Use the tabs, search, and year filters above to explore.</p>
+  <p>Hi! I'm Nancy — I work across AI/ML and mechatronics. Below are
+  projects spanning software, research, mechatronics, startups (under
+  leadership), fun projects, and more. Use the tabs / search / year / starred filters above to explore.</p>
 </section>
 
 <!-- ─── CATEGORY SECTIONS ───────────────────────────────── -->
 {% set cat_descs = {
-  'Research and Software':    'Published research and software — papers, graduate coursework, NLP, motion planning, and tools built from scratch.',
-  'Robotics':                'Robot arms, manipulators, walking machines, and autonomous systems — from tactile-sensing research to rideable hexapods.',
-  'Hardware/Mechatronics':   'Mechanical design, embedded systems, and fabrication — devices and hardware built from scratch.',
-  'Leadership':              'Workshops, conferences, and seminar series organized to bring people into making and engineering.',
-  'Fun':                     'Playful side projects — laser-etched pancakes, CNC Nyan Cat molds, rainbow food, sewing, sailing, and other adventures.',
-  'Press and Other Events':  'Talks, media coverage, awards, activism, and miscellaneous projects that don\'t fit a neat engineering box.'
+  'Research and Software':    'Published research and software — papers,
+  graduate coursework, and contract work',
+  'Robotics':                'From tactile-sensing research to rideable hexapods.',
+  'Hardware/Mechatronics':   'Non-robots',
+  'Leadership':              'I've run hackathons, for-fun conferences, seminar series, and kickstarters',
+  'Fun':                     'Smaller side projects — laser-etched
+  pancakes, CNC Nyan Cat molds, etc.',
+  'Press and Other Events':  'Talks, media coverage, awards, activism, all
+  that jam.'
 } %}
 
 {% set ordered_cats = ['Research and Software', 'Robotics', 'Hardware/Mechatronics', 'Leadership', 'Fun', 'Press and Other Events'] %}
