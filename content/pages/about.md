@@ -26,21 +26,6 @@ Between degrees I co-founded **NarwhalEdu**, shipping a drawing robot arm kit to
 
 ---
 
-## Robotics Stack
-
-<div class="skills-grid">
-<span class="skill-tag"><img src="/images/icons/arduino.png" alt="">Arduino C &amp; microcontrollers</span>
-<span class="skill-tag"><img src="/images/icons/python.png" alt="">RP2040 &amp; CircuitPython</span>
-<span class="skill-tag"><img src="/images/icons/opencv.png" alt="">OpenCV (Python)</span>
-<span class="skill-tag"><img src="/images/icons/solidworks.png" alt="">3D CAD (Solidworks &amp; Onshape)</span>
-<span class="skill-tag"><img src="/images/icons/3dprinter.png" alt="">3D Printing (FDM)</span>
-<span class="skill-tag"><img src="/images/icons/laser.svg" alt="">Lasercutting</span>
-<span class="skill-tag"><img src="/images/icons/mill.png" alt="">Mill / Lathe</span>
-<span class="skill-tag"><img src="/images/icons/diptrace.png" alt="">PCB Design (Diptrace &amp; Eagle)</span>
-</div>
-
----
-
 ## Tech Stack
 
 <div class="skills-grid">
@@ -68,6 +53,21 @@ Between degrees I co-founded **NarwhalEdu**, shipping a drawing robot arm kit to
 <span class="skill-tag"><img src="/images/icons/uv.svg" alt="">uv</span>
 <span class="skill-tag"><img src="/images/icons/vscode.png" alt="">VSCode</span>
 <span class="skill-tag"><img src="/images/icons/vim.png" alt="">Vim</span>
+</div>
+
+---
+
+## Robotics Stack
+
+<div class="skills-grid">
+<span class="skill-tag"><img src="/images/icons/arduino.png" alt="">Arduino C &amp; microcontrollers</span>
+<span class="skill-tag"><img src="/images/icons/python.png" alt="">RP2040 &amp; CircuitPython</span>
+<span class="skill-tag"><img src="/images/icons/opencv.png" alt="">OpenCV (Python)</span>
+<span class="skill-tag"><img src="/images/icons/solidworks.png" alt="">3D CAD (Solidworks &amp; Onshape)</span>
+<span class="skill-tag"><img src="/images/icons/3dprinter.png" alt="">3D Printing (FDM)</span>
+<span class="skill-tag"><img src="/images/icons/laser.svg" alt="">Lasercutting</span>
+<span class="skill-tag"><img src="/images/icons/mill.png" alt="">Mill / Lathe</span>
+<span class="skill-tag"><img src="/images/icons/diptrace.png" alt="">PCB Design (Diptrace &amp; Eagle)</span>
 </div>
 
 ---
