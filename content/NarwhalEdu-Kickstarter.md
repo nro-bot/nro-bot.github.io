@@ -14,7 +14,8 @@ After graduating, I recruited my friend Cappie Pomeroy. Together we founded an e
 
 We taught it on EdX with the permission of MIT's Director of Digital Learning, Prof. Sanjay Sarma. We shipped ninety robotics kits on time and on-budget. Hanna Lin helped with the mechanical design and more over Summer 2013.
 
- We were accepted into the 2013 MIT Global Founders' Skills Accelerator. By focusing on hands-on online learning, we sought to address flaws we saw in our own education, such as the tendency to rely on funding, teacher resources, and large teams not available in rural settings, as well as the focus on competitions that skewed heavily male.
+ We were accepted into the 2013 MIT Global Founders' Skills Accelerator. By focusing on hands-on online learning, we sought to address flaws we saw in our own education, such as the tendency to rely on funding, teacher resources, and large teams not available in rural settings.
+ <!--, as well as the focus on competitions that skewed heavily male.-->
 
 **Press:**
 
