@@ -233,6 +233,3 @@ The site reorganization (category structure, starred-first ordering) and the
 project editor (`manage.py`) were developed with
 [Claude Opus 4.8](https://claude.com/claude-code) (Anthropic).
 
-## License
-
-Site content © Nancy Ouyang. Theme and build tooling are free to reuse.
