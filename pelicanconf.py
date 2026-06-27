@@ -4,7 +4,7 @@ SITESUBTITLE = 'Harvard CS PhD \'23 · MIT MechE BS \'13 · Boston, MA'
 SITEURL = ''
 
 # Contact / social links shown in the header
-EMAIL = 'nouyang@alum.mit.edu'
+EMAIL = 'nouyang AT alum DOT mit DOT edu'
 GITHUB_URL = 'https://github.com/nro-bot'
 LINKEDIN_URL = 'https://www.linkedin.com/in/nrobot'
 BLOG_URL = 'https://orangenarwhals.com'
