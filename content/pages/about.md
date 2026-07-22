@@ -7,7 +7,7 @@ Slug: about
 
 <h1>Hi, I'm Nancy Ouyang.</h1>
 
-<p class="about-tagline">MIT mechanical engineer (BS '13) and Harvard computer scientist (PhD '23). I completed my PhD researching both vision-based touch sensors for robotics and applications of machine learning to counter-trafficking.</p>
+<p class="about-tagline">MIT mechanical engineer (BS '13) and Harvard computer scientist (PhD '23). I completed my PhD researching both vision-based touch sensors for robotics and applications of machine learning to counter-trafficking. My thesis committee consisted of Professors Roberto Rigobon, David Parkes, and Finale Doshi-Velez.</p> 
 
 <div class="about-links">
 <a href="https://orangenarwhals.com">Blog</a>
