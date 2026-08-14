@@ -19,7 +19,7 @@ ARTICLE_URL = '{date:%Y}/{date:%m}/{slug}/'
 ARTICLE_SAVE_AS = '{date:%Y}/{date:%m}/{slug}/index.html'
 
 # Static asset directories — copy post asset folders alongside articles
-STATIC_PATHS = ['images'] + [
+STATIC_PATHS = ['images'] + ['pdfs'] + [
     '18-Servo-Hexapod', 'Countertop-Vending-Machine',
     'DIY-Menstrual-Cup', 'EL-Wire-Workshop', 'Feminism-Hackathon-Hack4Fem',
     'Food-Fun', 'Hexapod-Conference-Hexacon', 'LED-Graduation-Cap',
