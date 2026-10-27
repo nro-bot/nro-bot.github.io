@@ -43,6 +43,8 @@ STATIC_PATHS = ['images'] + ['pdfs'] + [
 EXTRA_PATH_METADATA = {
     'pdfs/reading-desk.html' : {'path' : 'reading-desk.html'}
 }
+# Tell Pelican to ignore .html files for content parsing (articles/pages)
+READERS = {'html': None}
 
 # Keep asset folders at the same relative path as the article
 ARTICLE_EXCLUDES = []
