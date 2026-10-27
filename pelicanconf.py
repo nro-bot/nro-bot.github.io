@@ -43,6 +43,8 @@ STATIC_PATHS = ['images'] + ['pdfs'] + [
 EXTRA_PATH_METADATA = {
     'pdfs/reading-desk.html' : {'path' : 'reading-desk.html'}
 }
+IGNORE_FILES = ['reading-desk.html']
+
 # Keep asset folders at the same relative path as the article
 ARTICLE_EXCLUDES = []
 
