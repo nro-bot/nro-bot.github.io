@@ -1,0 +1,2601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F7A5C">
+<title>Reading Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%96%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --surround:#D7DCE0; --panel:#FFFFFF; --panel-2:#EEF2F4; --ink:#1B1F24; --muted:#58616B; --line:#C6CDD3;
+  --jade:#1F7A5C; --jade-ink:#FFFFFF; --jade-soft:rgba(31,122,92,.24); --amber-soft:rgba(240,168,30,.32);
+  --saved:#D99A00; --saved-ink:#1E1500; --flame:#E2580B;
+  --t1:#D3322A; --t2:#1D8A47; --t3:#2B60C8; --t4:#8A3EC0; --t5:#737A82;
+  --grid:#E09B95; --pinyin:#1F6F55;
+  --shadow:0 12px 32px rgba(18,28,38,.20), 0 2px 6px rgba(18,28,38,.12);
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --surround:#121619; --panel:#1F252B; --panel-2:#2A3138; --ink:#E8ECEF; --muted:#9AA4AD; --line:#38424B;
+    --jade:#4CC395; --jade-ink:#08201A; --jade-soft:rgba(76,195,149,.28); --amber-soft:rgba(255,190,70,.30);
+    --saved:#FFC233; --saved-ink:#1E1500; --flame:#FF8A3D;
+    --t1:#FF6E63; --t2:#4FCB7E; --t3:#77A2FF; --t4:#BE85EE; --t5:#9AA1A8;
+    --grid:#8A514C; --pinyin:#6FD3AC;
+    --shadow:0 12px 32px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --surround:#121619; --panel:#1F252B; --panel-2:#2A3138; --ink:#E8ECEF; --muted:#9AA4AD; --line:#38424B;
+  --jade:#4CC395; --jade-ink:#08201A; --jade-soft:rgba(76,195,149,.28); --amber-soft:rgba(255,190,70,.30);
+  --saved:#FFC233; --saved-ink:#1E1500; --flame:#FF8A3D;
+  --t1:#FF6E63; --t2:#4FCB7E; --t3:#77A2FF; --t4:#BE85EE; --t5:#9AA1A8;
+  --grid:#8A514C; --pinyin:#6FD3AC;
+  --shadow:0 12px 32px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{height:100%;margin:0}
+body{background:var(--surround);color:var(--ink);font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.4;display:flex;flex-direction:column;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--jade);outline-offset:2px}
+.zh,[lang="zh"]{font-family:"Noto Serif SC","Noto Serif CJK SC","Songti SC",serif}
+
+/* Top bar */
+.bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;position:relative;z-index:5}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;white-space:nowrap}
+.seal{width:34px;height:34px;border-radius:8px;background:var(--jade);color:var(--jade-ink);display:grid;place-items:center;font-family:"Noto Serif SC","Songti SC",serif;font-size:21px;font-weight:700;line-height:1}
+.streak{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-weight:700;font-size:15px;white-space:nowrap;border:1px solid transparent;background:transparent;min-height:44px;padding:0 8px;border-radius:10px;cursor:pointer}
+.streak:hover{border-color:var(--line)}
+.streak.on{color:var(--flame)}
+.progress{flex:1 1 180px;min-width:130px;display:flex;flex-direction:column;gap:5px}
+.progress .meta{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted);white-space:nowrap}
+.progress .meta span{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.progress .meta b{color:var(--ink);font-weight:600}
+.track{height:9px;border-radius:99px;background:var(--panel-2);overflow:hidden;border:1px solid var(--line)}
+.fill{height:100%;width:0;background:var(--jade);border-radius:99px;transition:width .4s ease}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:0 11px;min-height:42px;font-weight:600;font-size:15px;color:var(--muted);cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);font-weight:600;font-size:16px;cursor:pointer;white-space:nowrap;color:var(--ink);text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--jade);color:var(--jade-ink);border-color:transparent}
+.btn.ghost{background:transparent}
+.btn.saved{background:var(--saved);color:var(--saved-ink);border-color:transparent}
+.btn.nudge{border-color:var(--jade);box-shadow:inset 0 0 0 1px var(--jade)}
+.btn[aria-pressed="true"]{border-color:var(--jade);box-shadow:inset 0 0 0 1px var(--jade)}
+.icon-btn{width:44px;padding:0}
+.badge{display:inline-grid;place-items:center;min-width:24px;height:22px;padding:0 6px;border-radius:99px;background:var(--panel);border:1px solid var(--line);font-size:13px}
+svg.i{width:20px;height:20px;flex:none}
+@media (max-width:1400px){.brand-name{display:none}#wordsBtn .lbl,#detailsBtn .lbl{display:none}#wordsBtn,#detailsBtn{padding:0 11px}}
+@media (max-width:700px){.btn .lbl{display:none}.btn:has(.lbl){padding:0 11px}}
+
+/* App frame */
+.app{flex:1;min-height:0;display:flex}
+.col{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* Info panel (replaces popups) */
+#info{height:212px;flex:none;background:var(--panel);border-bottom:1px solid var(--line);display:flex;flex-direction:column}
+.info-main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(140px,230px) minmax(0,1fr) auto;gap:16px;padding:10px 14px 8px}
+.info-main.is-sent{grid-template-columns:minmax(0,1fr) auto}
+.ih{min-width:0;overflow:hidden}
+.ib{min-width:0;overflow:auto;padding-right:6px}
+.ia{display:grid;grid-template-columns:auto auto;gap:6px;align-content:start}
+.ia .btn{min-height:40px;padding:0 11px;font-size:15px}
+.fix{display:flex;gap:6px;align-items:center;padding:6px 14px;border-top:1px solid var(--line);overflow-x:auto;white-space:nowrap;flex:none;background:var(--panel)}
+.fix .btn{min-height:36px;padding:0 10px;font-size:14.5px}
+.fix .lab{font-size:14px;font-weight:700;color:var(--muted);margin-right:2px}
+.fix .sep{width:1px;align-self:stretch;background:var(--line);margin:0 4px;flex:none}
+.fix input{min-width:200px;flex:1;font-size:20px;padding:4px 10px;border-radius:8px;border:1px solid var(--jade);background:var(--panel);min-height:38px}
+.idle{height:100%;padding:12px 18px;color:var(--muted);display:flex;flex-direction:column;justify-content:center;gap:6px;overflow:auto}
+.idle p{margin:0;max-width:90ch}
+.idle b{color:var(--ink)}
+kbd{font:600 13px/1 "Source Sans 3",sans-serif;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:2px 6px;background:var(--panel-2);color:var(--ink)}
+.hz{font-family:"Noto Serif SC","Songti SC",serif;font-weight:700;font-size:44px;line-height:1.12;letter-spacing:.03em;overflow-wrap:anywhere}
+.pyl{font-size:20px;font-weight:600;margin-top:2px}
+.tags{margin-top:5px}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--panel-2);border:1px solid var(--line);margin:0 4px 4px 0}
+.tag.saved{background:var(--saved);color:var(--saved-ink);border-color:transparent}
+.t1{color:var(--t1)}.t2{color:var(--t2)}.t3{color:var(--t3)}.t4{color:var(--t4)}.t5{color:var(--t5)}
+.defs p{margin:0 0 6px;font-size:17px;line-height:1.45}
+.defs .reading{font-weight:700;margin-right:7px}
+.zhdef{font-size:20px !important;line-height:1.6 !important}
+.note{color:var(--muted);font-size:15px}
+.sec{margin-top:10px}
+.sec h4{margin:0 0 4px;font-size:14px;color:var(--muted);font-weight:700}
+.parts{display:grid;gap:5px}
+.part{display:grid;grid-template-columns:auto 62px 1fr;gap:4px 10px;align-items:baseline;font-size:15.5px}
+.part .pl{grid-column:2 / -1;font-size:14.5px;color:var(--muted);line-height:2.3}
+.part.single{display:block}.part.single .pl{display:block;font-size:15.5px}
+.side-head{flex-wrap:wrap}
+.side-head>span{display:flex;gap:6px}
+.parts .part+.part{border-top:1px dashed var(--line);padding-top:6px}
+.alt{font-size:.55em;color:var(--muted);font-weight:500;margin-left:.35em;letter-spacing:0}
+.part .alt{font-size:.7em}
+.altlab{font-size:13.5px;color:var(--muted);margin-top:2px}
+.cp,.cpr{white-space:nowrap}
+.cpc{font-family:"Noto Serif SC","Songti SC",serif;font-size:19px;font-weight:700;color:var(--ink);ruby-position:over}
+.cpc rt{font-family:"Source Sans 3",system-ui,sans-serif;font-size:11.5px;font-weight:600;color:var(--pinyin);letter-spacing:0}
+.cpp{color:var(--pinyin);font-weight:600}
+.role{font-size:12.5px;font-weight:700;text-transform:none;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:99px;padding:0 7px}
+.hint{font-style:italic}
+.radnote{margin:0;font-size:14px;color:var(--muted);text-align:center}
+.part .c{font-family:"Noto Serif SC","Songti SC",serif;font-size:24px;font-weight:700;line-height:1}
+.part .p{font-weight:600}
+.part .g{color:var(--muted)}
+.also p{margin:0 0 3px;font-size:18px;cursor:pointer;line-height:1.5}
+.also mark,.ex mark{background:var(--jade-soft);color:inherit;border-radius:3px;padding:0 1px}
+.ex{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.ex li{cursor:pointer;border-left:3px solid var(--line);padding-left:9px}
+.ex .exz{display:block;font-size:19px}
+.ex .exp{display:block;font-size:14.5px;font-weight:600;color:var(--muted)}
+.ex .exe{display:block;font-size:15.5px}
+.links{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.links a{font-size:14.5px;font-weight:600;color:var(--jade);padding:4px 11px;border:1px solid var(--line);border-radius:99px;text-decoration:none}
+.sent{font-family:"Noto Serif SC","Songti SC",serif;font-size:27px;line-height:2.05;font-weight:500}
+.sent.nopy{line-height:1.6}
+.sent.nopy rt{display:none}
+.sent ruby{ruby-position:over;cursor:pointer;border-radius:5px;padding:0 1px}
+.sent ruby:active{background:var(--jade-soft)}
+.sent rt{font-family:"Source Sans 3",system-ui,sans-serif;font-size:13.5px;font-weight:600}
+.tr{font-size:19px;line-height:1.45;margin-top:2px}
+
+/* Reading stage */
+#stage{position:absolute;inset:0;overflow:auto;touch-action:pan-x pan-y pinch-zoom;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:contain}
+#wrap{position:relative}
+.stage-wrap{flex:1;min-height:0;position:relative}
+.flip{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:46px;height:92px;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 88%,transparent);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);padding:0}
+.flip.prev{left:8px}.flip.next{right:8px}
+.flip svg{width:26px;height:26px}
+.stagebar{position:absolute;right:12px;bottom:12px;z-index:4;display:flex;gap:8px}
+.adjbar{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:6;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 12px;box-shadow:var(--shadow);width:max-content;max-width:calc(100% - 24px)}
+.adjbar .lab{font-weight:600;font-size:15px;color:var(--muted);width:100%;text-align:center}
+.adj .who{white-space:nowrap}
+.adj{display:flex;align-items:center;gap:6px;font-weight:600}
+.adj input{width:180px;accent-color:var(--jade)}
+.adj output{min-width:54px;text-align:right;font-variant-numeric:tabular-nums}
+.adj .btn{min-height:38px;width:38px;padding:0;font-size:20px}
+#page.tilting img,#page.tilting #tints,#page.tilting #hl{visibility:hidden}
+#tiltCanvas{position:absolute;inset:0;width:100%;height:100%}
+#page.tilting::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0 35px,rgba(31,122,92,.5) 35px 36px)}
+body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !important}
+.stagebar .btn{background:var(--panel);box-shadow:var(--shadow)}
+.counter{position:absolute;left:12px;bottom:12px;z-index:4;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:0 14px;min-height:44px;font-size:14.5px;font-weight:700;color:var(--ink);box-shadow:var(--shadow);cursor:pointer}
+.pages-help{max-width:1100px;margin:16px auto 0;padding:0 20px}
+.pages-help p{margin:0}
+.sortrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.sortrow .btn{min-height:40px;font-size:15px}
+.moveto{min-height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);font-weight:600;font-size:14.5px;padding:0 6px;flex:1;min-width:0}
+.linklike.del{color:#B3261E;margin-left:6px}
+.pcard .row{flex-wrap:nowrap !important}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;padding:14px 20px 40px;max-width:1100px;margin:0 auto}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pcard[aria-current="true"]{border-color:var(--jade);box-shadow:0 0 0 2px var(--jade)}
+.pcard .thumb{border:0;padding:0;background:#111;cursor:pointer;aspect-ratio:4/3;display:block;width:100%}
+.pcard .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pcard .meta{padding:9px 12px 2px;font-weight:700}
+.pcard .sub{padding:0 12px;color:var(--muted);font-size:14px}
+.pcard .row{display:flex;gap:6px;padding:10px 12px 12px;flex-wrap:wrap}
+.pcard .row .btn{min-height:40px;padding:0 10px;font-size:14.5px}
+.pcard .row .grow{flex:1}
+.btn:disabled{opacity:.4;cursor:default}
+#stage.mag #page{touch-action:none;cursor:crosshair}
+#loupe{position:fixed;z-index:25;width:320px;height:320px;border-radius:50%;border:3px solid #fff;box-shadow:0 8px 24px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.25);background-color:#fff;background-repeat:no-repeat;pointer-events:none;display:none}
+#loupe::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:var(--jade);box-shadow:0 0 0 2px #fff}
+#loupe.show{display:block}
+.stats{width:100%;max-width:780px;margin:0 auto;padding:22px 20px 40px;display:grid;gap:22px;align-content:start}
+.big{display:flex;align-items:center;gap:18px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.big .num{font-size:68px;font-weight:700;line-height:1;color:var(--flame)}
+.big .lab{font-size:22px;font-weight:700}
+.big p{margin:2px 0 0;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.tile b{display:block;font-size:26px;line-height:1.2}
+.tile span{color:var(--muted);font-size:15px}
+.stats h3{margin:0 0 8px;font-size:18px}
+.cal{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,18px);grid-auto-columns:18px;gap:4px;overflow-x:auto;padding-bottom:4px}
+.cal i,.legend i{width:18px;height:18px;border-radius:4px;background:var(--panel-2);border:1px solid var(--line);display:inline-block}
+.l1{background:color-mix(in srgb,var(--jade) 35%,var(--panel)) !important}
+.l2{background:color-mix(in srgb,var(--jade) 65%,var(--panel)) !important}
+.l3{background:var(--jade) !important;border-color:var(--jade) !important}
+.cal i.today{outline:2px solid var(--ink);outline-offset:1px}
+.cal i.future{visibility:hidden}
+.legend{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:14px;margin-top:8px}
+.legend i{width:14px;height:14px}
+.btn.danger{color:#B3261E;border-color:#E3B1AC}
+.revcta{display:flex;gap:14px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;flex-wrap:wrap}
+.revcta p{margin:2px 0 0}
+.mini{margin:6px 0 0;padding-left:20px;color:var(--muted)}
+.kchart{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;align-items:end}
+.kb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:13px;color:var(--muted)}
+.kb b{color:var(--ink);font-size:14px}
+.kbar{height:110px;width:100%;max-width:46px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;display:flex;align-items:flex-end;overflow:hidden}
+.kbar i{display:block;width:100%;background:var(--jade)}
+.rev{max-width:640px;margin:0 auto;padding:20px 20px 40px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.rev .kind{margin:0;font-weight:700;color:var(--muted)}
+.rev .big-hz{font-family:"Noto Serif SC","Songti SC",serif;font-size:84px;font-weight:700;line-height:1.1}
+.rev .pybig{font-size:26px}
+.rev .gl{font-size:20px;margin:0}
+.rev .ctx{font-size:20px;color:var(--muted);margin:0;line-height:1.6}
+.rev .ctx mark{background:var(--jade-soft);color:var(--ink);border-radius:3px}
+.rev .blank{color:var(--jade);font-weight:700;letter-spacing:.05em}
+.rev .result{font-weight:700;margin:0;font-size:18px}
+.rev .ans{font-family:"Noto Serif SC","Songti SC",serif;font-size:36px;vertical-align:middle;margin-left:8px}
+.rev #revBack{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.rev .btn.wide{min-width:240px}
+.revbar{height:6px;width:100%;background:var(--panel-2);border-radius:99px;overflow:hidden}
+.revbar i{display:block;height:100%;background:var(--jade)}
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;margin-top:4px}
+.grades .btn{flex-direction:column;min-height:60px;gap:0}
+.grades small{font-weight:500;color:var(--muted);font-size:13px}
+.grades .btn.sugg{border-color:var(--jade);box-shadow:inset 0 0 0 2px var(--jade)}
+.rev-done{display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:30px}
+.rev-done .hz{font-size:72px;color:var(--jade)}
+.rev-done h3{margin:0;font-size:22px}
+.rev-done p{margin:0}
+#page{position:absolute;display:none;border-radius:6px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.28);background:#000}
+#page.show{display:block}
+#page img{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
+#tints,#hl{position:absolute;inset:0;pointer-events:none}
+.wt{position:absolute;border-radius:3px}
+.w0{background:rgba(43,96,200,.16)}.w1{background:rgba(29,150,71,.17)}.w2{background:rgba(230,120,10,.18)}.w3{background:rgba(170,62,200,.15)}
+.hl{position:absolute;border-radius:5px}
+.hl.word{background:var(--jade-soft);box-shadow:0 0 0 2px var(--jade)}
+.hl.sent{background:var(--amber-soft)}
+.mk{position:absolute;height:0;border-bottom:3px solid var(--saved);border-radius:2px}
+.pyl,.sent rt,.part .p,.wrow .p{color:var(--pinyin)}
+.mdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:0}
+.wrow .c{text-decoration:underline;text-decoration-color:var(--mk,transparent);text-decoration-thickness:3px;text-underline-offset:6px}
+/* Details panel on the left */
+body.info-left #info{width:min(380px,36vw);height:auto;border-bottom:0;border-right:1px solid var(--line)}
+body.info-left .info-main,body.info-left .info-main.is-sent{grid-template-columns:minmax(0,1fr);align-content:start;overflow:auto}
+body.info-left .ib{overflow:visible}
+body.info-left .info-main .ih{order:0}
+body.info-left .info-main .ia{order:1;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+body.info-left .info-main .ib{order:2}
+body.info-left .info-main.is-sent .ib{order:0}
+body.info-left .fix{flex-wrap:wrap;white-space:normal;overflow:visible}
+body.info-left .fix input{min-width:0;width:100%}
+body.info-left .idle{justify-content:flex-start;padding-top:18px}
+#empty{position:absolute;inset:0;display:grid;place-items:center;padding:24px;overflow:auto}
+.welcome{max-width:560px;background:var(--panel);border-radius:18px;padding:30px 30px 26px;box-shadow:var(--shadow)}
+.welcome h1{font-family:"Noto Serif SC","Songti SC",serif;font-weight:700;font-size:44px;line-height:1.15;margin:0 0 4px;letter-spacing:.04em}
+.welcome .sub{font-size:20px;font-weight:600;margin:0 0 14px}
+.welcome p{margin:0 0 12px;color:var(--muted);max-width:60ch}
+.welcome .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.welcome .keynote{margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--panel-2);color:var(--ink);font-size:15.5px}
+.linklike{background:none;border:0;padding:0;color:var(--jade);font-weight:700;text-decoration:underline;cursor:pointer}
+
+/* Side pane */
+#side{width:290px;flex:none;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.side-top{padding:10px;display:flex;gap:6px;border-bottom:1px solid var(--line)}
+.side-top input{flex:1;min-width:0;font-size:19px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);min-height:44px}
+.side-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;font-weight:700;border-bottom:1px solid var(--line)}
+.side-head .btn{min-height:38px;font-size:14.5px;padding:0 10px}
+#sideList{flex:1;overflow:auto}
+.wrow{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;padding:9px 12px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer}
+.wrow[aria-current="true"]{background:var(--panel-2);box-shadow:inset 4px 0 0 var(--jade)}
+.wrow .c{font-family:"Noto Serif SC","Songti SC",serif;font-size:26px;font-weight:700;line-height:1.1}
+.wrow .mid{min-width:0;display:flex;flex-direction:column}
+.wrow .p{font-weight:600;font-size:14.5px}
+.wrow .g{color:var(--muted);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow .n{font-size:13px;color:var(--muted);white-space:nowrap}
+.wempty{padding:18px;color:var(--muted);margin:0}
+
+/* Sheets */
+.sheet{position:fixed;inset:0;z-index:40;background:var(--surround);display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet.open{display:flex}
+.sheet-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet-bar h2{font-size:19px;margin:0 auto 0 4px;font-weight:700}
+.cam{flex:1;min-height:0;position:relative;background:#0b0d0f;display:grid;place-items:center;overflow:hidden}
+.cam video{width:100%;height:100%;object-fit:contain;background:#000}
+.cam canvas{max-width:100%;max-height:100%;display:block}
+.guide{position:absolute;inset:7% 5%;border:2px dashed rgba(255,255,255,.6);border-radius:12px;pointer-events:none}
+.guide::after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed rgba(255,255,255,.5)}
+.guide span{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.55);padding:5px 12px;border-radius:99px;font-size:14.5px;white-space:nowrap}
+.cam-msg{color:#fff;text-align:center;padding:24px;max-width:460px;font-size:17px}
+.cam-controls{display:flex;align-items:center;justify-content:center;gap:14px;padding:12px;background:var(--panel);flex-wrap:wrap}
+.shutter{width:74px;height:74px;border-radius:50%;border:5px solid var(--jade);background:var(--panel);cursor:pointer;box-shadow:inset 0 0 0 4px var(--panel),inset 0 0 0 40px var(--panel-2)}
+.shutter:active{transform:scale(.95)}
+.practice{flex:1;min-height:0;display:grid;grid-template-columns:minmax(250px,340px) 1fr}
+.wlist{overflow:auto;border-right:1px solid var(--line);background:var(--panel)}
+.pane{overflow:auto;padding:22px 20px 28px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.p-head{text-align:center;max-width:560px}
+.p-head .hz{font-size:54px}
+.p-head .g{color:var(--muted);margin-top:4px}
+.charpick{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.charpick button{font-family:"Noto Serif SC","Songti SC",serif;font-size:26px;font-weight:700;width:54px;height:54px;border-radius:10px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+.charpick button[aria-pressed="true"]{border-color:var(--jade);box-shadow:inset 0 0 0 2px var(--jade)}
+.tzg{position:relative;background:var(--panel);border-radius:4px;box-shadow:var(--shadow)}
+.tzg svg.grid{position:absolute;inset:0;width:100%;height:100%}
+.tzg svg.grid *{stroke:var(--grid);fill:none;vector-effect:non-scaling-stroke}
+.tzg svg.grid .dash{stroke-dasharray:6 6}
+.tzg .target{position:absolute;inset:0}
+.modes{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.status{margin:0;font-weight:600;min-height:1.4em;text-align:center}
+.form{width:100%;max-width:660px;margin:0 auto;padding:22px 20px 40px;display:grid;gap:18px;align-content:start}
+.sheet .scroll{flex:1;min-height:0;overflow:auto}
+.form h3{margin:10px 0 -6px;font-size:18px;font-weight:700}
+.field label,.field .label{display:block;font-weight:700;margin-bottom:6px}
+.field .help{color:var(--muted);font-size:15px;margin:6px 0 0}
+.field input[type=text],.field input[type=password],.field input[type=number],.field select{width:100%;font-size:17px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);min-height:46px}
+.field .row{display:flex;gap:8px;align-items:center}
+.field .row input{flex:1}
+.check{display:flex !important;gap:10px;align-items:center;font-weight:600 !important}
+.check input{width:22px;height:22px;accent-color:var(--jade);flex:none}
+input[type=range]{width:100%;accent-color:var(--jade)}
+.radio-row{display:flex;gap:8px;flex-wrap:wrap}
+.radio-row label{display:inline-flex !important;gap:8px;align-items:center;padding:0 14px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font-weight:600;cursor:pointer;margin:0 !important}
+.radio-row input{accent-color:var(--jade);width:18px;height:18px}
+
+#busy{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(8,12,16,.55)}
+#busy.show{display:grid}
+.busy-card{background:var(--panel);color:var(--ink);padding:20px 26px;border-radius:16px;display:flex;gap:14px;align-items:center;font-size:18px;font-weight:600;box-shadow:var(--shadow)}
+.spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--jade);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--ink);color:var(--panel);padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:70;max-width:min(560px,calc(100vw - 32px));text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.act.show{pointer-events:auto}
+.toast-act{margin-left:10px;background:transparent;border:1.5px solid currentColor;color:inherit;border-radius:8px;padding:4px 12px;font:inherit;font-weight:700;cursor:pointer}
+
+@media (max-width:820px){
+  #side{position:fixed;right:0;top:0;bottom:0;z-index:35;box-shadow:var(--shadow);width:min(330px,88vw)}
+  #info{height:42vh}
+  .info-main,.info-main.is-sent{grid-template-columns:1fr;overflow:auto}
+  .ib{overflow:visible}
+  .practice{grid-template-columns:1fr;grid-template-rows:minmax(140px,34%) 1fr}
+  .wlist{border-right:0;border-bottom:1px solid var(--line)}
+}
+@media (prefers-reduced-motion: reduce){.fill,#toast{transition:none}.spin{animation-duration:2.5s}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand"><span class="seal" aria-hidden="true">读</span><span class="brand-name">Reading Desk</span></div>
+  <button class="streak" id="streak" type="button"></button>
+  <button class="btn" id="reviewBtn" type="button" hidden></button>
+  <div class="progress" aria-live="polite">
+    <div class="meta"><span id="pct">No pages yet</span><span id="goal"></span></div>
+    <div class="track" role="progressbar" aria-label="Progress through these pages" aria-valuemin="0" aria-valuemax="100" id="track"><div class="fill" id="fill"></div></div>
+  </div>
+  <div class="seg" id="viewSeg" role="group" aria-label="Zoom" hidden>
+    <button type="button" data-view="spread" aria-pressed="true">Both</button>
+    <button type="button" data-view="left" aria-pressed="false">Left</button>
+    <button type="button" data-view="right" aria-pressed="false">Right</button>
+  </div>
+  <button class="btn" id="finishBtn" type="button" hidden></button>
+  <button class="btn" id="detailsBtn" type="button" hidden></button>
+  <button class="btn" id="wordsBtn" type="button"></button>
+  <button class="btn icon-btn" id="settingsBtn" type="button" aria-label="Settings"></button>
+  <button class="btn primary" id="captureBtn" type="button"></button>
+</header>
+
+<div class="app" id="app">
+  <div class="col" id="col">
+    <section id="info" aria-live="polite" aria-label="Word details" hidden></section>
+    <div class="stage-wrap" id="stageWrap">
+    <main id="stage">
+      <div id="wrap">
+        <div id="page"><img id="img" alt="Photo of the open book" draggable="false"><div id="tints"></div><div id="hl"></div></div>
+      </div>
+      <div id="empty">
+        <div class="welcome">
+          <h1>翻开书，开始读</h1>
+          <p class="sub">Open your book and start reading.</p>
+          <p>Photograph two pages at a time. Tap any word for pinyin, meaning and sound. Double-tap to save it. Press and hold to translate the whole sentence.</p>
+          <div class="row">
+            <button class="btn primary" id="emptyCapture" type="button"></button>
+            <button class="btn" id="demoBtn" type="button">Try sample pages</button>
+          </div>
+          <div class="keynote" id="keyNote" hidden>Before photographing your own book, add your Google Cloud API key in <button class="linklike" id="keyNoteBtn" type="button">Settings</button>. The sample pages work without it.</div>
+        </div>
+      </div>
+    </main>
+    <button class="flip prev" id="prevBtn" type="button" aria-label="Previous pages" title="Previous pages" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="flip next" id="nextBtn" type="button" aria-label="Next pages" hidden></button>
+    <button class="counter" id="counter" type="button" title="Reorder or delete pages" hidden></button>
+    <div class="stagebar" id="stageBar" hidden>
+      <button class="btn" id="magBtn" type="button" aria-pressed="false"></button>
+      <button class="btn" id="lightBtn" type="button" aria-pressed="false"></button>
+      <button class="btn" id="tiltBtn" type="button"></button>
+    </div>
+    <div class="adjbar" id="adjBar" role="group" aria-label="Fix tilt" hidden>
+      <span class="lab">Turn each page until its lines of text run along the green lines</span>
+      <div class="adj" id="adj0"><span class="who">Left page</span><button class="btn" type="button" data-side="0" data-step="-0.1" aria-label="Turn left page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="0" aria-label="Left page tilt"><button class="btn" type="button" data-side="0" data-step="0.1" aria-label="Turn left page clockwise">⟳</button><output>0.0°</output></div>
+      <div class="adj" id="adj1"><span class="who">Right page</span><button class="btn" type="button" data-side="1" data-step="-0.1" aria-label="Turn right page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="1" aria-label="Right page tilt"><button class="btn" type="button" data-side="1" data-step="0.1" aria-label="Turn right page clockwise">⟳</button><output>0.0°</output></div>
+      <button class="btn" id="tiltReset" type="button">Reset</button>
+      <button class="btn" id="tiltCancel" type="button">Cancel</button>
+      <button class="btn primary" id="tiltDone" type="button">Done</button>
+    </div>
+    </div>
+  </div>
+  <aside id="side" aria-label="Saved words">
+    <div class="side-top">
+      <input id="lookupInput" type="text" lang="zh" placeholder="Look up a word" aria-label="Look up a word. Type it or handwrite it with your keyboard." autocomplete="off">
+      <button class="btn" id="lookupBtn" type="button">Look up</button>
+    </div>
+    <div class="side-head"><span id="sideCount">Saved words</span><span><button class="btn" id="practiceBtn" type="button">Practice</button> <button class="btn ghost" id="sideHide" type="button">Hide</button></span></div>
+    <div id="sideList"></div>
+  </aside>
+</div>
+
+<section class="sheet" id="capSheet" aria-label="Photograph pages">
+  <div class="sheet-bar"><h2>Photograph two pages</h2><button class="btn" id="capClose" type="button">Cancel</button></div>
+  <div class="cam">
+    <video id="video" playsinline muted autoplay></video>
+    <canvas id="reviewCanvas" hidden></canvas>
+    <div class="guide" id="guide"><span>Line up the spine with the center line</span></div>
+    <p class="cam-msg" id="camMsg" hidden></p>
+  </div>
+  <div class="cam-controls" id="liveCtl">
+    <button class="btn" id="pickBtn" type="button">Choose a photo</button>
+    <button class="shutter" id="shutter" type="button" aria-label="Take photo"></button>
+    <button class="btn" id="flipCamBtn" type="button">Switch camera</button>
+  </div>
+  <div class="cam-controls" id="reviewCtl" hidden>
+    <button class="btn" id="retakeBtn" type="button">Retake</button>
+    <button class="btn" id="rotBtn" type="button">Rotate</button>
+    <button class="btn" id="mirBtn" type="button">Mirror</button>
+    <button class="btn" id="straightBtn" type="button" aria-pressed="true">Straighten pages</button>
+    <button class="btn primary" id="readBtn" type="button">Read these pages</button>
+  </div>
+</section>
+
+<section class="sheet" id="pracSheet" aria-label="Writing practice">
+  <div class="sheet-bar">
+    <h2 id="pracTitle">Writing practice</h2>
+    <button class="btn" id="nextWordBtn" type="button">Practice next</button>
+    <button class="btn" id="exportBtn" type="button">Export</button>
+    <button class="btn" id="importBtn" type="button">Import</button>
+    <button class="btn" id="pracClose" type="button">Close</button>
+  </div>
+  <div class="practice"><div class="wlist" id="wlist"></div><div class="pane" id="pane"></div></div>
+</section>
+
+<section class="sheet" id="setSheet" aria-label="Settings">
+  <div class="sheet-bar"><h2>Settings</h2><button class="btn" id="setCancel" type="button">Cancel</button><button class="btn primary" id="setSave" type="button">Save settings</button></div>
+  <div class="scroll"><div class="form">
+    <h3>Reading</h3>
+    <div class="field">
+      <span class="label">Definitions</span>
+      <div class="radio-row">
+        <label><input type="radio" name="fDef" value="en"> English</label>
+        <label><input type="radio" name="fDef" value="zh"> 中文 (from AI)</label>
+      </div>
+      <p class="help">Chinese definitions come from the AI helper below. English comes from the CC-CEDICT dictionary.</p>
+    </div>
+    <div class="field">
+      <span class="label">Word details panel</span>
+      <div class="radio-row">
+        <label><input type="radio" name="fInfoPos" value="top"> Above the page</label>
+        <label><input type="radio" name="fInfoPos" value="left"> Left of the page</label>
+      </div>
+      <p class="help">The Details button in the top bar shows or hides it. On small screens it always sits above the page.</p>
+    </div>
+    <div class="field"><label class="check"><input id="fSentPy" type="checkbox"> Show pinyin over sentences</label></div>
+    <div class="field"><label class="check"><input id="fColor" type="checkbox"> Give each word on the page its own color</label></div>
+    <div class="field"><label class="check"><input id="fAuto" type="checkbox"> Speak words and sentences when I tap them</label></div>
+    <div class="field">
+      <span class="label">Characters in your books</span>
+      <div class="radio-row">
+        <label><input type="radio" name="fScript" value="simplified"> Simplified</label>
+        <label><input type="radio" name="fScript" value="traditional"> Traditional</label>
+      </div>
+    </div>
+    <div class="field">
+      <label for="fGoal">Daily goal (pages)</label>
+      <input id="fGoal" type="number" min="1" max="60" step="1" inputmode="numeric">
+      <p class="help">Finishing a photo of two pages counts as 2 pages.</p>
+    </div>
+
+    <h3>Photos</h3>
+    <div class="field">
+      <span class="label">Camera</span>
+      <div class="radio-row">
+        <label><input type="radio" name="fFacing" value="environment"> Back camera</label>
+        <label><input type="radio" name="fFacing" value="user"> Front camera</label>
+      </div>
+    </div>
+    <div class="field"><label class="check"><input id="fStraight" type="checkbox"> Straighten new photos and crop to the text</label></div>
+    <p class="help" style="margin:-8px 0 0">For shadowy photos, turn on Even lighting at the bottom of the reading screen. It only changes how the photo looks.</p>
+
+    <h3>Google Cloud</h3>
+    <div class="field">
+      <label for="fKey">Google Cloud API key</label>
+      <div class="row"><input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your key"><button class="btn" data-show="fKey" type="button">Show</button></div>
+      <p class="help">Kept only on this device. Turn on the Cloud Vision API (reading pages) and the Cloud Translation API (sentences) for this key’s project.</p>
+    </div>
+
+    <h3>AI helper</h3>
+    <div class="field">
+      <label for="fAiKey">Gemini API key (optional)</label>
+      <div class="row"><input id="fAiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your key from Google AI Studio"><button class="btn" data-show="fAiKey" type="button">Show</button></div>
+      <p class="help">Used for Ask AI, sentence explanations, and Chinese definitions. Create one at aistudio.google.com under API keys. A Google Cloud key restricted to Vision and Translation won’t work for Gemini.</p>
+    </div>
+    <div class="field">
+      <label for="fAiModel">Gemini model</label>
+      <input id="fAiModel" type="text" autocomplete="off" spellcheck="false">
+      <p class="help">Google renames models from time to time. If AI stops working, check the current model list in Google’s Gemini API docs.</p>
+    </div>
+
+    <h3>Voice</h3>
+    <div class="field">
+      <label for="fVoice">Reading voice</label>
+      <select id="fVoice"></select>
+      <p class="help" id="voiceHelp"></p>
+    </div>
+    <div class="field">
+      <label for="fRate">Speech speed <span id="fRateVal"></span></label>
+      <input id="fRate" type="range" min="0.5" max="1.2" step="0.05">
+    </div>
+  </div></div>
+</section>
+
+<section class="sheet" id="statSheet" aria-label="Your reading">
+  <div class="sheet-bar"><h2>Your reading</h2><button class="btn" id="statClose" type="button">Close</button></div>
+  <div class="scroll"><div class="stats" id="stats"></div></div>
+</section>
+<section class="sheet" id="pagesSheet" aria-label="Your pages">
+  <div class="sheet-bar"><h2 id="pagesTitle">Your pages</h2><button class="btn" id="pagesClose" type="button">Close</button></div>
+  <div class="scroll"><div class="pages-help"><p class="note">Tap a photo to open it. Use the arrows, Move, or sort to change the order you flip through them.</p><div class="sortrow"><span class="note">Sort by</span><button class="btn" id="sortPage" type="button">Book page number</button><button class="btn" id="sortDate" type="button">Date taken</button></div></div><div class="pgrid" id="pgrid"></div></div>
+</section>
+<section class="sheet" id="revSheet" aria-label="Daily review">
+  <div class="sheet-bar"><h2>Daily review</h2><span class="note" id="revCount"></span><button class="btn" id="revClose" type="button">Close</button></div>
+  <div class="scroll"><div class="rev" id="rev"></div></div>
+</section>
+<div id="loupe" aria-hidden="true"></div>
+<div id="busy"><div class="busy-card"><div class="spin" aria-hidden="true"></div><span id="busyMsg">Reading the pages…</span></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="filePick" accept="image/*" hidden>
+<input type="file" id="importPick" accept="application/json,.json" hidden>
+
+<script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.25.0/dist/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>
+<script>
+(() => {
+'use strict';
+
+/* ================= Basics ================= */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const range = (a, b) => { const r = []; for (let i = a; i < b; i++) r.push(i); return r; };
+const nextFrame = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
+const ICON = {
+  camera:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3.2l1.6-2.5h6.4L16.8 8H20v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13.2" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+  speaker:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.6 7.6 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  bookmark:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-3.8-5.5 3.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>',
+  brush:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5l4 4L9 19H5v-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12.5 7.5l4 4" stroke="currentColor" stroke-width="2"/></svg>',
+  sliders:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+  check:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  flame:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c.6 3.6 5.6 5.4 5.6 10.6A5.6 5.6 0 0 1 12 19a5.6 5.6 0 0 1-5.6-5.6c0-2.6 1.4-4 2.2-5.8.9 1.2 1.6 1.9 2.6 2.3.4-2.3.4-4.4.8-7.1z" fill="currentColor"/></svg>',
+  panel:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 4.5v15" stroke="currentColor" stroke-width="2"/></svg>',
+  loupe:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 15l5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  sun:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  tilt:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l16-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 3"/><path d="M16 4a6 6 0 0 1 4 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20.5 6.5l-.5 3-3-.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  cards:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="12" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 3.5h10a2 2 0 0 1 2 2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  back:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  spark:'<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" fill="currentColor"/></svg>'
+};
+
+/* ================= Storage ================= */
+const LS = { settings:'rd.settings', words:'rd.words', stats:'rd.stats', tcache:'rd.tcache', lex:'rd.lex', ai:'rd.ai', known:'rd.known' };
+const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const DEFAULTS = {
+  apiKey:'', aiKey:'', aiModel:'gemini-3.8-flash',
+  rotate:0, mirror:false, facing:'environment', straighten:true, lighting:false,
+  rate:0.85, autoplay:true, goal:4, script:'simplified', voiceURI:'',
+  defLang:'en', sentPinyin:true, colorWords:false, sideOpen:null, infoOpen:true, infoPos:'top'
+};
+function idbOpen() {
+  return new Promise((res, rej) => { const r = indexedDB.open('reading-desk', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+}
+async function idbGet(k) { try { const db = await idbOpen(); return await new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); } catch (e) { return null; } }
+async function idbDel(k) { try { const db = await idbOpen(); await new Promise((res, rej) => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').delete(k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); } catch (e) {} }
+async function idbSet(k, v) { try { const db = await idbOpen(); await new Promise((res, rej) => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); }); return true; } catch (e) { return false; } }
+
+const storedSettings = load(LS.settings, {});
+const S = {
+  settings:{ ...DEFAULTS, ...storedSettings },
+  words:load(LS.words, []), stats:load(LS.stats, { days:{} }),
+  tcache:load(LS.tcache, {}), lex:load(LS.lex, {}), ai:load(LS.ai, {}), known:load(LS.known, {}), mt:{},
+  spread:null, model:null, imgW:0, imgH:0, imgURL:null, view:'spread',
+  sel:null, info:null,
+  dictS:null, dictT:null, dictState:'loading', lexMax:0,
+  voices:[], warnedVoice:false,
+  stream:null, raw:null, revRot:0, revMir:false,
+  writer:null, practiceWord:null, practiceChar:0, wake:null,
+  index:[], mag:false, shownURL:null, revStraight:true
+};
+if (!S.stats.days) S.stats.days = {};
+if ((storedSettings.v || 0) < 3) { S.settings.colorWords = false; S.settings.v = 3; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
+if (S.settings.aiModel === 'gemini-3.1-flash-lite') { S.settings.aiModel = DEFAULTS.aiModel; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
+// Each saved word keeps its own underline color.
+const MARK_COLORS = ['#D99A00', '#2B6FD6', '#D6336C', '#1E9A50', '#7B4BD1', '#E2600B', '#0F9AA0'];
+S.words.slice().reverse().forEach((w, i) => { if (w.c == null) w.c = i % MARK_COLORS.length; });
+const nextColor = () => ((S.words[0]?.c ?? -1) + 1) % MARK_COLORS.length;
+const markColor = t => { const w = S.words.find(x => x.w === t); return w ? MARK_COLORS[(w.c || 0) % MARK_COLORS.length] : null; };
+if (S.settings.sideOpen === null) S.settings.sideOpen = innerWidth >= 1000;
+const saveSettings = () => store(LS.settings, S.settings);
+const saveWords = () => store(LS.words, S.words);
+const saveStats = () => store(LS.stats, S.stats);
+const saveLex = () => { store(LS.lex, S.lex); computeLexMax(); };
+function computeLexMax() { S.lexMax = Object.keys(S.lex).reduce((m, k) => { const n = Array.from(k).length; return n >= 2 ? Math.max(m, n) : m; }, 0); }
+computeLexMax();
+function cacheAI(k, v) { S.ai[k] = v; const keys = Object.keys(S.ai); if (keys.length > 300) delete S.ai[keys[0]]; store(LS.ai, S.ai); }
+
+/* ================= Dates, streaks ================= */
+const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function todayStats() { const k = dayKey(); if (!S.stats.days[k]) S.stats.days[k] = { pages:0, lookups:0 }; return S.stats.days[k]; }
+function streak() {
+  const has = k => activeDay(S.stats.days[k]);
+  const d = new Date(); let n = 0;
+  if (!has(dayKey(d))) d.setDate(d.getDate() - 1);
+  while (has(dayKey(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+
+/* ================= Pinyin helpers ================= */
+const MARKS = { a:'āáǎà', e:'ēéěè', i:'īíǐì', o:'ōóǒò', u:'ūúǔù', 'ü':'ǖǘǚǜ' };
+function numSyl(s) {
+  const m = /^([A-Za-zÜü:]+)([1-5])$/.exec(s);
+  if (!m) return s.replace(/u:/g, 'ü').replace(/U:/g, 'Ü');
+  let syl = m[1].replace(/u:/g, 'ü').replace(/U:/g, 'Ü').replace(/v/g, 'ü').replace(/V/g, 'Ü');
+  const tone = +m[2]; if (tone === 5) return syl;
+  const low = syl.toLowerCase();
+  let idx = low.indexOf('a'); if (idx < 0) idx = low.indexOf('e');
+  if (idx < 0 && low.includes('ou')) idx = low.indexOf('o');
+  if (idx < 0) for (let i = low.length - 1; i >= 0; i--) if ('aeiouü'.includes(low[i])) { idx = i; break; }
+  if (idx < 0) return syl;
+  let mk = MARKS[low[idx]][tone - 1]; if (syl[idx] !== low[idx]) mk = mk.toUpperCase();
+  return syl.slice(0, idx) + mk + syl.slice(idx + 1);
+}
+const numToMarks = p => String(p || '').split(/\s+/).filter(Boolean).map(numSyl).join(' ');
+function toneClass(py) {
+  const n = String(py || '').normalize('NFD');
+  if (n.includes('\u0304')) return 't1'; if (n.includes('\u0301')) return 't2';
+  if (n.includes('\u030C')) return 't3'; if (n.includes('\u0300')) return 't4'; return 't5';
+}
+const plain = p => String(p || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+const CJK_RE = /[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]|[\uD840-\uD87E][\uDC00-\uDFFF]/;
+const isCJK = ch => CJK_RE.test(ch);
+const hasCJK = s => CJK_RE.test(s);
+
+/* ================= Dictionary (CC-CEDICT) ================= */
+const DICT_URL = 'https://cdn.jsdelivr.net/npm/cedict-json@1.3.20251213';
+function parseArr(t) {
+  t = t.trim();
+  try {
+    if (t[0] === '[') { const a = JSON.parse(t); return Array.isArray(a) && a.length > 1000 ? a : null; }
+    const i = t.indexOf('['), j = t.lastIndexOf(']'); if (i < 0 || j < i) return null;
+    const a = JSON.parse(t.slice(i, j + 1)); return Array.isArray(a) && a.length > 1000 ? a : null;
+  } catch (e) { return null; }
+}
+async function fetchArr(url) { try { const r = await fetch(url); if (!r.ok) return null; return parseArr(await r.text()); } catch (e) { return null; } }
+async function loadDict() {
+  S.dictState = 'loading';
+  let arr = await fetchArr(DICT_URL);
+  if (!arr) for (const p of ['/dist/index.json', '/index.json', '/cedict.json', '/data.json', '/dist/cedict.json']) { arr = await fetchArr(DICT_URL + p); if (arr) break; }
+  if (!arr) { try { const mod = await import(DICT_URL + '/+esm'); const d = mod.default ?? mod; arr = Array.isArray(d) ? d : null; } catch (e) { arr = null; } }
+  if (!arr) { S.dictState = 'failed'; toast('The dictionary didn’t load. Word meanings will use Google Translate when your key is set.', 6000); return; }
+  const dS = new Map(), dT = new Map();
+  for (const e of arr) {
+    if (!e || !e.simplified) continue;
+    const ent = { s:e.simplified, t:e.traditional || e.simplified, p:e.pinyin || '', e:e.english || e.definitions || [] };
+    if (!Array.isArray(ent.e)) ent.e = [String(ent.e)];
+    (dS.get(ent.s) || dS.set(ent.s, []).get(ent.s)).push(ent);
+    if (ent.t !== ent.s) (dT.get(ent.t) || dT.set(ent.t, []).get(ent.t)).push(ent);
+  }
+  S.dictS = dS; S.dictT = dT; S.dictState = 'ready';
+  if (S.spread) { rebuild(); if (S.info) renderInfo(); }
+}
+const lookup = w => (S.dictS && (S.dictS.get(w) || S.dictT.get(w))) || [];
+const hasWord = w => !!(S.dictS && (S.dictS.has(w) || S.dictT.has(w)));
+const isVariant = d => /^(old |archaic |ancient |Japanese |Korean )?variant of|^see [^ ]/i.test(d);
+function rankEntries(entries, ctxPy) {
+  const ctx = String(ctxPy || '').toLowerCase().trim(), ctxPlain = plain(ctxPy);
+  return entries.map((e, i) => {
+    const m = numToMarks(e.p); let sc = 0;
+    if (ctx && m.toLowerCase() === ctx) sc += 4; else if (ctxPlain && plain(m) === ctxPlain) sc += 2;
+    if (/^[A-Z]/.test(e.p)) sc -= 1;
+    if (e.e.length && e.e.every(isVariant)) sc -= 3;
+    return { e, m, sc, i };
+  }).sort((a, b) => b.sc - a.sc || a.i - b.i);
+}
+function cleanDef(d) {
+  const trad = S.settings.script === 'traditional';
+  return String(d).replace(/CL:/g, 'measure word: ')
+    .replace(/([^\s|\[\],;:]+)\|([^\s|\[\],;:]+)\[([^\]]+)\]/g, (_, t, s, p) => `${trad ? t : s} (${numToMarks(p)})`)
+    .replace(/([\u3400-\u9FFF]+)\|([\u3400-\u9FFF]+)/g, (_, t, s) => trad ? t : s)
+    .replace(/([\u3400-\u9FFF]+)\[([^\]]+)\]/g, (_, s, p) => `${s} (${numToMarks(p)})`);
+}
+const usefulDefs = e => { const d = e.e.filter(x => !isVariant(x)); return (d.length ? d : e.e).map(cleanDef); };
+
+/* ================= Character parts (Make Me a Hanzi) + the other script form (CC-CEDICT) ================= */
+const PARTS_URLS = ['https://cdn.jsdelivr.net/gh/skishore/makemeahanzi@master/dictionary.txt', 'https://raw.githubusercontent.com/skishore/makemeahanzi/master/dictionary.txt'];
+async function loadParts() {
+  S.partsState = 'loading';
+  for (const url of PARTS_URLS) {
+    try {
+      const r = await fetch(url); if (!r.ok) continue;
+      const text = await r.text(), map = new Map();
+      for (const line of text.split('\n')) { if (!line.trim()) continue; try { const o = JSON.parse(line); if (o.character) map.set(o.character, o); } catch (e) {} }
+      if (map.size > 1000) { S.parts = map; S.partsState = 'ready'; if (S.info) renderInfo(); return; }
+    } catch (e) {}
+  }
+  S.partsState = 'failed';
+}
+const otherScript = () => S.settings.script === 'traditional' ? 'simplified' : 'traditional';
+function altChar(c, py) {
+  const r = rankEntries(lookup(c), py || '')[0];
+  if (!r) return c;
+  return S.settings.script === 'traditional' ? r.e.s : r.e.t;
+}
+// Traditional form for a simplified word (or simplified for a traditional book). Empty if the same.
+function altForm(text, pys) {
+  if (!hasCJK(text) || S.dictState !== 'ready') return '';
+  const r = rankEntries(lookup(text), (pys || []).join(' '))[0];
+  let out = r ? (S.settings.script === 'traditional' ? r.e.s : r.e.t) : Array.from(text).map((c, i) => isCJK(c) ? altChar(c, pys?.[i]) : c).join('');
+  if (Array.from(out).length !== Array.from(text).length) out = Array.from(text).map((c, i) => isCJK(c) ? altChar(c, pys?.[i]) : c).join('');
+  return out !== text ? out : '';
+}
+const altLabel = () => S.settings.script === 'traditional' ? 'Simplified' : 'Traditional';
+function partGloss(c) {
+  const d = S.parts?.get(c);
+  if (d?.definition) return d.definition.split(/[;,]/)[0].trim();
+  const r = rankEntries(lookup(c), '')[0];
+  return r ? usefulDefs(r.e)[0]?.split(/[;,]/)[0] || '' : '';
+}
+function partPy(c) {
+  const d = S.parts?.get(c);
+  if (d?.pinyin?.length) return d.pinyin[0];
+  const r = rankEntries(lookup(c), '')[0];
+  return r ? r.m.toLowerCase() : '';
+}
+// Each part gets small pinyin on top, then its meaning.
+const compHTML = (c, gloss) => { const py = partPy(c); return `<span class="cp"><ruby class="cpc" lang="zh">${esc(c)}${py ? `<rt>${esc(py)}</rt>` : ''}</ruby>${gloss ? ` ${esc(gloss)}` : ''}</span>`; };
+// One line describing what a character is made of, or '' if nothing useful is known.
+function partsLine(ch) {
+  const d = S.parts?.get(ch); if (!d) return '';
+  const ety = d.etymology || {};
+  const comps = Array.from(String(d.decomposition || '')).filter(x => isCJK(x) || /[\u2E80-\u2FDF\u31C0-\u31EF]/.test(x)).filter(x => x !== ch);
+  if (ety.type === 'pictophonetic' && ety.semantic && ety.phonetic) {
+    return `<span class="cpr">${compHTML(ety.semantic, ety.hint || partGloss(ety.semantic))} <span class="role">meaning</span></span> + <span class="cpr">${compHTML(ety.phonetic, partGloss(ety.phonetic))} <span class="role">sound</span></span>`;
+  }
+  // characters mentioned inside the origin note get small pinyin on top too
+  const hint = ety.hint ? `<span class="hint">${esc(ety.hint).replace(/[\u2E80-\u2FDF\u31C0-\u31EF\u3400-\u9FFF\uF900-\uFAFF]/g, x => { const py = partPy(x); return `<ruby class="cpc" lang="zh">${x}${py ? `<rt>${esc(py)}</rt>` : ''}</ruby>`; })}</span>` : '';
+  const kind = ety.type === 'pictographic' ? 'Picture' : ety.type === 'ideographic' ? 'Idea' : '';
+  const list = comps.map(x => compHTML(x, partGloss(x))).join(' + ');
+  if (!hint && !list) return '';
+  return `${kind ? `<span class="role">${kind}</span> ` : ''}${hint}${hint && list ? '<br>' : ''}${list}`;
+}
+
+/* ================= Segmentation + model ================= */
+const segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('zh', { granularity:'word' }) : null;
+function fmm(chs, a, b, push) {
+  let i = a;
+  while (i < b) { let found = 1; for (let L = Math.min(8, b - i); L > 1; L--) if (hasWord(chs.slice(i, i + L).join(''))) { found = L; break; } push(i, i + found); i += found; }
+}
+function segmentPlain(chs) {
+  const out = [], push = (a, b) => { if (b > a) out.push([a, b]); };
+  const ready = S.dictState === 'ready';
+  if (segmenter) {
+    let str = ''; const off = [];
+    chs.forEach((c, i) => { for (let k = 0; k < c.length; k++) off.push(i); str += c; });
+    off.push(chs.length);
+    for (const seg of segmenter.segment(str)) {
+      if (!seg.isWordLike) continue;
+      const a = off[seg.index], b = off[seg.index + seg.segment.length], part = chs.slice(a, b);
+      if (part.every(c => !isCJK(c))) { push(a, b); continue; }
+      if (part.every(isCJK)) { if (ready && b - a > 1 && !hasWord(part.join(''))) fmm(chs, a, b, push); else push(a, b); continue; }
+      let i = a;
+      while (i < b) { const cj = isCJK(chs[i]); let j = i; while (j < b && isCJK(chs[j]) === cj) j++; if (cj && ready) fmm(chs, i, j, push); else push(i, j); i = j; }
+    }
+  } else {
+    let i = 0;
+    while (i < chs.length) {
+      if (isCJK(chs[i])) { let j = i; while (j < chs.length && isCJK(chs[j])) j++; if (ready) fmm(chs, i, j, push); else for (let k = i; k < j; k++) push(k, k + 1); i = j; }
+      else if (/[A-Za-z0-9]/.test(chs[i])) { let j = i; while (j < chs.length && /[A-Za-z0-9]/.test(chs[j])) j++; push(i, j); i = j; }
+      else i++;
+    }
+  }
+  return out;
+}
+// Your own words and names (from "Make one word" / "Mark as name") win over the dictionary.
+function segmentChars(chs) {
+  const out = [];
+  const gap = (a, b) => { if (b > a) for (const [x, y] of segmentPlain(chs.slice(a, b))) out.push([a + x, a + y]); };
+  if (!S.lexMax) { gap(0, chs.length); return out; }
+  let i = 0, start = 0;
+  while (i < chs.length) {
+    let found = 0;
+    for (let L = Math.min(S.lexMax, chs.length - i); L >= 2; L--) if (S.lex[chs.slice(i, i + L).join('')]) { found = L; break; }
+    if (found) { gap(start, i); out.push([i, i + found]); i += found; start = i; } else i++;
+  }
+  gap(start, chs.length);
+  return out;
+}
+function pinyinFor(chs) {
+  const out = new Array(chs.length).fill(''), P = window.pinyinPro;
+  let i = 0;
+  while (i < chs.length) {
+    if (!isCJK(chs[i])) { i++; continue; }
+    let j = i; while (j < chs.length && isCJK(chs[j])) j++;
+    const run = chs.slice(i, j); let arr = null;
+    if (P) { try { arr = P.pinyin(run.join(''), { type:'array', toneSandhi:false }); if (!Array.isArray(arr) || arr.length !== run.length) arr = null; } catch (e) { arr = null; } }
+    if (!arr) arr = run.map(c => { if (P) { try { const p = P.pinyin(c); if (p && p !== c) return p; } catch (e) {} } const r = rankEntries(lookup(c), '')[0]; return r ? r.m.toLowerCase() : ''; });
+    for (let k = 0; k < run.length; k++) out[i + k] = (arr[k] && arr[k] !== run[k]) ? arr[k] : '';
+    i = j;
+  }
+  return out;
+}
+const TERM = new Set(['。', '！', '？', '!', '?', '；', ';', '…']);
+const CLOSE = new Set(['”', '’', '」', '』', '）', ')', '】', '》', '"', '〕']);
+function buildModel(raw) {
+  const chars = raw.map(c => ({ ch:c.ch, box:c.box, para:c.para, line:c.line, s:-1, w:-1, py:'' }));
+  const sentences = [], words = [];
+  let i = 0;
+  while (i < chars.length) {
+    const para = chars[i].para; let j = i;
+    while (j < chars.length && chars[j].para === para) j++;
+    let start = i;
+    for (let k = i; k < j; k++) if (TERM.has(chars[k].ch)) {
+      let e = k + 1; while (e < j && (TERM.has(chars[e].ch) || CLOSE.has(chars[e].ch))) e++;
+      sentences.push({ a:start, b:e }); start = e; k = e - 1;
+    }
+    if (start < j) sentences.push({ a:start, b:j });
+    i = j;
+  }
+  sentences.forEach((s, si) => {
+    const chs = chars.slice(s.a, s.b).map(c => c.ch);
+    s.text = chs.join('').trim(); s.hasWords = chs.some(isCJK);
+    const py = pinyinFor(chs);
+    for (let k = s.a; k < s.b; k++) { chars[k].s = si; chars[k].py = py[k - s.a]; }
+    for (const [a, b] of segmentChars(chs)) {
+      const wi = words.length, idx = [];
+      for (let k = s.a + a; k < s.a + b; k++) { idx.push(k); chars[k].w = wi; }
+      words.push({ text:chs.slice(a, b).join(''), idx, s:si });
+    }
+  });
+  return { chars, sentences, words };
+}
+function rebuild() { if (!S.spread) return; S.model = buildModel(displayChars(S.spread)); drawTints(); drawHighlights(); updateProgress(); }
+
+/* ================= Google Cloud + AI ================= */
+function friendlyError(e) {
+  const m = String(e?.message || e);
+  if (m === 'STORAGE_FULL') return 'The tablet’s storage for this app is full. Delete some old photos in Your pages (tap “Photo 1 of …” at the bottom left), then try again.';
+  if (m === 'NOKEY') return 'Add your Google Cloud API key in Settings to translate sentences.';
+  if (m === 'NOAIKEY') return 'Add a Gemini key from Google AI Studio (aistudio.google.com) in Settings.';
+  if (/generativelanguage/i.test(m) && /are blocked|API_KEY_SERVICE_BLOCKED/i.test(m)) return 'Your Google Cloud key can’t be used for Gemini. Create a key in Google AI Studio (aistudio.google.com, API keys) and paste it into Settings under Gemini API key.';
+  if (/API key not valid|API_KEY_INVALID/i.test(m)) return 'Google rejected the API key. Check it in Settings.';
+  if (/billing/i.test(m)) return 'Turn on billing for your Google Cloud project, then try again.';
+  if (/are blocked|API_KEY_SERVICE_BLOCKED/i.test(m)) { const api = /generativelanguage/i.test(m) ? 'Generative Language API (Gemini)' : /texttospeech/i.test(m) ? 'Cloud Text-to-Speech API' : /translat/i.test(m) ? 'Cloud Translation API' : /vision/i.test(m) ? 'Cloud Vision API' : 'this API'; return `Your API key isn’t allowed to use the ${api}. In Google Cloud, go to APIs & Services, then Credentials, edit the key, and add it under API restrictions. Or paste a separate Gemini key in Settings.`; }
+  if (/has not been used|is disabled|SERVICE_DISABLED|not been enabled/i.test(m)) return 'Turn on this API in your Google Cloud project, wait a minute, then try again. Google said: ' + m.slice(0, 140);
+  if (/referer|referrer/i.test(m)) return 'Your API key’s website restriction doesn’t include this page’s address. Add it in Google Cloud.';
+  if (/not found|is not supported/i.test(m) && /model/i.test(m)) return 'That Gemini model name isn’t available. Change it in Settings.';
+  if (/Failed to fetch|NetworkError|Load failed/i.test(m)) return 'Couldn’t reach Google. Check your internet connection.';
+  return m;
+}
+async function googlePost(url, body, key) {
+  const res = await fetch(url + (url.includes('?') ? '&' : '?') + 'key=' + encodeURIComponent(key), { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(body) });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok || j.error) throw new Error(j.error?.message || ('Google returned error ' + res.status));
+  return j;
+}
+async function visionOCR(b64) {
+  if (!S.settings.apiKey) throw new Error('Add your Google Cloud API key in Settings first.');
+  const j = await googlePost('https://vision.googleapis.com/v1/images:annotate', {
+    requests:[{ image:{ content:b64 }, features:[{ type:'DOCUMENT_TEXT_DETECTION' }], imageContext:{ languageHints:[S.settings.script === 'traditional' ? 'zh-Hant' : 'zh'] } }]
+  }, S.settings.apiKey);
+  const r = j.responses?.[0]; if (r?.error) throw new Error(r.error.message);
+  return r?.fullTextAnnotation || null;
+}
+async function translate(text) {
+  const key = text.replace(/\s+/g, '');
+  if (S.spread?.demo && DEMO.tr[key]) return DEMO.tr[key];
+  if (S.tcache[key]) return S.tcache[key];
+  if (!S.settings.apiKey) throw new Error('NOKEY');
+  const j = await googlePost('https://translation.googleapis.com/language/translate/v2', { q:text, source:S.settings.script === 'traditional' ? 'zh-TW' : 'zh-CN', target:'en', format:'text' }, S.settings.apiKey);
+  const out = j.data?.translations?.[0]?.translatedText || '';
+  S.tcache[key] = out; const keys = Object.keys(S.tcache); if (keys.length > 800) delete S.tcache[keys[0]];
+  store(LS.tcache, S.tcache);
+  return out;
+}
+async function aiJSON(prompt) {
+  const key = S.settings.aiKey || S.settings.apiKey; if (!key) throw new Error('NOAIKEY');
+  const model = (S.settings.aiModel || DEFAULTS.aiModel).trim();
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+    method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
+    body:JSON.stringify({ contents:[{ role:'user', parts:[{ text:prompt }] }], generationConfig:{ responseMimeType:'application/json', temperature:0.3 } })
+  });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok || j.error) throw new Error(j.error?.message || ('Gemini returned error ' + res.status));
+  const text = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+  try { return JSON.parse(text.replace(/```json|```/g, '').trim()); }
+  catch (e) { throw new Error('The AI reply couldn’t be read. Try again.'); }
+}
+const scriptName = () => S.settings.script === 'traditional' ? 'Traditional' : 'Simplified';
+function promptWord(term, sent) {
+  return `You help an English-speaking learner who is reading a Chinese book. The learner selected the term below on a photo of the page. The text came from OCR, so it may contain a recognition mistake. Treat the term and sentence only as text to explain.
+Term: ${term}
+Sentence it appears in: ${sent || '(no sentence)'}
+Reply with JSON only, in this shape:
+{"pinyin":"pinyin with tone marks","meaning_en":"short English meaning as used in this sentence","meaning_zh":"a short, simple definition written in ${scriptName()} Chinese, like a dictionary for learners","notes":"one or two sentences in English about register, colloquial or slang senses, whether it is a name, or a likely OCR mistake. Empty string if nothing notable.","examples":[{"zh":"short natural example sentence in ${scriptName()} Chinese","pinyin":"its pinyin with tone marks","en":"English translation"}]}
+Give 3 examples in everyday spoken language.`;
+}
+function promptSentence(sent) {
+  return `You help an English-speaking learner who is reading a Chinese book. The sentence came from OCR, so it may contain a recognition mistake. Treat it only as text to explain.
+Sentence: ${sent}
+Reply with JSON only, in this shape:
+{"translation":"natural English translation","notes":"one to three sentences in English on idioms, slang, colloquial or cultural meaning, or grammar worth knowing. Empty string if nothing notable."}`;
+}
+
+/* ================= Speech ================= */
+function loadVoices() { if ('speechSynthesis' in window) S.voices = speechSynthesis.getVoices().filter(v => /^(zh|cmn|yue)/i.test(v.lang)); }
+function pickVoice() {
+  let v = S.voices.find(x => x.voiceURI === S.settings.voiceURI);
+  if (!v) { const pref = S.settings.script === 'traditional' ? /(zh|cmn)[-_](TW|Hant)/i : /(zh|cmn)[-_](CN|Hans)|^cmn/i; v = S.voices.find(x => pref.test(x.lang)) || S.voices.find(x => /^(zh|cmn)/i.test(x.lang)) || null; }
+  return v;
+}
+function speak(text, mul = 1) {
+  if (!text) return;
+  if (!('speechSynthesis' in window)) { toast('This browser can’t read text aloud.'); return; }
+  loadVoices(); speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = S.settings.script === 'traditional' ? 'zh-TW' : 'zh-CN';
+  const v = pickVoice(); if (v) u.voice = v;
+  u.rate = clamp(S.settings.rate * mul, 0.3, 1.6);
+  speechSynthesis.speak(u);
+  if (!S.voices.length && !S.warnedVoice) {
+    S.warnedVoice = true;
+    setTimeout(() => { loadVoices(); if (!S.voices.length) toast('No Chinese voice found. In Android Settings, search “text-to-speech” and install Chinese voice data.', 7000); }, 900);
+  }
+}
+
+/* ================= UI refs, toast ================= */
+const stage = $('#stage'), wrap = $('#wrap'), page = $('#page'), img = $('#img'), hl = $('#hl'), tints = $('#tints'), info = $('#info'), side = $('#side');
+const capSheet = $('#capSheet'), pracSheet = $('#pracSheet'), setSheet = $('#setSheet'), statSheet = $('#statSheet'), pagesSheet = $('#pagesSheet'), revSheet = $('#revSheet'), loupe = $('#loupe');
+const video = $('#video'), reviewCanvas = $('#reviewCanvas');
+let toastTimer = null;
+function toast(msg, ms = 3200, action) {
+  const t = $('#toast'); t.textContent = msg;
+  t.classList.toggle('act', !!action);
+  if (action) { const b = document.createElement('button'); b.type = 'button'; b.className = 'toast-act'; b.textContent = action.label; b.onclick = () => { t.classList.remove('show'); action.fn(); }; t.append(' ', b); }
+  t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms);
+}
+function busy(msg) { const b = $('#busy'); if (msg) { $('#busyMsg').textContent = msg; b.classList.add('show'); } else b.classList.remove('show'); }
+const openSheet = el => el.classList.add('open');
+const closeSheet = el => el.classList.remove('open');
+const anySheet = () => [capSheet, pracSheet, setSheet, statSheet, pagesSheet, revSheet].some(s => s.classList.contains('open'));
+
+/* ================= Header ================= */
+function updateBar() {
+  const n = S.words.length;
+  $('#wordsBtn').innerHTML = `${ICON.bookmark}<span class="lbl">Words</span> <span class="badge">${n}</span>`;
+  $('#wordsBtn').setAttribute('aria-pressed', String(!!S.settings.sideOpen));
+  $('#wordsBtn').setAttribute('aria-label', `Saved words: ${n}. Show or hide the list.`);
+  $('#settingsBtn').innerHTML = ICON.sliders;
+  const due = dueCount(), rb = $('#reviewBtn');
+  rb.hidden = !S.words.length;
+  rb.innerHTML = `${ICON.cards}<span class="lbl">Review</span>${due ? ` <span class="badge">${due}</span>` : ''}`;
+  rb.setAttribute('aria-label', due ? `Daily review: ${due} words due` : 'Daily review: nothing due');
+  rb.classList.toggle('nudge', due > 0 && !todayStats().reviewed);
+  $('#captureBtn').innerHTML = `${ICON.camera}<span class="lbl">New photo</span>`;
+  $('#emptyCapture').innerHTML = `${ICON.camera}Photograph pages`;
+  $('#viewSeg').hidden = !S.spread; $('#finishBtn').hidden = !S.spread;
+  $('#keyNote').hidden = !!S.settings.apiKey;
+  applyPanels();
+}
+function applyPanels() {
+  const left = S.settings.infoPos === 'left' && innerWidth >= 820, app = $('#app'), col = $('#col');
+  document.body.classList.toggle('info-left', left);
+  if (left) { if (info.parentElement !== app) app.insertBefore(info, col); }
+  else if (info.parentElement !== col) col.insertBefore(info, $('#stageWrap'));
+  info.hidden = !(S.spread || S.info) || !S.settings.infoOpen;
+  side.hidden = !S.settings.sideOpen;
+  const db = $('#detailsBtn');
+  db.hidden = !S.spread;
+  db.innerHTML = `${ICON.panel}<span class="lbl">Details</span>`;
+  db.title = S.settings.infoOpen ? 'Hide word details' : 'Show word details';
+  db.setAttribute('aria-pressed', String(!!S.settings.infoOpen));
+  db.setAttribute('aria-label', S.settings.infoOpen ? 'Hide word details' : 'Show word details');
+  layout(false);
+}
+function toggleDetails(open) {
+  S.settings.infoOpen = open ?? !S.settings.infoOpen; saveSettings();
+  applyPanels(); renderInfo();
+}
+function updateProgress() {
+  const t = todayStats(), goal = S.settings.goal, st = streak();
+  $('#goal').innerHTML = `<b>${t.pages}</b>/${goal} pages today`;
+  const sk = $('#streak');
+  sk.innerHTML = ICON.flame + `<span>${st ? `${st}-day streak` : 'No streak yet'}</span>`;
+  sk.setAttribute('aria-label', `Reading streak: ${st} day${st === 1 ? '' : 's'} in a row. Open your reading stats.`);
+  sk.classList.toggle('on', st > 0);
+  const fin = $('#finishBtn');
+  if (!S.model) { $('#pct').textContent = 'No pages yet'; $('#fill').style.width = '0%'; $('#track').setAttribute('aria-valuenow', '0'); return; }
+  const counted = S.model.sentences.map((s, i) => [s, i]).filter(([s]) => s.hasWords);
+  const total = counted.length || 1;
+  const done = S.spread.done ? total : counted.filter(([, i]) => i <= S.spread.maxReached).length;
+  const pct = Math.round(done / total * 100);
+  $('#fill').style.width = pct + '%'; $('#track').setAttribute('aria-valuenow', String(pct));
+  $('#pct').textContent = S.spread.done ? 'Pages finished' : `${pct}% read`;
+  if (S.spread.done) { fin.innerHTML = `${ICON.camera}<span class="lbl">Next</span>`; fin.title = 'Photograph the next pages'; fin.classList.remove('nudge'); }
+  else { fin.innerHTML = `${ICON.check}<span class="lbl">Finish</span>`; fin.title = 'Finish these pages'; fin.classList.toggle('nudge', pct >= 80); }
+}
+function finishPages() {
+  if (!S.spread) return;
+  if (S.spread.done) { openCapture(); return; }
+  S.spread.done = true;
+  const { pct, added, list } = learnFromPages();
+  S.spread.finish = { day:dayKey(), pages:2, known:list };
+  persistSpread();
+  const t = todayStats(), before = t.pages; t.pages += 2; saveStats(); updateProgress();
+  const goal = S.settings.goal, st = streak();
+  const knew = pct != null ? ` You knew ${pct}% of the words${added ? `, and ${added} more now count as known` : ''}.` : '';
+  const undo = { label:'Undo', fn:() => undoFinish(S.spread) };
+  if (before < goal && t.pages >= goal) toast(`Daily goal reached: ${t.pages} pages. ${st}-day streak.${knew}`, 8000, undo);
+  else toast(`Pages finished.${knew}`, 8000, undo);
+}
+
+// Puts the pages back to unfinished and takes back the pages and known words that finishing added.
+async function undoFinish(sp) {
+  if (!sp || !sp.done) return;
+  const f = sp.finish;
+  sp.done = false;
+  if (f) {
+    const d = S.stats.days[f.day]; if (d) d.pages = Math.max(0, (d.pages || 0) - (f.pages || 0));
+    for (const w of (f.known || [])) delete S.known[w];
+    const log = S.stats.knownLog || [], i = log.map(e => e.id).lastIndexOf(sp.id); if (i >= 0) log.splice(i, 1);
+    saveKnown(); saveStats();
+  }
+  delete sp.finish;
+  if (S.spread?.id === sp.id) { S.spread = sp; persistSpread(); } else await idbSet('sp:' + sp.id, sp);
+  const c = pageCache.get(sp.id); if (c) c.done = false;
+  updateProgress(); updateFlip(); updateBar();
+  if (pagesSheet.classList.contains('open')) renderPages();
+  toast(f ? 'Finish undone. Those pages and known words were taken back.' : 'Marked as not finished.');
+}
+
+/* ================= Layout ================= */
+function layout(scrollTo) {
+  if (!S.spread) return;
+  const W = stage.clientWidth, H = stage.clientHeight, pad = 16, ar = S.imgW / S.imgH;
+  const fitW = Math.max(120, Math.min(W - pad * 2, (H - pad * 2) * ar));
+  const w = S.view === 'spread' ? fitW : Math.min(2 * (W - pad * 2), fitW * 2.2), h = w / ar;
+  const ww = Math.max(W, w + pad * 2), wh = Math.max(H, h + pad * 2);
+  wrap.style.width = ww + 'px'; wrap.style.height = wh + 'px';
+  page.style.width = w + 'px'; page.style.height = h + 'px';
+  page.style.left = (ww - w) / 2 + 'px'; page.style.top = (wh - h) / 2 + 'px';
+  if (scrollTo) { stage.scrollTop = 0; stage.scrollLeft = S.view === 'right' ? stage.scrollWidth : 0; }
+}
+function setView(v) {
+  S.view = v;
+  document.querySelectorAll('#viewSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+  layout(true);
+}
+function toggleSide(open) {
+  S.settings.sideOpen = open ?? !S.settings.sideOpen; saveSettings();
+  updateBar(); layout(false);
+  if (S.settings.sideOpen) renderSide();
+}
+
+/* ================= Page overlays ================= */
+function rectsFor(idx) {
+  const out = []; let cur = null;
+  for (const i of idx) {
+    const c = S.model.chars[i]; if (!c || !c.box) continue;
+    if (!cur || cur.line !== c.line) { cur = { line:c.line, x0:c.box.x0, y0:c.box.y0, x1:c.box.x1, y1:c.box.y1 }; out.push(cur); }
+    else { cur.x0 = Math.min(cur.x0, c.box.x0); cur.y0 = Math.min(cur.y0, c.box.y0); cur.x1 = Math.max(cur.x1, c.box.x1); cur.y1 = Math.max(cur.y1, c.box.y1); }
+  }
+  return out;
+}
+function boxEl(cls, r, padF) {
+  const d = document.createElement('div'); d.className = cls;
+  const p = (r.y1 - r.y0) * padF, x0 = r.x0 - p, y0 = r.y0 - p, x1 = r.x1 + p, y1 = r.y1 + p;
+  d.style.left = (x0 / S.imgW * 100) + '%'; d.style.width = ((x1 - x0) / S.imgW * 100) + '%';
+  if (cls === 'mk') d.style.top = ((r.y1 + (r.y1 - r.y0) * 0.06) / S.imgH * 100) + '%';
+  else { d.style.top = (y0 / S.imgH * 100) + '%'; d.style.height = ((y1 - y0) / S.imgH * 100) + '%'; }
+  return d;
+}
+function drawTints() {
+  tints.innerHTML = '';
+  if (!S.model || !S.settings.colorWords) return;
+  const f = document.createDocumentFragment(); let k = 0;
+  for (const w of S.model.words) { if (!hasCJK(w.text)) continue; const cls = 'wt w' + (k++ % 4); for (const r of rectsFor(w.idx)) f.appendChild(boxEl(cls, r, 0.03)); }
+  tints.appendChild(f);
+}
+function drawHighlights() {
+  hl.innerHTML = ''; const m = S.model; if (!m) return;
+  const f = document.createDocumentFragment();
+  const colors = new Map(S.words.map(x => [x.w, MARK_COLORS[(x.c || 0) % MARK_COLORS.length]]));
+  m.words.forEach(w => { const col = colors.get(w.text); if (col) rectsFor(w.idx).forEach(r => { const d = boxEl('mk', r, 0); d.style.borderBottomColor = col; f.appendChild(d); }); });
+  if (S.sel?.type === 'sent') { const s = m.sentences[S.sel.si]; if (s) rectsFor(range(s.a, s.b)).forEach(r => f.appendChild(boxEl('hl sent', r, 0.12))); }
+  if (S.sel?.type === 'span') rectsFor(range(S.sel.a, S.sel.b)).forEach(r => f.appendChild(boxEl('hl word', r, 0.1)));
+  hl.appendChild(f);
+}
+function ensureVisible(idx) {
+  const rs = rectsFor(idx); if (!rs.length) return;
+  const pr = page.getBoundingClientRect(), st = stage.getBoundingClientRect(), sx = pr.width / S.imgW, sy = pr.height / S.imgH, r = rs[0];
+  const L = pr.left + r.x0 * sx, T = pr.top + r.y0 * sy, R = pr.left + r.x1 * sx, B = pr.top + r.y1 * sy, m = 40;
+  let dx = 0, dy = 0;
+  if (L < st.left + m) dx = L - st.left - m; else if (R > st.right - m) dx = R - st.right + m;
+  if (T < st.top + m) dy = T - st.top - m; else if (B > st.bottom - m) dy = B - st.bottom + m;
+  if (dx || dy) stage.scrollBy({ left:dx, top:dy, behavior:'smooth' });
+}
+
+/* ================= Touch: tap, double-tap, hold ================= */
+function toImg(cx, cy) { const r = page.getBoundingClientRect(); return { x:(cx - r.left) / r.width * S.imgW, y:(cy - r.top) / r.height * S.imgH }; }
+function charAt(x, y, ok) {
+  const cs = S.model.chars; let best = -1, bd = Infinity;
+  for (let i = 0; i < cs.length; i++) {
+    const c = cs[i], b = c.box; if (!b || !ok(c)) continue;
+    const dx = x < b.x0 ? b.x0 - x : x > b.x1 ? x - b.x1 : 0, dy = y < b.y0 ? b.y0 - y : y > b.y1 ? y - b.y1 : 0, d = dx * dx + dy * dy;
+    if (d < bd) { bd = d; best = i; if (d === 0) break; }
+  }
+  if (best < 0) return -1;
+  const b = cs[best].box, sz = Math.max(b.x1 - b.x0, b.y1 - b.y0);
+  return bd <= (sz * 0.65) ** 2 ? best : -1;
+}
+let press = null, lastTap = { t:0, wi:-1 };
+const ZOOM = 2.6;
+const loupeSize = () => Math.round(Math.min(340, Math.min(innerWidth, innerHeight) * 0.45));
+function showLoupe(cx, cy) {
+  const r = page.getBoundingClientRect();
+  if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) { hideLoupe(); return; }
+  const px = cx - r.left, py = cy - r.top, LOUPE = loupeSize();
+  loupe.style.width = loupe.style.height = LOUPE + 'px';
+  loupe.style.backgroundImage = `url("${S.shownURL}")`;
+  loupe.style.backgroundSize = `${r.width * ZOOM}px ${r.height * ZOOM}px`;
+  loupe.style.backgroundPosition = `${LOUPE / 2 - px * ZOOM}px ${LOUPE / 2 - py * ZOOM}px`;
+  let top = cy - LOUPE - 40; if (top < 8) top = cy + 40;
+  loupe.style.left = clamp(cx - LOUPE / 2, 8, innerWidth - LOUPE - 8) + 'px'; loupe.style.top = top + 'px';
+  loupe.classList.add('show');
+}
+function hideLoupe() { loupe.classList.remove('show'); }
+function toggleMag() {
+  S.mag = !S.mag; stage.classList.toggle('mag', S.mag); hideLoupe(); updateFlip();
+  if (S.mag && !S.hintedMag) { S.hintedMag = true; toast('Slide your finger over the page. Lift it to look up the word under the dot.', 5000); }
+}
+page.addEventListener('pointerdown', e => {
+  if (!S.model || S.tilt || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  const p = { x:e.clientX, y:e.clientY, long:false, moved:false };
+  p.t = setTimeout(() => { if (!p.moved) { p.long = true; hideLoupe(); onLong(p.x, p.y); } }, 450);
+  press = p;
+  if (S.mag) { showLoupe(e.clientX, e.clientY); try { page.setPointerCapture(e.pointerId); } catch (err) {} }
+});
+page.addEventListener('pointermove', e => {
+  if (S.mag) {
+    if (press || e.pointerType === 'mouse') showLoupe(e.clientX, e.clientY);
+    if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 12) { press.moved = true; clearTimeout(press.t); }
+    return;
+  }
+  if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 12) { clearTimeout(press.t); press = null; }
+});
+page.addEventListener('pointerup', e => {
+  if (!press) return; clearTimeout(press.t);
+  if (S.mag && e.pointerType !== 'mouse') hideLoupe();
+  if (!press.long) onTap(e.clientX, e.clientY, press.moved);
+  press = null;
+});
+page.addEventListener('pointercancel', () => { hideLoupe(); if (press) { clearTimeout(press.t); press = null; } });
+page.addEventListener('pointerleave', () => { if (S.mag && !press) hideLoupe(); });
+// Swipe left or right on the page to flip between saved photos.
+let swipe = null;
+stage.addEventListener('touchstart', e => { if (e.touches.length !== 1 || S.mag) { swipe = null; return; } const t = e.touches[0]; swipe = { x:t.clientX, y:t.clientY, t:performance.now() }; }, { passive:true });
+stage.addEventListener('touchend', e => {
+  if (!swipe) return; const t = e.changedTouches[0], dx = t.clientX - swipe.x, dy = t.clientY - swipe.y, dt = performance.now() - swipe.t; swipe = null;
+  if (dt < 600 && Math.abs(dx) > 90 && Math.abs(dy) < 60 && stage.scrollWidth <= stage.clientWidth + 2) flip(dx < 0 ? 1 : -1);
+}, { passive:true });
+
+page.addEventListener('contextmenu', e => e.preventDefault());
+const wordSpan = w => [w.idx[0], w.idx[w.idx.length - 1] + 1];
+function onTap(cx, cy, moved) {
+  const p = toImg(cx, cy), i = charAt(p.x, p.y, c => c.w >= 0);
+  if (i < 0) { clearSel(); return; }
+  const wi = S.model.chars[i].w, now = performance.now();
+  if (!moved && now - lastTap.t < 350 && lastTap.wi === wi) {
+    lastTap.t = 0;
+    if (navigator.vibrate) navigator.vibrate(12);
+    toggleSave(); return;
+  }
+  lastTap = { t:now, wi };
+  const [a, b] = wordSpan(S.model.words[wi]); openSpan(a, b, null);
+}
+function onLong(cx, cy) {
+  const p = toImg(cx, cy), i = charAt(p.x, p.y, c => c.s >= 0);
+  if (i < 0) return;
+  if (navigator.vibrate) navigator.vibrate(15);
+  lastTap.t = 0;
+  openSentence(S.model.chars[i].s);
+}
+
+let persistTimer = null;
+function persistSpread() { clearTimeout(persistTimer); persistTimer = setTimeout(() => { if (S.spread?.id) idbSet('sp:' + S.spread.id, S.spread); }, 400); }
+/* ---------- Saved photos (page history) ---------- */
+async function saveNewSpread(sp) {
+  sp.id = sp.id || ('s' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
+  let idx = (await idbGet('spreads:index')) || [];
+  if (sp.demo) for (const old of idx.filter(x => x.demo)) await idbDel('sp:' + old.id);
+  idx = idx.filter(x => x.id !== sp.id && !(sp.demo && x.demo));
+  idx.push({ id:sp.id, at:sp.at, demo:!!sp.demo });
+  // No automatic deleting: photos stay until you delete them in Your pages.
+  if (!(await idbSet('sp:' + sp.id, sp))) throw new Error('STORAGE_FULL');
+  await idbSet('spreads:index', idx);
+  S.index = idx;
+}
+const curPos = () => S.spread ? S.index.findIndex(x => x.id === S.spread.id) : -1;
+async function flip(d) {
+  if (!S.spread) return;
+  if (S.tilt) await endTilt(false);
+  const j = curPos() + d;
+  if (d > 0 && j >= S.index.length) { openCapture(); return; }
+  if (j < 0) { toast('These are the first pages you photographed.'); return; }
+  const sp = await idbGet('sp:' + S.index[j].id);
+  if (sp) await showSpread(sp);
+}
+function updateFlip() {
+  const has = !!S.spread, i = curPos(), n = S.index.length, last = i >= n - 1;
+  $('#prevBtn').hidden = !has || i <= 0;
+  const nb = $('#nextBtn'); nb.hidden = !has;
+  nb.innerHTML = last ? ICON.camera.replace('class="i" ', '') : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  nb.setAttribute('aria-label', last ? 'Photograph the next pages' : 'Next pages');
+  nb.title = last ? 'Photograph the next pages' : 'Next pages';
+  const kp = has ? knownPct(S.model) : null;
+  $('#counter').hidden = !has; $('#counter').textContent = `Photo ${i + 1} of ${n}${kp != null ? `, ${kp}% known` : ''}`;
+  $('#counter').setAttribute('aria-label', `Photo ${i + 1} of ${n}. Reorder or delete pages.`);
+  $('#stageBar').hidden = !has;
+  $('#magBtn').innerHTML = `${ICON.loupe}Magnifier`; $('#magBtn').setAttribute('aria-pressed', String(S.mag));
+  $('#tiltBtn').innerHTML = `${ICON.tilt}Fix tilt`;
+  $('#lightBtn').innerHTML = `${ICON.sun}Even lighting`; $('#lightBtn').setAttribute('aria-pressed', String(!!S.settings.lighting));
+}
+async function deleteCurrent() {
+  if (!S.spread) return;
+  const i = curPos(), id = S.spread.id;
+  await idbDel('sp:' + id); S.index = S.index.filter(x => x.id !== id); await idbSet('spreads:index', S.index);
+  const next = S.index[Math.min(i, S.index.length - 1)];
+  const sp = next ? await idbGet('sp:' + next.id) : null;
+  closeSheet(statSheet);
+  if (sp) await showSpread(sp); else { S.spread = null; S.model = null; S.info = null; S.sel = null; showEmpty(); renderInfo(); }
+  toast('Photo deleted');
+}
+function reach(si) { if (S.spread && !S.spread.done && si > S.spread.maxReached) { S.spread.maxReached = si; updateProgress(); persistSpread(); } }
+
+/* ================= Selections ================= */
+function hiddenHint() { if (!S.settings.infoOpen && !S.hintedHidden) { S.hintedHidden = true; toast('Word details are hidden. Tap Details in the top bar to show them.', 4500); } }
+function clearSel() { S.sel = null; S.info = null; drawHighlights(); renderInfo(); renderSide(); }
+function openSpan(a, b, fromSent) {
+  const m = S.model, n = m.chars.length;
+  a = clamp(a, 0, n - 1); b = clamp(b, a + 1, n);
+  const idx = range(a, b), si = m.chars[a].s;
+  S.sel = { type:'span', a, b };
+  noteLookup(idx.map(i => m.chars[i].ch).join('').trim());
+  S.info = { kind:'word', text:idx.map(i => m.chars[i].ch).join('').trim(), pys:idx.map(i => m.chars[i].py), sent:m.sentences[si]?.text || '', si, span:{ a, b }, fromSent, ai:null, fix:false };
+  reach(si); drawHighlights(); afterOpen(); ensureVisible(idx); hiddenHint();
+}
+function openQuery(raw) {
+  const t = String(raw || '').replace(/\s+/g, ''); if (!t) return;
+  if (S.model) { const w = S.model.words.find(x => x.text === t); if (w) { const [a, b] = wordSpan(w); openSpan(a, b, null); return; } }
+  const chs = Array.from(t), saved = S.words.find(x => x.w === t);
+  S.sel = { type:'query' };
+  S.info = { kind:'word', text:t, pys:saved?.py ? saved.py.split(' ') : pinyinFor(chs), sent:saved?.sent || '', si:-1, span:null, fromSent:null, ai:null, fix:false };
+  if (!S.settings.infoOpen) S.settings.infoOpen = true;
+  applyPanels(); drawHighlights(); afterOpen();
+}
+function afterOpen() {
+  const inf = S.info;
+  renderInfo(); renderSide();
+  if (!hasCJK(inf.text)) return;
+  if (S.settings.autoplay) speak(inf.text);
+  todayStats().lookups++; saveStats();
+  if (S.settings.defLang === 'zh') askAI(inf);
+  else if (!rankEntries(lookup(inf.text), '').length && !S.lex[inf.text]?.name && S.settings.apiKey && S.dictState !== 'loading' && !S.mt[inf.text]) {
+    inf.mtLoading = true;
+    translate(inf.text).then(t => { S.mt[inf.text] = t; }).catch(e => { inf.mtErr = friendlyError(e); })
+      .finally(() => { inf.mtLoading = false; if (S.info === inf) renderInfo(); });
+  }
+}
+function openSentence(si) {
+  const m = S.model, s = m?.sentences[si]; if (!s) return;
+  S.sel = { type:'sent', si };
+  const inf = S.info = { kind:'sent', si, text:s.text, tr:null, trErr:null, ai:null };
+  reach(si); drawHighlights(); renderInfo(); ensureVisible(range(s.a, s.b)); hiddenHint();
+  if (S.settings.autoplay) speak(s.text);
+  translate(s.text).then(t => { inf.tr = t; }).catch(e => { inf.trErr = friendlyError(e); }).finally(() => { if (S.info === inf) renderInfo(); });
+}
+function askAI(inf) {
+  const key = (inf.kind === 'sent' ? 's|' : 'w|') + scriptName() + '|' + inf.text + '|' + (inf.sent || '');
+  if (S.ai[key]) { inf.ai = S.ai[key]; if (S.info === inf) renderInfo(); return; }
+  inf.ai = 'loading'; if (S.info === inf) renderInfo();
+  aiJSON(inf.kind === 'sent' ? promptSentence(inf.text) : promptWord(inf.text, inf.sent))
+    .then(r => { inf.ai = r && typeof r === 'object' ? r : { error:'The AI reply was empty.' }; if (!inf.ai.error) cacheAI(key, inf.ai); })
+    .catch(e => { inf.ai = { error:friendlyError(e) }; })
+    .finally(() => { if (S.info === inf) renderInfo(); });
+}
+function moveWord(d) {
+  const m = S.model; if (!m || !m.words.length) return;
+  const sp = S.info?.span;
+  let i = sp ? (d > 0 ? sp.b : sp.a - 1) : (d > 0 ? 0 : m.chars.length - 1);
+  while (i >= 0 && i < m.chars.length && m.chars[i].w < 0) i += d;
+  if (i < 0 || i >= m.chars.length) return;
+  const [a, b] = wordSpan(m.words[m.chars[i].w]); openSpan(a, b, null);
+}
+function adjust(kind) {
+  const sp = S.info?.span; if (!sp) return;
+  const m = S.model; let { a, b } = sp;
+  const skip = (i, d) => { while (i > 0 && i < m.chars.length - 1 && m.chars[i].ch === ' ') i += d; return i; };
+  if (kind === 'addL') a = skip(a - 1, -1);
+  if (kind === 'addR') b = skip(b, 1) + 1;
+  if (kind === 'delL' && b - a > 1) a++;
+  if (kind === 'delR' && b - a > 1) b--;
+  openSpan(a, b, S.info.fromSent);
+}
+const isModelWord = sp => { const c = S.model.chars[sp.a]; if (!c || c.w < 0) return false; const [a, b] = wordSpan(S.model.words[c.w]); return a === sp.a && b === sp.b; };
+const isSaved = t => S.words.some(x => x.w === t);
+function glossFor(inf) {
+  const r = rankEntries(lookup(inf.text), inf.pys.join(' '))[0];
+  if (r) return usefulDefs(r.e).slice(0, 3).join('; ');
+  if (S.lex[inf.text]?.name) return 'name';
+  if (inf.ai && inf.ai.meaning_en) return inf.ai.meaning_en;
+  return S.mt[inf.text] || '';
+}
+function toggleSave() {
+  const inf = S.info; if (!inf || inf.kind !== 'word' || !hasCJK(inf.text)) return;
+  const t = inf.text, i = S.words.findIndex(x => x.w === t);
+  if (i >= 0) { S.words.splice(i, 1); toast(`Removed ${t} from saved words`); }
+  else {
+    if (inf.span && Array.from(t).length >= 2 && !isModelWord(inf.span) && !S.lex[t]) { S.lex[t] = { name:false }; saveLex(); rebuild(); }
+    if (S.known[t]) { delete S.known[t]; saveKnown(); }
+    S.words.unshift({ w:t, py:inf.pys.filter(Boolean).join(' '), gloss:glossFor(inf), sent:inf.sent, added:Date.now(), n:0, last:0, c:nextColor(), box:0, due:dayKey() });
+    toast(`Saved ${t}`);
+  }
+  saveWords(); updateBar(); drawHighlights(); renderInfo(); renderSide();
+}
+
+/* ================= OCR corrections ================= */
+function applyCorrection(a, b, newText) {
+  const raw = S.spread.chars, chs = Array.from(String(newText).replace(/\s+/g, ''));
+  const rects = rectsFor(range(a, b)), para = raw[a].para, baseLine = raw[a].line, slots = [];
+  if (rects.length && chs.length) {
+    const total = rects.reduce((s, r) => s + (r.x1 - r.x0), 0) || 1; let used = 0;
+    rects.forEach((r, ri) => {
+      let k = ri === rects.length - 1 ? chs.length - used : Math.round(chs.length * (r.x1 - r.x0) / total);
+      k = clamp(k, 0, chs.length - used); const w = (r.x1 - r.x0) / Math.max(1, k);
+      for (let j = 0; j < k; j++) slots.push({ box:{ x0:r.x0 + j * w, y0:r.y0, x1:r.x0 + (j + 1) * w, y1:r.y1 }, line:r.line });
+      used += k;
+    });
+  }
+  const sp = S.spread, side = charSide(raw[a], sp), deg = sp.adj?.[side] || 0;
+  const repl = chs.map((ch, i) => ({ ch, box:tiltBox(slots[i]?.box || null, side, sp, deg, true), para, line:slots[i]?.line ?? baseLine, side }));
+  raw.splice(a, b - a, ...repl);
+  persistSpread(); rebuild();
+  if (repl.length) openSpan(a, a + repl.length, null); else clearSel();
+  toast(repl.length ? 'Text corrected' : 'Characters removed');
+}
+function toggleName() {
+  const t = S.info?.text; if (!t) return;
+  if (S.lex[t]?.name) { delete S.lex[t]; toast(`${t} is no longer marked as a name`); }
+  else { S.lex[t] = { name:true }; toast(`${t} marked as a name`); }
+  saveLex(); rebuild(); renderInfo();
+}
+function toggleJoin() {
+  const t = S.info?.text; if (!t) return;
+  if (S.lex[t] && !S.lex[t].name) { delete S.lex[t]; toast(`${t} is no longer kept as one word`); }
+  else { S.lex[t] = { name:false }; toast(`${t} is now read as one word`); }
+  saveLex(); rebuild(); renderInfo();
+}
+
+/* ================= Info panel rendering ================= */
+const hzSpans = (chs, pys) => chs.map((c, i) => `<span class="${pys[i] ? toneClass(pys[i]) : ''}">${esc(c)}</span>`).join('');
+const pySpans = pys => esc(pys.filter(Boolean).join(' '));
+const markTerm = (text, term) => esc(text).split(esc(term)).join(`<mark>${esc(term)}</mark>`);
+function defsHTML(ranked) {
+  const list = ranked.slice(0, 3), multi = new Set(list.map(r => r.m.toLowerCase())).size > 1;
+  return list.map(r => `<p>${multi ? `<span class="reading">${esc(r.m)}</span>` : ''}${esc(usefulDefs(r.e).slice(0, 6).join('; '))}</p>`).join('');
+}
+function partsHTML(inf) {
+  const chs = Array.from(inf.text), single = chs.length === 1;
+  const rows = chs.map((c, i) => {
+    if (!isCJK(c)) return '';
+    const py = inf.pys[i] || '', r = rankEntries(lookup(c), py)[0], g = r ? usefulDefs(r.e).slice(0, 2).join('; ') : '', tc = toneClass(py);
+    const alt = altChar(c, py), pl = partsLine(c), altPl = alt !== c ? partsLine(alt) : '';
+    if (single && !pl && !altPl) return '';
+    if (single) return `<div class="part single">${pl ? `<span class="pl">${pl}</span>` : ''}${altPl && altPl !== pl ? `<span class="pl">${altLabel()} <span lang="zh">${esc(alt)}</span>: ${altPl}</span>` : ''}</div>`;
+    return `<div class="part"><span class="c ${tc}" lang="zh">${esc(c)}${alt !== c ? `<span class="alt" title="${altLabel()} form">${esc(alt)}</span>` : ''}</span>
+      <span class="p">${esc(py)}</span><span class="g">${single ? '' : esc(g || '—')}</span>
+      ${pl ? `<span class="pl">${pl}</span>` : ''}
+      ${altPl && altPl !== pl ? `<span class="pl">${altLabel()} ${esc(alt)}: ${altPl}</span>` : ''}</div>`;
+  }).join('');
+  return rows ? `<div class="sec"><h4>${single ? 'Parts' : 'Characters and their parts'}</h4><div class="parts">${rows}</div></div>` : '';
+}
+function exHTML(list, term) {
+  if (!Array.isArray(list) || !list.length) return '';
+  return `<div class="sec"><h4>Examples (tap to hear)</h4><ul class="ex">${list.slice(0, 4).map(e => `<li data-say="${esc(e.zh)}"><span class="exz" lang="zh">${term ? markTerm(e.zh, term) : esc(e.zh)}</span>${S.settings.sentPinyin && e.pinyin ? `<span class="exp">${esc(e.pinyin)}</span>` : ''}<span class="exe">${esc(e.en)}</span></li>`).join('')}</ul></div>`;
+}
+function alsoHTML(inf) {
+  if (!S.model || !hasCJK(inf.text)) return '';
+  const list = [];
+  S.model.sentences.forEach((s, si) => { if (si !== inf.si && list.length < 3 && s.text.includes(inf.text)) list.push([s, si]); });
+  if (!list.length) return '';
+  return `<div class="sec also"><h4>Also on these pages</h4>${list.map(([s, si]) => `<p data-si="${si}" lang="zh">${markTerm(s.text, inf.text)}</p>`).join('')}</div>`;
+}
+function linksHTML(t) {
+  const q = encodeURIComponent(t);
+  return `<div class="links">
+    <a href="https://tatoeba.org/en/sentences/search?from=cmn&to=eng&query=${q}" target="_blank" rel="noopener">Example sentences on Tatoeba</a>
+    <a href="https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=${q}" target="_blank" rel="noopener">MDBG</a>
+    <a href="https://${S.settings.defLang === 'zh' ? 'zh' : 'en'}.wiktionary.org/wiki/${q}" target="_blank" rel="noopener">Wiktionary</a>
+  </div>`;
+}
+function wordBody(inf) {
+  const ranked = rankEntries(lookup(inf.text), inf.pys.join(' ')), ai = inf.ai, zh = S.settings.defLang === 'zh';
+  const name = S.lex[inf.text]?.name;
+  let out = '';
+  if (name) out += `<p>A name. ${ranked.length ? 'Dictionary meanings, if it’s used as a word:' : ''}</p>`;
+  if (zh && hasCJK(inf.text)) {
+    if (ai && ai !== 'loading' && !ai.error && ai.meaning_zh) out += `<p class="zhdef" lang="zh">${esc(ai.meaning_zh)}</p>`;
+    else if (ai === 'loading') out += `<p class="note">正在查…</p>`;
+    else if (ai?.error) out += `<p class="note">${esc(ai.error)}</p>`;
+    if (ranked.length) out += `<p class="note">English: ${esc(usefulDefs(ranked[0].e).slice(0, 3).join('; '))}</p>`;
+  } else {
+    if (ranked.length) out += defsHTML(ranked);
+    else if (!name) {
+      if (S.dictState === 'loading' && hasCJK(inf.text)) out += `<p class="note">The dictionary is still loading.</p>`;
+      else if (S.mt[inf.text]) out += `<p>${esc(S.mt[inf.text])} <span class="note">(machine translation)</span></p>`;
+      else if (inf.mtLoading) out += `<p class="note">Not in the dictionary. Getting a machine translation…</p>`;
+      else out += `<p class="note">Not in the dictionary.${inf.mtErr ? ' ' + esc(inf.mtErr) : ''} Try Ask AI, or fix the selection below if the text looks wrong.</p>`;
+    }
+    if (ai === 'loading') out += `<div class="sec"><p class="note">Asking AI…</p></div>`;
+    else if (ai?.error) out += `<div class="sec"><p class="note">${esc(ai.error)}</p></div>`;
+    else if (ai) out += `<div class="sec"><h4>AI notes</h4><p>${esc(ai.meaning_en || '')}</p></div>`;
+  }
+  if (ai && ai !== 'loading' && !ai.error) {
+    if (ai.notes) out += `<p class="note" style="margin-top:6px">${esc(ai.notes)}</p>`;
+    out += exHTML(ai.examples, inf.text);
+  }
+  out += partsHTML(inf) + alsoHTML(inf) + linksHTML(inf.text);
+  return out;
+}
+function fixHTML(inf) {
+  if (!inf.span) return '';
+  if (inf.fix) return `<div class="fix"><span class="lab">Correct to</span><input id="fixInput" lang="zh" value="${esc(inf.fixVal ?? inf.text)}" autocomplete="off" aria-label="Correct characters"><button class="btn primary" data-act="fixSave">Save fix</button><button class="btn" data-act="fixCancel">Cancel</button><span class="note">Gboard’s Chinese handwriting keyboard lets you draw a character here.</span></div>`;
+  const len = Array.from(inf.text).length, lex = S.lex[inf.text];
+  const join = len >= 2 && (lex && !lex.name ? `<button class="btn" data-act="join">Split back up</button>` : (!isModelWord(inf.span) ? `<button class="btn" data-act="join">Make one word</button>` : ''));
+  return `<div class="fix" role="toolbar" aria-label="Fix the selection">
+    <span class="lab">Selection</span>
+    <button class="btn" data-act="addL" title="Shift + Left arrow">+ Before</button>
+    <button class="btn" data-act="addR" title="Shift + Right arrow">+ After</button>
+    <button class="btn" data-act="delL" title="Ctrl + Shift + Left arrow" ${len < 2 ? 'disabled' : ''}>− First</button>
+    <button class="btn" data-act="delR" title="Ctrl + Shift + Right arrow" ${len < 2 ? 'disabled' : ''}>− Last</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="btn" data-act="fix">Correct text</button>
+    ${len >= 2 ? `<button class="btn" data-act="name">${lex?.name ? 'Not a name' : 'Mark as name'}</button>` : ''}
+    ${join || ''}
+  </div>`;
+}
+function sentenceHTML(inf) {
+  const m = S.model, s = m.sentences[inf.si]; let body = '';
+  for (let i = s.a; i < s.b; i++) {
+    const c = m.chars[i];
+    if (c.ch === ' ') { body += ' '; continue; }
+    if (isCJK(c.ch) && c.py) body += `<ruby data-i="${i}">${esc(c.ch)}<rt>${esc(c.py)}</rt></ruby>`;
+    else body += `<span>${esc(c.ch)}</span>`;
+  }
+  const ai = inf.ai;
+  let aiOut = '';
+  if (ai === 'loading') aiOut = `<p class="note">Asking AI…</p>`;
+  else if (ai?.error) aiOut = `<p class="note">${esc(ai.error)}</p>`;
+  else if (ai) aiOut = `<div class="sec"><h4>AI explanation</h4><p>${esc(ai.translation || '')}</p>${ai.notes ? `<p class="note">${esc(ai.notes)}</p>` : ''}</div>`;
+  const py = S.settings.sentPinyin;
+  return `<div class="info-main is-sent">
+    <div class="ib">
+      <div class="sent ${py ? '' : 'nopy'}" lang="zh">${body}</div>
+      <div class="tr">${inf.tr ? esc(inf.tr) : inf.trErr ? `<span class="note">${esc(inf.trErr)}</span>` : '<span class="note">Translating…</span>'}</div>
+      ${aiOut}
+      <p class="note" style="margin:6px 0 0">Tap a character to look up its word.</p>
+    </div>
+    <div class="ia">
+      <button class="btn" data-act="listen">${ICON.speaker}Listen</button>
+      <button class="btn" data-act="slow">${ICON.speaker}Slowly</button>
+      <button class="btn" data-act="pinyin" aria-pressed="${py}">Pinyin ${py ? 'on' : 'off'}</button>
+      <button class="btn" data-act="ai">${ICON.spark}Explain</button>
+    </div>
+  </div>`;
+}
+function renderInfo() {
+  const inf = S.info;
+  if (!S.spread && !inf) { info.hidden = true; return; }
+  info.hidden = !S.settings.infoOpen;
+  if (!inf) {
+    info.innerHTML = `<div class="idle">
+      <p><b>Tap</b> a word for its meaning. <b>Double-tap</b> to save or unsave it. <b>Press and hold</b> for the whole sentence.</p>
+      <p>Keyboard: <kbd>←</kbd> <kbd>→</kbd> next word. <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> adds a character on that side, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> removes one. <kbd>S</kbd> save, <kbd>Space</kbd> listen, <kbd>Enter</kbd> whole sentence.</p>
+    </div>`;
+    return;
+  }
+  const focusFix = document.activeElement?.id === 'fixInput';
+  if (inf.kind === 'sent') { info.innerHTML = sentenceHTML(inf); return; }
+  const chs = Array.from(inf.text), saved = isSaved(inf.text), name = S.lex[inf.text]?.name;
+  info.innerHTML = `<div class="info-main">
+      <div class="ih">
+        <div class="hz" lang="zh">${hzSpans(chs, inf.pys)}${(() => { const a = altForm(inf.text, inf.pys); return a ? `<span class="alt" title="${altLabel()} form">${esc(a)}</span>` : ""; })()}</div>
+        <div class="pyl">${pySpans(inf.pys)}</div>
+        <div class="tags">${saved ? `<span class="tag"><span class="mdot" style="background:${markColor(inf.text)}"></span>Saved</span>` : ''}${name ? '<span class="tag">Name</span>' : ''}${isKnown(inf.text) ? '<span class="tag">Known</span>' : ''}</div>
+      </div>
+      <div class="ib defs">${wordBody(inf)}</div>
+      <div class="ia">
+        ${inf.fromSent != null ? `<button class="btn" data-act="back">${ICON.back}Sentence</button>` : ''}
+        <button class="btn" data-act="listen">${ICON.speaker}Listen</button>
+        <button class="btn ${saved ? 'saved' : ''}" data-act="save">${ICON.bookmark}${saved ? 'Saved' : 'Save'}</button>
+        <button class="btn" data-act="ai">${ICON.spark}Ask AI</button>
+        <button class="btn" data-act="practice">${ICON.brush}Practice</button>
+        ${hasCJK(inf.text) ? `<button class="btn" data-act="known" aria-pressed="${isKnown(inf.text)}">${ICON.check}${isKnown(inf.text) ? 'Known' : 'I know this'}</button>` : ''}
+      </div>
+    </div>${fixHTML(inf)}`;
+  if (inf.fix) { const el = $('#fixInput'); if (el && (focusFix || inf.fixFocus)) { el.focus(); if (inf.fixFocus) el.select(); inf.fixFocus = false; } }
+}
+info.addEventListener('input', e => { if (e.target.id === 'fixInput' && S.info) S.info.fixVal = e.target.value; });
+info.addEventListener('keydown', e => {
+  if (e.target.id !== 'fixInput') return;
+  if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); act('fixSave'); }
+  if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); act('fixCancel'); }
+});
+info.addEventListener('click', e => {
+  const say = e.target.closest('[data-say]'); if (say) { speak(say.dataset.say); return; }
+  const r = e.target.closest('ruby[data-i]');
+  if (r) { const c = S.model.chars[+r.dataset.i]; if (c && c.w >= 0) { const [a, b] = wordSpan(S.model.words[c.w]); openSpan(a, b, S.info.si); } return; }
+  const al = e.target.closest('[data-si]'); if (al) { openSentence(+al.dataset.si); return; }
+  const b = e.target.closest('[data-act]'); if (b && !b.disabled) act(b.dataset.act);
+});
+function act(name) {
+  const inf = S.info; if (!inf) return;
+  switch (name) {
+    case 'listen': speak(inf.text); break;
+    case 'slow': speak(inf.text, 0.65); break;
+    case 'pinyin': S.settings.sentPinyin = !S.settings.sentPinyin; saveSettings(); renderInfo(); break;
+    case 'ai': askAI(inf); break;
+    case 'save': toggleSave(); break;
+    case 'known': { const on = !isKnown(inf.text), wasSaved = isSaved(inf.text); markKnown(inf.text, on); toast(on ? (wasSaved ? `${inf.text} moved from saved words to known` : `${inf.text} marked as known`) : `${inf.text} is no longer marked as known`); renderInfo(); break; }
+    case 'practice': if (!hasCJK(inf.text)) { toast('Writing practice works with Chinese characters.'); break; } if (!isSaved(inf.text)) toggleSave(); openPractice(inf.text); break;
+    case 'back': if (inf.fromSent != null) openSentence(inf.fromSent); break;
+    case 'addL': case 'addR': case 'delL': case 'delR': adjust(name); break;
+    case 'fix': inf.fix = true; inf.fixVal = inf.text; inf.fixFocus = true; renderInfo(); break;
+    case 'fixCancel': inf.fix = false; renderInfo(); break;
+    case 'fixSave': { const v = $('#fixInput')?.value ?? ''; if (inf.span) applyCorrection(inf.span.a, inf.span.b, v); break; }
+    case 'name': toggleName(); break;
+    case 'join': toggleJoin(); break;
+  }
+}
+
+/* ================= Side pane ================= */
+function rowsHTML(current) {
+  if (!S.words.length) return `<p class="wempty">Double-tap a word on the page, or tap Save, and it shows up here.</p>`;
+  return S.words.map(w => `<button class="wrow" data-w="${esc(w.w)}" aria-current="${current === w.w}" style="--mk:${MARK_COLORS[(w.c || 0) % MARK_COLORS.length]}">
+      <span class="c">${esc(w.w)}</span>
+      <span class="mid"><span class="p">${pySpans((w.py || '').split(' '))}</span><span class="g">${esc(w.gloss || '')}</span></span>
+      <span class="n">${isDue(w) ? 'Due' : ''}</span></button>`).join('');
+}
+function renderSide() {
+  if (side.hidden) return;
+  $('#sideCount').textContent = `Saved words (${S.words.length})`;
+  $('#sideList').innerHTML = rowsHTML(S.info?.kind === 'word' ? S.info.text : null);
+}
+$('#sideList').addEventListener('click', e => { const b = e.target.closest('.wrow'); if (b) openQuery(b.dataset.w); });
+$('#lookupBtn').addEventListener('click', () => { openQuery($('#lookupInput').value); });
+$('#lookupInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); openQuery(e.target.value); } });
+$('#practiceBtn').addEventListener('click', () => openPractice());
+
+/* ================= Keyboard ================= */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (setSheet.classList.contains('open')) closeSheet(setSheet);
+    else if (capSheet.classList.contains('open')) closeCapture();
+    else if (pracSheet.classList.contains('open')) closeSheet(pracSheet);
+    else if (revSheet.classList.contains('open')) closeReview();
+    else if (pagesSheet.classList.contains('open')) closePages();
+    else if (statSheet.classList.contains('open')) closeSheet(statSheet);
+    else if (S.tilt) endTilt(false);
+    else if (S.mag) toggleMag();
+    else clearSel();
+    return;
+  }
+  if (anySheet() || /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || '') || !S.model || S.tilt) return;
+  if ((e.key === 'Enter' || e.key === ' ') && document.activeElement?.tagName === 'BUTTON') return;
+  if (e.key === 'PageDown' || e.key === 'PageUp') { flip(e.key === 'PageDown' ? 1 : -1); e.preventDefault(); return; }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    const left = e.key === 'ArrowLeft';
+    if (e.shiftKey && (e.ctrlKey || e.metaKey)) adjust(left ? 'delL' : 'delR');
+    else if (e.shiftKey) adjust(left ? 'addL' : 'addR');
+    else moveWord(left ? -1 : 1);
+    e.preventDefault();
+  } else if (e.key === ' ' && S.info) { speak(S.info.text); e.preventDefault(); }
+  else if ((e.key === 's' || e.key === 'S') && !e.ctrlKey && !e.metaKey) toggleSave();
+  else if (e.key === 'Enter' && S.info?.span) openSentence(S.model.chars[S.info.span.a].s);
+});
+
+/* ================= Spread display ================= */
+/* ---------- Fix tilt by hand: each page turns around its own center. The stored photo never changes. ---------- */
+function sideSplit(sp) {
+  if (sp.split != null) return sp.split;
+  const bs = sp.chars.filter(c => c.box);
+  let x1 = -Infinity, x0 = Infinity;
+  for (const c of bs) { if (c.side === 0) x1 = Math.max(x1, c.box.x1); if (c.side === 1) x0 = Math.min(x0, c.box.x0); }
+  sp.split = (x1 > -Infinity && x0 < Infinity) ? (x1 + x0) / 2 : sp.w / 2;
+  return sp.split;
+}
+const charSide = (c, sp) => c.side ?? (c.box && (c.box.x0 + c.box.x1) / 2 >= sideSplit(sp) ? 1 : 0);
+const hasTilt = sp => !!(sp?.adj && (sp.adj[0] || sp.adj[1]));
+function tiltBox(box, side, sp, deg, inverse) {
+  if (!box || !deg) return box;
+  const split = sideSplit(sp), cx = side ? (split + sp.w) / 2 : split / 2, cy = sp.h / 2;
+  const a = (inverse ? -deg : deg) * DEG, c = Math.cos(a), s = Math.sin(a);
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const [px, py] of [[box.x0, box.y0], [box.x1, box.y0], [box.x1, box.y1], [box.x0, box.y1]]) {
+    const dx = px - cx, dy = py - cy, X = dx * c - dy * s + cx, Y = dx * s + dy * c + cy;
+    x0 = Math.min(x0, X); y0 = Math.min(y0, Y); x1 = Math.max(x1, X); y1 = Math.max(y1, Y);
+  }
+  // keep the box the same size (rotating a box's corners makes it grow)
+  const w = box.x1 - box.x0, h = box.y1 - box.y0, mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+  return { x0:mx - w / 2, y0:my - h / 2, x1:mx + w / 2, y1:my + h / 2 };
+}
+function displayChars(sp) {
+  if (!hasTilt(sp)) return sp.chars;
+  return sp.chars.map(c => { if (!c.box) return c; const sd = charSide(c, sp); return { ...c, box:tiltBox(c.box, sd, sp, sp.adj[sd]) }; });
+}
+function renderTilted(bmp, sp, adj, scale, fill) {
+  const W = sp.w, H = sp.h, split = sideSplit(sp);
+  const c = document.createElement('canvas'); c.width = Math.round(W * scale); c.height = Math.round(H * scale);
+  const x = c.getContext('2d'); x.scale(scale, scale);
+  x.fillStyle = fill; x.fillRect(0, 0, W, H);
+  for (const side of [0, 1]) {
+    const x0 = side ? split : 0, x1 = side ? W : split, cx = (x0 + x1) / 2, cy = H / 2;
+    x.save(); x.beginPath(); x.rect(x0, 0, x1 - x0, H); x.clip();
+    x.translate(cx, cy); x.rotate((adj[side] || 0) * DEG); x.drawImage(bmp, -cx, -cy);
+    x.restore();
+  }
+  return c;
+}
+const pagesWithText = sp => [0, 1].filter(s => sp.chars.some(c => c.box && charSide(c, sp) === s));
+async function startTilt() {
+  const sp = S.spread; if (!sp || S.tilt) return;
+  if (S.mag) toggleMag();
+  clearSel();
+  const bmp = await createImageBitmap(sp.blob);
+  S.tilt = { bmp, fill:paperColor(bmp), adj:[...(sp.adj || [0, 0])], raf:0 };
+  const pages = pagesWithText(sp), two = pages.length === 2;
+  for (const s of [0, 1]) {
+    const row = $('#adj' + s); row.hidden = !pages.includes(s);
+    row.querySelector('.who').textContent = two ? (s ? 'Right page' : 'Left page') : 'Page';
+  }
+  syncTiltUI();
+  const pc = document.createElement('canvas'); pc.id = 'tiltCanvas'; page.appendChild(pc);
+  page.classList.add('tilting'); document.body.classList.add('tilting'); $('#adjBar').hidden = false;
+  drawTiltPreview();
+}
+function syncTiltUI() {
+  for (const s of [0, 1]) {
+    const row = $('#adj' + s), v = S.tilt.adj[s] || 0;
+    row.querySelector('input').value = v;
+    row.querySelector('output').textContent = `${v > 0 ? '+' : ''}${v.toFixed(1)}°`;
+  }
+}
+function drawTiltPreview() {
+  const t = S.tilt; if (!t) return;
+  cancelAnimationFrame(t.raf);
+  t.raf = requestAnimationFrame(() => {
+    const r = page.getBoundingClientRect(), scale = Math.min(1, r.width * (devicePixelRatio || 1) / S.spread.w);
+    const c = renderTilted(t.bmp, S.spread, t.adj, scale, t.fill), pc = $('#tiltCanvas');
+    if (!pc) return;
+    pc.width = c.width; pc.height = c.height; pc.getContext('2d').drawImage(c, 0, 0);
+  });
+}
+function setTilt(side, v) { if (!S.tilt) return; S.tilt.adj[side] = Math.round(clamp(v, -10, 10) * 10) / 10; syncTiltUI(); drawTiltPreview(); }
+async function endTilt(apply) {
+  const t = S.tilt; if (!t) return;
+  S.tilt = null;
+  $('#tiltCanvas')?.remove(); page.classList.remove('tilting'); document.body.classList.remove('tilting'); $('#adjBar').hidden = true;
+  if (apply) {
+    const sp = S.spread; sp.adj = t.adj; sp.fill = t.fill;
+    persistSpread(); rebuild();
+    await setPageImage();
+    toast(hasTilt(sp) ? 'Tilt saved for these pages' : 'Tilt reset');
+  }
+}
+
+const litCache = new Map();
+async function setPageImage() {
+  const sp = S.spread; if (!sp) return;
+  let url = S.imgURL;
+  const tilt = hasTilt(sp), light = !!S.settings.lighting;
+  if (tilt || light) {
+    const key = `${sp.id}|${tilt ? sp.adj.join(',') : ''}|${light ? 1 : 0}`;
+    if (!litCache.has(key)) {
+      if (light) { busy('Evening out the lighting…'); await nextFrame(); }
+      try {
+        const bmp = await createImageBitmap(sp.blob);
+        let c;
+        if (tilt) c = renderTilted(bmp, sp, sp.adj, 1, sp.fill || paperColor(bmp));
+        else { c = document.createElement('canvas'); c.width = bmp.width; c.height = bmp.height; c.getContext('2d').drawImage(bmp, 0, 0); }
+        if (light) evenLighting(c);
+        litCache.set(key, URL.createObjectURL(await canvasBlob(c, 'image/jpeg', 0.92)));
+        if (litCache.size > 8) { const [k, u] = litCache.entries().next().value; URL.revokeObjectURL(u); litCache.delete(k); }
+      } catch (e) { toast('The photo couldn’t be redrawn.'); }
+      busy(false);
+    }
+    url = litCache.get(key) || url;
+  }
+  S.shownURL = url; img.src = url;
+  try { await img.decode(); } catch (e) {}
+}
+async function showSpread(sp) {
+  if (S.tilt) await endTilt(false);
+  S.spread = sp; S.imgW = sp.w; S.imgH = sp.h;
+  if (S.imgURL) URL.revokeObjectURL(S.imgURL);
+  S.imgURL = URL.createObjectURL(sp.blob);
+  await setPageImage();
+  store('rd.cur', sp.id);
+  S.sel = null; S.info = null;
+  $('#empty').hidden = true; page.classList.add('show');
+  updateBar(); rebuild(); renderInfo(); renderSide();
+  setView('spread'); requestWake(); updateFlip();
+}
+function showEmpty() { updateFlip(); $('#empty').hidden = false; page.classList.remove('show'); wrap.style.width = ''; wrap.style.height = ''; updateBar(); updateProgress(); renderSide(); }
+async function requestWake() { try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !S.wake) { S.wake = await navigator.wakeLock.request('screen'); S.wake.addEventListener('release', () => { S.wake = null; }); } } catch (e) {} }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.spread) requestWake(); });
+addEventListener('resize', () => { applyPanels(); if (pracSheet.classList.contains('open')) renderPane(); });
+
+/* ================= Camera + review ================= */
+function setCapMode(mode) {
+  $('#liveCtl').hidden = mode !== 'live'; $('#reviewCtl').hidden = mode !== 'review';
+  video.hidden = mode !== 'live'; reviewCanvas.hidden = mode !== 'review'; $('#guide').hidden = mode !== 'live';
+  if (mode === 'review') $('#camMsg').hidden = true;
+}
+function camMsg(t) { const el = $('#camMsg'); el.textContent = t; el.hidden = false; video.hidden = true; $('#guide').hidden = true; }
+function stopCamera() { if (S.stream) S.stream.getTracks().forEach(t => t.stop()); S.stream = null; video.srcObject = null; }
+async function startCamera() {
+  stopCamera(); $('#camMsg').hidden = true; video.hidden = false; $('#guide').hidden = false;
+  if (!navigator.mediaDevices?.getUserMedia) { camMsg('The camera only opens on an https:// address or on localhost. You can still use “Choose a photo”.'); return; }
+  try {
+    S.stream = await navigator.mediaDevices.getUserMedia({ audio:false, video:{ facingMode:{ ideal:S.settings.facing }, width:{ ideal:4096 }, height:{ ideal:3072 } } });
+    video.srcObject = S.stream; await video.play().catch(() => {});
+    try { await S.stream.getVideoTracks()[0].applyConstraints({ advanced:[{ focusMode:'continuous' }] }); } catch (e) {}
+  } catch (e) { camMsg('The camera didn’t open (' + (e.name || e.message) + '). Allow camera access for this site in Chrome, or use “Choose a photo”.'); }
+}
+async function openCapture() { openSheet(capSheet); setCapMode('live'); await startCamera(); }
+function closeCapture() { stopCamera(); S.raw = null; closeSheet(capSheet); }
+async function shoot() {
+  if (!S.stream) return;
+  const tr = S.stream.getVideoTracks()[0]; let bmp = null;
+  if ('ImageCapture' in window) {
+    const ic = new ImageCapture(tr); let opts = {};
+    try { const caps = await ic.getPhotoCapabilities(); if (caps?.imageWidth?.max) opts = { imageWidth:caps.imageWidth.max, imageHeight:caps.imageHeight.max }; } catch (e) {}
+    try { bmp = await createImageBitmap(await ic.takePhoto(opts)); } catch (e) { try { bmp = await createImageBitmap(await ic.takePhoto()); } catch (e2) { bmp = null; } }
+  }
+  if (!bmp) { try { bmp = await createImageBitmap(video); } catch (e) { const c = document.createElement('canvas'); c.width = video.videoWidth; c.height = video.videoHeight; c.getContext('2d').drawImage(video, 0, 0); bmp = c; } }
+  stopCamera(); toReview(bmp);
+}
+function toReview(src) { S.raw = src; S.revRot = S.settings.rotate || 0; S.revMir = !!S.settings.mirror; S.revStraight = !!S.settings.straighten; $('#straightBtn').setAttribute('aria-pressed', String(S.revStraight)); setCapMode('review'); drawReview(); }
+function drawTransformed(src, rot, mirror, maxEdge) {
+  const sw = src.width, sh = src.height, swap = rot % 180 !== 0, w = swap ? sh : sw, h = swap ? sw : sh;
+  const sc = Math.min(1, maxEdge / Math.max(w, h));
+  const c = document.createElement('canvas'); c.width = Math.round(w * sc); c.height = Math.round(h * sc);
+  const x = c.getContext('2d');
+  x.translate(c.width / 2, c.height / 2); x.rotate(rot * Math.PI / 180); if (mirror) x.scale(-1, 1);
+  x.drawImage(src, -sw * sc / 2, -sh * sc / 2, sw * sc, sh * sc);
+  return c;
+}
+function drawReview() { const c = drawTransformed(S.raw, S.revRot, S.revMir, 1600); reviewCanvas.width = c.width; reviewCanvas.height = c.height; reviewCanvas.getContext('2d').drawImage(c, 0, 0); }
+const canvasBlob = (c, type, q) => new Promise(r => c.toBlob(r, type, q));
+const blobB64 = b => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1]); fr.onerror = () => rej(fr.error); fr.readAsDataURL(b); });
+
+/* --- Even lighting: brighten the shadowed parts of the page so it looks evenly lit. Keeps color; display only. --- */
+function evenLighting(c) {
+  const W = c.width, H = c.height, ctx = c.getContext('2d', { willReadFrequently:true });
+  const sw = 120, sh = Math.max(1, Math.round(H * sw / W));
+  const sc = document.createElement('canvas'); sc.width = sw; sc.height = sh;
+  const sx = sc.getContext('2d', { willReadFrequently:true }); sx.imageSmoothingQuality = 'high'; sx.drawImage(c, 0, 0, sw, sh);
+  const sd = sx.getImageData(0, 0, sw, sh), sdd = sd.data;
+  let g = new Float32Array(sw * sh);
+  for (let i = 0; i < sw * sh; i++) g[i] = 0.299 * sdd[i * 4] + 0.587 * sdd[i * 4 + 1] + 0.114 * sdd[i * 4 + 2];
+  const filt = (src, max) => { // 5x5 max (erases text, keeps paper) or mean (smooths)
+    const o = new Float32Array(sw * sh);
+    for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) {
+      let m = 0, n = 0;
+      for (let dy = -2; dy <= 2; dy++) { const yy = y + dy; if (yy < 0 || yy >= sh) continue; for (let dx = -2; dx <= 2; dx++) { const xx = x + dx; if (xx < 0 || xx >= sw) continue; const v = src[yy * sw + xx]; if (max) { if (v > m) m = v; } else { m += v; n++; } } }
+      o[y * sw + x] = max ? m : m / n;
+    }
+    return o;
+  };
+  g = filt(filt(filt(g, true), false), false);
+  for (let i = 0; i < sw * sh; i++) { sdd[i * 4] = sdd[i * 4 + 1] = sdd[i * 4 + 2] = g[i]; sdd[i * 4 + 3] = 255; }
+  sx.putImageData(sd, 0, 0);
+  const bc = document.createElement('canvas'); bc.width = W; bc.height = H;
+  const bx = bc.getContext('2d', { willReadFrequently:true }); bx.imageSmoothingEnabled = true; bx.imageSmoothingQuality = 'high'; bx.drawImage(sc, 0, 0, W, H);
+  const bd = bx.getImageData(0, 0, W, H).data, id = ctx.getImageData(0, 0, W, H), d = id.data;
+  for (let p = 0; p < d.length; p += 4) {
+    const gain = clamp(236 / Math.max(1, bd[p]), 0.95, 1.7);
+    for (let k = 0; k < 3; k++) { const v = (d[p + k] * gain - 20) * 1.09; d[p + k] = v < 0 ? 0 : v > 255 ? 255 : v; }
+  }
+  ctx.putImageData(id, 0, 0);
+}
+/* --- Straighten: read each page's text angle from Vision's boxes, rotate each page on its own, crop to the text --- */
+const DEG = Math.PI / 180;
+const visionBlocks = fta => { const out = []; (fta.pages || []).forEach(p => (p.blocks || []).forEach(b => out.push(b))); return out; };
+function vbox(bp, map) {
+  const v = (bp && bp.vertices) || []; if (!v.length) return null;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const p of v) { const [x, y] = map(p.x || 0, p.y || 0); x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+  return { x0, y0, x1, y1 };
+}
+const IDENT = (x, y) => [x, y];
+function gutterSplit(xs, W) {
+  xs = xs.slice().sort((a, b) => a - b);
+  let split = W / 2, best = 0;
+  for (let k = 1; k < xs.length; k++) { const mid = (xs[k] + xs[k - 1]) / 2, gap = xs[k] - xs[k - 1]; if (mid > W * 0.3 && mid < W * 0.7 && gap > best) { best = gap; split = mid; } }
+  return best < W * 0.03 ? W / 2 : split;
+}
+function textAngle(blocks) {
+  let sx = 0, sy = 0;
+  for (const b of blocks) for (const pa of (b.paragraphs || [])) {
+    const v = pa.boundingBox?.vertices; if (!v || v.length < 2) continue;
+    const dx = (v[1].x || 0) - (v[0].x || 0), dy = (v[1].y || 0) - (v[0].y || 0);
+    if (Math.hypot(dx, dy) > 10) { sx += dx; sy += dy; }
+  }
+  return (sx || sy) ? Math.atan2(sy, sx) : 0;
+}
+function rotator(W, H, th) {
+  const phi = -th, c = Math.cos(phi), s = Math.sin(phi);
+  const NW = Math.round(Math.abs(W * c) + Math.abs(H * s)), NH = Math.round(Math.abs(W * s) + Math.abs(H * c));
+  return { W:NW, H:NH, phi, map:(x, y) => { const dx = x - W / 2, dy = y - H / 2; return [dx * c - dy * s + NW / 2, dx * s + dy * c + NH / 2]; } };
+}
+function parseVision(blocks, sideOf, mapOf) {
+  const inf = blocks.map(b => { const side = sideOf(b); return { b, side, bb:vbox(b.boundingBox, mapOf(side)) || { x0:0, y0:0, x1:0, y1:0 } }; });
+  inf.sort((A, B) => A.side - B.side || A.bb.y0 - B.bb.y0 || A.bb.x0 - B.bb.x0);
+  const chars = []; let para = 0, line = 0;
+  for (const o of inf) {
+    const map = mapOf(o.side);
+    for (const p of (o.b.paragraphs || [])) {
+      para++; line++;
+      for (const w of (p.words || [])) for (const s of (w.symbols || [])) {
+        const t = s.text || ''; if (!t.trim()) continue;
+        chars.push({ ch:t, box:vbox(s.boundingBox, map), para, line, side:o.side });
+        const br = s.property?.detectedBreak?.type;
+        if ((br === 'SPACE' || br === 'SURE_SPACE') && /[A-Za-z0-9]$/.test(t)) chars.push({ ch:' ', box:null, para, line, side:o.side });
+        if (br === 'EOL_SURE_SPACE' || br === 'LINE_BREAK') line++;
+      }
+    }
+  }
+  return chars;
+}
+function textBounds(chars, W, H) {
+  const bs = chars.map(c => c.box).filter(Boolean);
+  if (bs.length < 15) return { x:0, y:0, w:W, h:H, left:0, right:W, ch:20 };
+  const hs = bs.map(b => b.y1 - b.y0).sort((a, b) => a - b), ch = hs[hs.length >> 1] || 20;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const b of bs) { x0 = Math.min(x0, b.x0); y0 = Math.min(y0, b.y0); x1 = Math.max(x1, b.x1); y1 = Math.max(y1, b.y1); }
+  const left = x0, right = x1, m = Math.max(ch * 4, Math.max(W, H) * 0.04);
+  x0 = Math.max(0, Math.floor(x0 - m)); y0 = Math.max(0, Math.floor(y0 - m)); x1 = Math.min(W, Math.ceil(x1 + m)); y1 = Math.min(H, Math.ceil(y1 + m));
+  return { x:x0, y:y0, w:x1 - x0, h:y1 - y0, left, right, ch };
+}
+function paperColor(src) {
+  const c = document.createElement('canvas'); c.width = c.height = 24;
+  const x = c.getContext('2d', { willReadFrequently:true });
+  x.drawImage(src, src.width * 0.3, src.height * 0.3, src.width * 0.4, src.height * 0.4, 0, 0, 24, 24);
+  const d = x.getImageData(0, 0, 24, 24).data, px = [];
+  for (let i = 0; i < d.length; i += 4) px.push([0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2], d[i], d[i + 1], d[i + 2]]);
+  px.sort((a, b) => a[0] - b[0]); const q = px[Math.floor(px.length * 0.85)];
+  return `rgb(${q[1]},${q[2]},${q[3]})`;
+}
+function renderRotCrop(src, R, crop, fill) {
+  const c = document.createElement('canvas'); c.width = crop.w; c.height = crop.h;
+  const x = c.getContext('2d'); x.fillStyle = fill || paperColor(src); x.fillRect(0, 0, crop.w, crop.h);
+  x.translate(-crop.x, -crop.y); x.translate(R.W / 2, R.H / 2); x.rotate(R.phi);
+  x.drawImage(src, -src.width / 2, -src.height / 2);
+  return c;
+}
+// Each page of a hand-held book usually tilts a different way, so each side is rotated separately,
+// cropped up to the gutter, and the two pages are laid side by side again.
+function composePages(src, chars, Rs, split) {
+  const H = src.height, sides = [0, 1].filter(s => chars.some(c => c.side === s && c.box));
+  const parts = sides.map(s => {
+    const R = Rs[s], cr = textBounds(chars.filter(c => c.side === s), R.W, R.H);
+    if (sides.length === 2) {
+      const sx = Math.round(R.map(split, H / 2)[0]);
+      if (s === 0) { const x1 = Math.max(Math.min(cr.x + cr.w, sx), Math.ceil(cr.right + cr.ch * 0.6)); cr.w = Math.max(10, x1 - cr.x); }
+      else { const x0 = Math.min(Math.max(cr.x, sx), Math.floor(cr.left - cr.ch * 0.6)); cr.w = cr.x + cr.w - x0; cr.x = x0; }
+    }
+    return { s, R, cr };
+  });
+  const gap = parts.length === 2 ? Math.round(src.width * 0.02) : 0;
+  const out = document.createElement('canvas');
+  out.width = parts.reduce((a, o) => a + o.cr.w, 0) + gap; out.height = Math.max(...parts.map(o => o.cr.h));
+  const fill = paperColor(src), ctx = out.getContext('2d'); ctx.fillStyle = fill; ctx.fillRect(0, 0, out.width, out.height);
+  let x = 0;
+  for (const o of parts) {
+    ctx.drawImage(renderRotCrop(src, o.R, o.cr, fill), x, 0);
+    for (const c of chars) if (c.side === o.s && c.box) { c.box.x0 += x - o.cr.x; c.box.x1 += x - o.cr.x; c.box.y0 -= o.cr.y; c.box.y1 -= o.cr.y; }
+    x += o.cr.w + gap;
+  }
+  return out;
+}
+function layoutFromVision(c, fta) {
+  const W = c.width, H = c.height, blocks = visionBlocks(fta), straighten = S.settings.straighten;
+  const all = straighten ? textAngle(blocks) : 0;
+  if (straighten && Math.abs(all) > 20 * DEG) { // photo taken sideways or upside down: turn it as a whole
+    const R = rotator(W, H, all), cx = b => { const bb = vbox(b.boundingBox, R.map); return bb ? (bb.x0 + bb.x1) / 2 : 0; };
+    const split = gutterSplit(blocks.map(cx), R.W);
+    const chars = parseVision(blocks, b => cx(b) < split ? 0 : 1, () => R.map);
+    const crop = textBounds(chars, R.W, R.H);
+    chars.forEach(ch => { if (ch.box) { ch.box.x0 -= crop.x; ch.box.x1 -= crop.x; ch.box.y0 -= crop.y; ch.box.y1 -= crop.y; } });
+    return { chars, out:renderRotCrop(c, R, crop) };
+  }
+  const cx = b => { const bb = vbox(b.boundingBox, IDENT); return bb ? (bb.x0 + bb.x1) / 2 : 0; };
+  const split = gutterSplit(blocks.map(cx), W), sideOf = b => cx(b) < split ? 0 : 1;
+  if (!straighten) return { chars:parseVision(blocks, sideOf, () => IDENT), out:c };
+  const Rs = [0, 1].map(s => { let a = textAngle(blocks.filter(b => sideOf(b) === s)); if (Math.abs(a) < 0.3 * DEG) a = 0; return rotator(W, H, a); });
+  const chars = parseVision(blocks, sideOf, s => Rs[s].map);
+  return { chars, out:composePages(c, chars, Rs, split) };
+}
+async function commitCapture() {
+  if (!S.raw) return;
+  if (!S.settings.apiKey) { toast('Add your Google Cloud API key in Settings first.', 5000); openSettings(); return; }
+  S.settings.rotate = S.revRot; S.settings.mirror = S.revMir; S.settings.straighten = S.revStraight; saveSettings();
+  try {
+    busy('Preparing the photo…'); await nextFrame();
+    const c = drawTransformed(S.raw, S.revRot, S.revMir, 3200);
+    busy('Reading the pages…');
+    const blob0 = await canvasBlob(c, 'image/jpeg', 0.9);
+    const fta = await visionOCR(await blobB64(blob0));
+    if (!fta) throw new Error('No text found. Check focus and lighting, then try again.');
+    if (S.settings.straighten) { busy('Straightening the pages…'); await nextFrame(); }
+    const { chars, out } = layoutFromVision(c, fta);
+    if (!chars.some(x => isCJK(x.ch))) throw new Error('No Chinese text found. Check focus and lighting, then try again.');
+    const blob = out === c ? blob0 : await canvasBlob(out, 'image/jpeg', 0.9);
+    const sp = { blob, chars, w:out.width, h:out.height, maxReached:-1, done:false, demo:false, at:Date.now() };
+    await saveNewSpread(sp);
+    closeCapture(); await showSpread(sp); busy(false);
+    toast('Tap a word. Double-tap to save. Press and hold for the sentence.', 4500);
+  } catch (e) { busy(false); toast(friendlyError(e), 8000); }
+}
+
+/* ================= Sample pages ================= */
+const DEMO = {
+  left:['第一章：小猫回家', '今天早上，天气很好。小明打开窗户，看见一只小猫坐在树下。它的眼睛很大，好像在找什么东西。', '小明走过去，轻轻地问：“你是不是迷路了？”小猫看了看他，没有跑开。'],
+  right:['小明的妈妈说，我们可以先给它一点水和饭。小猫吃得很快，吃完以后就睡着了。', '晚上，邻居王奶奶来敲门。她笑着说：“原来它在你们家，我找了一整天！”', '小明有一点难过，但是他也很高兴。他知道，小猫终于回家了。'],
+  tr:{
+    '第一章：小猫回家':'Chapter One: The Kitten Goes Home',
+    '今天早上，天气很好。':'The weather was lovely this morning.',
+    '小明打开窗户，看见一只小猫坐在树下。':'Xiaoming opened the window and saw a kitten sitting under a tree.',
+    '它的眼睛很大，好像在找什么东西。':'It had big eyes and seemed to be looking for something.',
+    '小明走过去，轻轻地问：“你是不是迷路了？”':'Xiaoming walked over and asked softly, “Are you lost?”',
+    '小猫看了看他，没有跑开。':'The kitten looked at him and didn’t run away.',
+    '小明的妈妈说，我们可以先给它一点水和饭。':'Xiaoming’s mom said they could give it a little water and food first.',
+    '小猫吃得很快，吃完以后就睡着了。':'The kitten ate quickly and fell asleep as soon as it finished.',
+    '晚上，邻居王奶奶来敲门。':'In the evening, Grandma Wang from next door knocked on the door.',
+    '她笑着说：“原来它在你们家，我找了一整天！”':'She laughed and said, “So it was at your house! I’ve been looking all day!”',
+    '小明有一点难过，但是他也很高兴。':'Xiaoming felt a little sad, but he was happy too.',
+    '他知道，小猫终于回家了。':'He knew the kitten had finally gone home.'
+  }
+};
+async function buildDemo() {
+  try { await Promise.all([document.fonts.load('500 50px "Noto Serif SC"', '小猫回家今天早上'), document.fonts.load('700 62px "Noto Serif SC"', '第一章小猫回家')]); } catch (e) {}
+  const W = 2400, H = 1700, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  x.fillStyle = '#5a5047'; x.fillRect(0, 0, W, H);
+  const pages = [{ x:110, y:80, w:1090, h:1540 }, { x:1200, y:80, w:1090, h:1540 }];
+  x.fillStyle = 'rgba(0,0,0,.35)'; x.fillRect(100, 96, 2200, 1540);
+  pages.forEach((p, i) => {
+    const g = x.createLinearGradient(p.x, 0, p.x + p.w, 0);
+    if (i === 0) { g.addColorStop(0, '#F7F2E6'); g.addColorStop(.82, '#F2ECDD'); g.addColorStop(1, '#D6CCB6'); }
+    else { g.addColorStop(0, '#D6CCB6'); g.addColorStop(.18, '#F2ECDD'); g.addColorStop(1, '#F7F2E6'); }
+    x.fillStyle = g; x.fillRect(p.x, p.y, p.w, p.h);
+  });
+  const chars = []; let para = 0, line = 0;
+  const NOSTART = new Set(Array.from('，。！？；：、”’）》」…')), LH = 96;
+  function lay(p, text, y, title) {
+    para++; line++;
+    const fs = title ? 62 : 50, cell = title ? 74 : 58;
+    x.font = `${title ? 700 : 500} ${fs}px "Noto Serif SC", "Noto Serif CJK SC", "Songti SC", serif`;
+    x.fillStyle = '#1e1b17'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    const left = p.x + 130, cols = Math.floor((p.w - 260) / cell), glyphs = Array.from(text);
+    let col = title ? Math.max(0, Math.floor((cols - glyphs.length) / 2)) : 2, cy = y;
+    for (const g of glyphs) {
+      if (col >= cols && !NOSTART.has(g)) { col = 0; cy += LH; line++; }
+      const cx = left + col * cell + cell / 2; x.fillText(g, cx, cy);
+      chars.push({ ch:g, box:{ x0:cx - cell * 0.48, y0:cy - fs * 0.6, x1:cx + cell * 0.48, y1:cy + fs * 0.6 }, para, line });
+      col++;
+    }
+    return cy + LH;
+  }
+  let y = lay(pages[0], DEMO.left[0], pages[0].y + 200, true) + 50;
+  for (const t of DEMO.left.slice(1)) y = lay(pages[0], t, y, false) + 26;
+  y = pages[1].y + 170;
+  for (const t of DEMO.right) y = lay(pages[1], t, y, false) + 26;
+  x.font = '500 30px "Source Sans 3", sans-serif'; x.fillStyle = '#8a8172';
+  x.fillText('12', pages[0].x + pages[0].w / 2, pages[0].y + pages[0].h - 70);
+  x.fillText('13', pages[1].x + pages[1].w / 2, pages[1].y + pages[1].h - 70);
+  return { blob:await canvasBlob(c, 'image/jpeg', 0.9), chars, w:W, h:H, maxReached:-1, done:false, demo:true, at:Date.now() };
+}
+async function startDemo() {
+  busy('Setting up the sample pages…');
+  try { const sp = await buildDemo(); await saveNewSpread(sp); await showSpread(sp); busy(false); toast('Tap a word. Double-tap to save. Press and hold for the sentence.', 5000); }
+  catch (e) { busy(false); toast('The sample pages didn’t load: ' + e.message, 6000); }
+}
+
+/* ================= Writing practice ================= */
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function openPractice(text) {
+  openSheet(pracSheet);
+  const target = text || S.practiceWord?.w || S.words[0]?.w;
+  S.practiceWord = S.words.find(x => x.w === target) || null; S.practiceChar = 0;
+  renderList(); renderPane();
+}
+function renderList() {
+  $('#pracTitle').textContent = `Writing practice (${S.words.length} words)`;
+  $('#wlist').innerHTML = rowsHTML(S.practiceWord?.w);
+}
+$('#wlist').addEventListener('click', e => { const b = e.target.closest('.wrow'); if (!b) return; S.practiceWord = S.words.find(x => x.w === b.dataset.w) || null; S.practiceChar = 0; renderList(); renderPane(); });
+const practiceChars = w => Array.from(w.w).filter(isCJK);
+function renderPane() {
+  const pane = $('#pane'), w = S.practiceWord; S.writer = null;
+  if (!w) { pane.innerHTML = `<div class="p-head"><div class="hz" style="font-size:40px" lang="zh">写字</div><p class="note">Save words while reading and they appear here for writing practice.</p></div>`; return; }
+  const chs = practiceChars(w), pys = (w.py || '').split(' '), allCh = Array.from(w.w);
+  const size = Math.max(200, Math.min(320, pane.clientWidth - 40, Math.round(innerHeight * 0.42)));
+  S.practiceChar = clamp(S.practiceChar, 0, Math.max(0, chs.length - 1));
+  pane.innerHTML = `
+    <div class="p-head"><div class="hz" lang="zh">${hzSpans(allCh, pys)}</div><div class="pyl">${pySpans(pys)}</div>${(() => { const a = altForm(w.w, pys); return a ? `<div class="altlab">${altLabel()}: <span lang="zh">${esc(a)}</span></div>` : ""; })()}<div class="g">${esc(w.gloss || '')}</div>${(() => { const ch = chs[S.practiceChar], pl = ch ? partsLine(ch) : ""; return pl ? `<div class="altlab">${esc(ch)} = ${pl}</div>` : ""; })()}</div>
+    ${chs.length > 1 ? `<div class="charpick">${chs.map((c, i) => `<button type="button" data-ci="${i}" aria-pressed="${i === S.practiceChar}" aria-label="Practice ${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}
+    <div class="tzg" style="width:${size}px;height:${size}px">
+      <svg class="grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="0.5" y="0.5" width="99" height="99" stroke-width="2"/>
+        <line class="dash" x1="50" y1="0" x2="50" y2="100" stroke-width="1"/><line class="dash" x1="0" y1="50" x2="100" y2="50" stroke-width="1"/>
+        <line class="dash" x1="0" y1="0" x2="100" y2="100" stroke-width="1"/><line class="dash" x1="100" y1="0" x2="0" y2="100" stroke-width="1"/>
+      </svg>
+      <div class="target" id="writerTarget"></div>
+    </div>
+    <div class="modes">
+      <button class="btn" type="button" data-mode="watch">Watch strokes</button>
+      <button class="btn" type="button" data-mode="trace">Trace</button>
+      <button class="btn" type="button" data-mode="memory">From memory</button>
+      <button class="btn" type="button" data-mode="listen">${ICON.speaker}Listen</button>
+    </div>
+    <p class="radnote">The radical, when known, is drawn in blue.</p>
+    <p class="status" id="pStatus" aria-live="polite">Watch the strokes, then trace them.</p>
+    <div class="modes">
+      <button class="btn primary" type="button" data-mode="done">${ICON.check}Mark practiced</button>
+      <button class="btn ghost" type="button" data-mode="remove">Remove word</button>
+    </div>
+    <p class="note" style="text-align:center;max-width:520px;margin:0">${w.n ? `Practiced ${w.n} time${w.n === 1 ? '' : 's'}.` : 'Not practiced yet.'}${w.sent ? ` Saved from: <span lang="zh">${esc(w.sent)}</span>` : ''}</p>`;
+  makeWriter(chs[S.practiceChar], size);
+}
+function makeWriter(ch, size) {
+  const st = $('#pStatus');
+  if (!ch) { st.textContent = 'This word has no Chinese characters to write.'; return; }
+  if (!window.HanziWriter) { st.textContent = 'Writing practice needs the Hanzi Writer library, which didn’t load. Check your connection and reopen this page.'; return; }
+  try {
+    S.writer = HanziWriter.create($('#writerTarget'), ch, {
+      width:size, height:size, padding:Math.round(size * 0.06), showCharacter:true, showOutline:true,
+      strokeColor:css('--ink') || '#1B1F24', outlineColor:css('--line') || '#C6CDD3', drawingColor:css('--jade') || '#1F7A5C', highlightColor:css('--jade') || '#1F7A5C', radicalColor:css('--t3') || '#2B60C8',
+      drawingWidth:Math.round(size / 14), strokeAnimationSpeed:1, delayBetweenStrokes:220,
+      onLoadCharDataError:() => { st.textContent = `Stroke data for ${ch} isn’t available.`; }
+    });
+  } catch (e) { st.textContent = 'Couldn’t start writing practice: ' + e.message; }
+}
+function runMode(mode) {
+  const w = S.practiceWord; if (!w) return;
+  const st = $('#pStatus'), wr = S.writer;
+  if (mode === 'listen') { speak(w.w); return; }
+  if (mode === 'done') { w.n = (w.n || 0) + 1; w.last = Date.now(); saveWords(); toast('Marked practiced'); renderList(); renderPane(); renderSide(); return; }
+  if (mode === 'remove') {
+    const i = S.words.indexOf(w); if (i >= 0) S.words.splice(i, 1);
+    saveWords(); updateBar(); drawHighlights(); renderSide();
+    S.practiceWord = S.words[Math.min(i, S.words.length - 1)] || null; S.practiceChar = 0;
+    toast('Removed from saved words'); renderList(); renderPane(); return;
+  }
+  if (!wr) return;
+  try { wr.cancelQuiz(); } catch (e) {}
+  const more = S.practiceChar < practiceChars(w).length - 1;
+  if (mode === 'watch') { wr.showOutline(); wr.animateCharacter(); st.textContent = 'Watch the stroke order.'; }
+  if (mode === 'trace' || mode === 'memory') {
+    wr.hideCharacter(); if (mode === 'trace') wr.showOutline(); else wr.hideOutline();
+    st.textContent = mode === 'trace' ? 'Trace each stroke in order with your finger or stylus.' : 'Write it from memory. A hint appears after 3 misses.';
+    wr.quiz({ showHintAfterMisses:mode === 'trace' ? 2 : 3, onComplete:sum => {
+      const n = sum?.totalMistakes || 0;
+      st.textContent = (n === 0 ? 'Clean, no mistakes.' : `Done with ${n} mistake${n === 1 ? '' : 's'}.`) + (more ? ' The next character is above.' : '');
+      if (mode === 'memory') wr.showOutline();
+    } });
+  }
+}
+$('#pane').addEventListener('click', e => { const ci = e.target.closest('[data-ci]'); if (ci) { S.practiceChar = +ci.dataset.ci; renderPane(); return; } const m = e.target.closest('[data-mode]'); if (m) runMode(m.dataset.mode); });
+function practiceNext() {
+  if (!S.words.length) return;
+  const pool = S.words.filter(x => x !== S.practiceWord), list = pool.length ? pool : S.words;
+  S.practiceWord = list.slice().sort((a, b) => (a.n || 0) - (b.n || 0) || (a.last || 0) - (b.last || 0))[0]; S.practiceChar = 0;
+  renderList(); renderPane();
+}
+function exportWords() {
+  const data = JSON.stringify({ app:'reading-desk', version:2, exported:new Date().toISOString(), words:S.words, customWords:S.lex, knownWords:Object.keys(S.known), stats:S.stats }, null, 2);
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([data], { type:'application/json' })); a.download = `reading-desk-words-${dayKey()}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('Exported your words');
+}
+async function importWords(file) {
+  try {
+    const j = JSON.parse(await file.text()), list = Array.isArray(j) ? j : j.words;
+    if (!Array.isArray(list)) throw new Error('That file doesn’t contain a word list.');
+    let n = 0;
+    for (const w of list) {
+      if (!w || typeof w.w !== 'string' || !w.w.trim() || S.words.some(x => x.w === w.w)) continue;
+      S.words.unshift({ w:w.w, py:String(w.py || ''), gloss:String(w.gloss || ''), sent:String(w.sent || ''), added:+w.added || Date.now(), n:0, last:0, c:nextColor(), box:0, due:dayKey() }); n++;
+    }
+    if (Array.isArray(j.knownWords)) { for (const k of j.knownWords) if (typeof k === 'string' && !S.known[k] && !S.words.some(x => x.w === k)) S.known[k] = Date.now(); saveKnown(); }
+    if (j.customWords && typeof j.customWords === 'object') { for (const [k, v] of Object.entries(j.customWords)) if (typeof k === 'string' && !S.lex[k]) S.lex[k] = { name:!!v?.name }; saveLex(); rebuild(); }
+    saveWords(); updateBar(); drawHighlights(); renderList(); renderSide();
+    if (!S.practiceWord) { S.practiceWord = S.words[0] || null; renderPane(); }
+    toast(n ? `Added ${n} word${n === 1 ? '' : 's'}` : 'No new words in that file');
+  } catch (e) { toast('Import failed: ' + e.message, 5000); }
+}
+
+/* ================= Known words (tracked quietly, no page coloring) ================= */
+const saveKnown = () => store(LS.known, S.known);
+const isKnown = t => !!S.known[t];
+function markKnown(t, on = true) {
+  if (on) {
+    S.known[t] = Date.now();
+    const i = S.words.findIndex(x => x.w === t);
+    if (i >= 0) { S.words.splice(i, 1); saveWords(); updateBar(); renderSide(); drawHighlights(); }
+  } else delete S.known[t];
+  saveKnown(); updateFlip();
+}
+// Words that count for "% known": Chinese words on the page, minus names, each counted once.
+function pageWords(model) {
+  const set = new Set();
+  for (const w of (model?.words || [])) if (hasCJK(w.text) && !S.lex[w.text]?.name) set.add(w.text);
+  return set;
+}
+function knownPct(model) {
+  const ws = pageWords(model); if (!ws.size) return null;
+  let k = 0; for (const t of ws) if (S.known[t]) k++;
+  return Math.round(k / ws.size * 100);
+}
+function noteLookup(t) {
+  if (!S.spread || !hasCJK(t)) return;
+  S.spread.looked = S.spread.looked || [];
+  if (!S.spread.looked.includes(t)) { S.spread.looked.push(t); persistSpread(); }
+}
+// When you finish a pair of pages, words you read without looking up or saving count as known.
+function learnFromPages() {
+  const pct = knownPct(S.model);
+  if (pct != null) { S.stats.knownLog = S.stats.knownLog || []; S.stats.knownLog.push({ d:dayKey(), pct, id:S.spread.id }); S.spread.knownPct = pct; }
+  const looked = new Set(S.spread.looked || []), saved = new Set(S.words.map(w => w.w)), list = [];
+  for (const t of pageWords(S.model)) if (!saved.has(t) && !looked.has(t) && !S.known[t]) { S.known[t] = Date.now(); list.push(t); }
+  saveKnown(); saveStats(); updateFlip();
+  return { pct, added:list.length, list };
+}
+/* Reading time: counts while these pages are open and you've touched the screen in the last 2 minutes. */
+let lastAct = 0;
+['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, () => { lastAct = Date.now(); }, { passive:true }));
+setInterval(() => {
+  if (!S.spread || document.visibilityState !== 'visible' || anySheet() || Date.now() - lastAct > 120000) return;
+  const t = todayStats(), before = t.secs || 0; t.secs = before + 15; saveStats();
+  if (before < 300 && t.secs >= 300) { updateProgress(); toast('5 minutes of reading today. That keeps your streak going.', 4500); }
+}, 15000);
+const activeDay = d => !!d && ((d.pages || 0) > 0 || !!d.reviewed || (d.secs || 0) >= 300);
+
+/* ================= Your reading (streak + stats) ================= */
+function longestStreak() {
+  const keys = Object.keys(S.stats.days).filter(k => activeDay(S.stats.days[k])).sort();
+  let best = 0, run = 0, prev = null;
+  for (const k of keys) { const d = new Date(k + 'T12:00:00'); run = prev && Math.round((d - prev) / 864e5) === 1 ? run + 1 : 1; best = Math.max(best, run); prev = d; }
+  return best;
+}
+function weeklyKnown() {
+  const log = S.stats.knownLog || [], weeks = [];
+  const monday = d => { const x = new Date(d + 'T12:00:00'); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return dayKey(x); };
+  const now = monday(dayKey());
+  for (let i = 7; i >= 0; i--) { const d = new Date(now + 'T12:00:00'); d.setDate(d.getDate() - 7 * i); weeks.push({ start:dayKey(d), vals:[] }); }
+  for (const e of log) { const w = weeks.find(x => x.start === monday(e.d)); if (w) w.vals.push(e.pct); }
+  return weeks.map(w => ({ start:w.start, avg:w.vals.length ? Math.round(w.vals.reduce((a, b) => a + b, 0) / w.vals.length) : null }));
+}
+function openStats() {
+  const st = streak(), best = Math.max(longestStreak(), st), t = todayStats(), goal = S.settings.goal;
+  const days = S.stats.days, sum = f => Object.values(days).reduce((a, d) => a + (f(d) || 0), 0);
+  let week = 0; for (let i = 0; i < 7; i++) { const d = new Date(); d.setDate(d.getDate() - i); week += days[dayKey(d)]?.pages || 0; }
+  const realPhotos = S.index.filter(x => !x.demo).length, due = dueCount(), mins = Math.floor((t.secs || 0) / 60);
+  const msg = activeDay(t) ? 'You’ve kept it going today.' : st ? 'Do any one of these today to keep it going:' : 'Do any one of these today to start one:';
+  const today = new Date(); today.setHours(12, 0, 0, 0);
+  const start = new Date(today); start.setDate(start.getDate() - start.getDay() - 7 * 11);
+  let cells = '';
+  for (let i = 0; i < 84; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i);
+    const k = dayKey(d), day = days[k], pg = day?.pages || 0, future = d > today;
+    const lv = pg >= goal ? 'l3' : pg && pg * 2 >= goal ? 'l2' : activeDay(day) ? 'l1' : '';
+    cells += `<i class="${lv}${k === dayKey() ? ' today' : ''}${future ? ' future' : ''}" title="${k}: ${pg} page${pg === 1 ? '' : 's'}${day?.reviewed ? ', review done' : ''}"></i>`;
+  }
+  const wk = weeklyKnown(), anyKnown = wk.some(x => x.avg != null);
+  const bars = wk.map(x => `<div class="kb"><div class="kbar"><i style="height:${x.avg ?? 0}%"></i></div><b>${x.avg == null ? '–' : x.avg + '%'}</b><span>${esc(new Date(x.start + 'T12:00:00').toLocaleDateString(undefined, { month:'short', day:'numeric' }))}</span></div>`).join('');
+  const pagePct = knownPct(S.model);
+  $('#stats').innerHTML = `
+    <div class="big"><span class="num">${st}</span><div><div class="lab">${st === 1 ? 'day' : 'days'} in a row</div><p>Longest streak: ${best} day${best === 1 ? '' : 's'}. ${esc(msg)}</p>
+      ${activeDay(t) ? '' : '<ul class="mini"><li>finish a pair of pages</li><li>read for 5 minutes</li><li>do the daily review</li></ul>'}</div></div>
+    <div class="revcta"><div><b>${due ? `${due} word${due === 1 ? '' : 's'} to review` : 'No words due for review'}</b><p class="note">${t.reviewed ? 'Today’s review is done.' : 'About 3 minutes: recall some words and write a few from memory.'}</p></div>
+      <button class="btn primary" type="button" id="statReview" ${due ? '' : 'disabled'}>Start daily review</button></div>
+    <div class="tiles">
+      <div class="tile"><b>${t.pages}/${goal}</b><span>pages today</span></div>
+      <div class="tile"><b>${mins}</b><span>minute${mins === 1 ? '' : 's'} reading today</span></div>
+      <div class="tile"><b>${week}</b><span>pages in the last 7 days</span></div>
+      <div class="tile"><b>${sum(d => d.pages)}</b><span>pages read in total</span></div>
+      <div class="tile"><b>${Object.keys(S.known).length}</b><span>words known</span></div>
+      <div class="tile"><b>${S.words.length}</b><span>saved words you’re learning</span></div>
+    </div>
+    <div><h3>How much of each page you already knew</h3>
+      ${anyKnown ? `<div class="kchart" role="img" aria-label="Average percent of words known per week, last 8 weeks">${bars}</div>` : '<p class="note">Finish a pair of pages to start this chart.</p>'}
+      <p class="note" style="margin-top:8px">${pagePct != null ? `On the pages open now, you know ${pagePct}% of the words. ` : ''}When you finish pages, the words you read without looking up count as known. Use the Known button in the word panel to change one.</p></div>
+    <div><h3>Last 12 weeks</h3><div class="cal" role="img" aria-label="Reading days over the last 12 weeks">${cells}</div>
+      <div class="legend">None <i></i><i class="l1"></i> Read <i class="l2"></i><i class="l3"></i> Goal met</div></div>
+    ${S.spread ? `<div><h3>These pages</h3><p class="note" style="margin:0 0 8px">${realPhotos} photo${realPhotos === 1 ? '' : 's'} kept on this device. Nothing is deleted unless you delete it.</p><button class="btn" type="button" id="delSpread">Reorder or delete pages</button></div>` : ''}`;
+  $('#delSpread')?.addEventListener('click', openPages);
+  $('#statReview')?.addEventListener('click', () => { closeSheet(statSheet); openReview(); });
+  openSheet(statSheet);
+}
+
+/* ================= Settings ================= */
+const radio = (name, v) => document.querySelectorAll(`input[name=${name}]`).forEach(r => { r.checked = r.value === v; });
+const radioVal = (name, d) => document.querySelector(`input[name=${name}]:checked`)?.value || d;
+function openSettings() {
+  const st = S.settings;
+  $('#fKey').value = st.apiKey; $('#fAiKey').value = st.aiKey; $('#fAiModel').value = st.aiModel;
+  ['fKey', 'fAiKey'].forEach(id => { $('#' + id).type = 'password'; });
+  document.querySelectorAll('[data-show]').forEach(b => { b.textContent = 'Show'; });
+  radio('fScript', st.script); radio('fFacing', st.facing); radio('fDef', st.defLang); radio('fInfoPos', st.infoPos);
+  $('#fSentPy').checked = !!st.sentPinyin; $('#fColor').checked = !!st.colorWords; $('#fAuto').checked = !!st.autoplay;
+  $('#fStraight').checked = !!st.straighten;
+  $('#fRate').value = st.rate; $('#fRateVal').textContent = `(${(+st.rate).toFixed(2)}×)`; $('#fGoal').value = st.goal;
+  loadVoices();
+  const sel = $('#fVoice');
+  sel.innerHTML = `<option value="">Automatic</option>` + S.voices.map(v => `<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})</option>`).join('');
+  sel.value = S.voices.some(v => v.voiceURI === st.voiceURI) ? st.voiceURI : '';
+  $('#voiceHelp').textContent = S.voices.length ? `${S.voices.length} Chinese voice${S.voices.length === 1 ? '' : 's'} on this device.` : 'No Chinese voices found yet. In Android Settings, search “text-to-speech” and install Chinese voice data.';
+  openSheet(setSheet);
+}
+function saveSettingsForm() {
+  const st = S.settings;
+  st.apiKey = $('#fKey').value.trim(); st.aiKey = $('#fAiKey').value.trim(); st.aiModel = $('#fAiModel').value.trim() || DEFAULTS.aiModel;
+  st.script = radioVal('fScript', 'simplified'); st.facing = radioVal('fFacing', 'environment'); st.defLang = radioVal('fDef', 'en'); st.infoPos = radioVal('fInfoPos', 'top');
+  st.sentPinyin = $('#fSentPy').checked; st.colorWords = $('#fColor').checked; st.autoplay = $('#fAuto').checked;
+  st.straighten = $('#fStraight').checked;
+  st.rate = clamp(parseFloat($('#fRate').value) || 0.85, 0.5, 1.2);
+  st.goal = clamp(parseInt($('#fGoal').value, 10) || 4, 1, 60);
+  st.voiceURI = $('#fVoice').value;
+  saveSettings(); closeSheet(setSheet); updateBar(); updateProgress(); drawTints(); renderInfo();
+  toast('Settings saved');
+}
+
+/* ================= Wire up ================= */
+$('#captureBtn').addEventListener('click', openCapture);
+$('#emptyCapture').addEventListener('click', openCapture);
+$('#demoBtn').addEventListener('click', startDemo);
+$('#keyNoteBtn').addEventListener('click', openSettings);
+$('#finishBtn').addEventListener('click', finishPages);
+$('#wordsBtn').addEventListener('click', () => toggleSide());
+$('#detailsBtn').addEventListener('click', () => toggleDetails());
+$('#sideHide').addEventListener('click', () => toggleSide(false));
+$('#settingsBtn').addEventListener('click', openSettings);
+$('#viewSeg').addEventListener('click', e => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+$('#capClose').addEventListener('click', closeCapture);
+$('#shutter').addEventListener('click', shoot);
+$('#pickBtn').addEventListener('click', () => $('#filePick').click());
+$('#filePick').addEventListener('change', async e => {
+  const f = e.target.files?.[0]; e.target.value = ''; if (!f) return;
+  try { const bmp = await createImageBitmap(f); stopCamera(); toReview(bmp); } catch (err) { toast('That photo couldn’t be opened. Try a JPEG or PNG.', 5000); }
+});
+$('#flipCamBtn').addEventListener('click', () => { S.settings.facing = S.settings.facing === 'user' ? 'environment' : 'user'; saveSettings(); startCamera(); });
+$('#retakeBtn').addEventListener('click', () => { S.raw = null; setCapMode('live'); startCamera(); });
+$('#rotBtn').addEventListener('click', () => { S.revRot = (S.revRot + 90) % 360; drawReview(); });
+$('#mirBtn').addEventListener('click', () => { S.revMir = !S.revMir; drawReview(); });
+$('#readBtn').addEventListener('click', commitCapture);
+$('#straightBtn').addEventListener('click', () => { S.revStraight = !S.revStraight; $('#straightBtn').setAttribute('aria-pressed', String(S.revStraight)); });
+$('#prevBtn').addEventListener('click', () => flip(-1));
+$('#nextBtn').addEventListener('click', () => flip(1));
+$('#magBtn').addEventListener('click', toggleMag);
+$('#tiltBtn').addEventListener('click', startTilt);
+$('#tiltDone').addEventListener('click', () => endTilt(true));
+$('#tiltCancel').addEventListener('click', () => endTilt(false));
+$('#tiltReset').addEventListener('click', () => { if (S.tilt) { S.tilt.adj = [0, 0]; syncTiltUI(); drawTiltPreview(); } });
+$('#adjBar').addEventListener('input', e => { const r = e.target.closest('input[type=range]'); if (r) setTilt(+r.dataset.side, +r.value); });
+$('#adjBar').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b && S.tilt) setTilt(+b.dataset.side, (S.tilt.adj[+b.dataset.side] || 0) + (+b.dataset.step)); });
+$('#lightBtn').addEventListener('click', async () => { S.settings.lighting = !S.settings.lighting; saveSettings(); updateFlip(); await setPageImage(); });
+$('#streak').addEventListener('click', openStats);
+$('#statClose').addEventListener('click', () => closeSheet(statSheet));
+$('#reviewBtn').addEventListener('click', openReview);
+/* ================= Daily review (spaced repetition) ================= */
+// Boxes: a word in box 0 comes back in 1 day, box 1 in 3, box 2 in 7, box 3 in 16.
+// Getting it right after the 16-day wait graduates it to known (its underline goes away).
+const INTERVALS = [1, 3, 7, 16], MAX_READ = 10, MAX_WRITE = 5;
+const dayPlus = n => { const d = new Date(); d.setDate(d.getDate() + n); return dayKey(d); };
+const isDue = w => !w.due || w.due <= dayKey();
+const dueCount = () => S.words.filter(isDue).length;
+function nextFor(w, g) {
+  const b = w.box || 0;
+  if (g === 'again') return { box:0, days:1 };
+  if (g === 'hard') return { box:b, days:Math.max(1, Math.round(INTERVALS[b] * 0.6)) };
+  if (b >= INTERVALS.length - 1) return { graduate:true };
+  const nb = Math.min(b + (g === 'easy' ? 2 : 1), INTERVALS.length - 1);
+  return { box:nb, days:INTERVALS[nb] };
+}
+const whenLabel = n => n.graduate ? 'Known' : n.days === 1 ? 'Tomorrow' : `${n.days} days`;
+function openReview() {
+  const due = S.words.filter(isDue).sort((a, b) => (a.due || '').localeCompare(b.due || '') || (a.added || 0) - (b.added || 0));
+  let writes = 0;
+  const q = [];
+  for (const w of due) {
+    const canWrite = (w.box || 0) >= 1 && writes < MAX_WRITE && practiceChars(w).length && window.HanziWriter;
+    if (canWrite) { writes++; q.push({ w:w.w, type:'write' }); }
+    else if (q.filter(x => x.type === 'read').length < MAX_READ) q.push({ w:w.w, type:'read' });
+    if (q.length >= MAX_READ + MAX_WRITE) break;
+  }
+  S.rev = { q, i:0, done:0, graduated:[], again:new Set(), card:null };
+  openSheet(revSheet); renderRev();
+}
+function closeReview() { try { S.rev?.card?.writer?.cancelQuiz(); } catch (e) {} closeSheet(revSheet); S.rev = null; updateBar(); renderSide(); }
+const revWord = () => S.words.find(x => x.w === S.rev.q[S.rev.i]?.w);
+function blanked(sent, t) { return sent && sent.includes(t) ? esc(sent).split(esc(t)).join('<span class="blank">' + '＿'.repeat(Array.from(t).length) + '</span>') : ''; }
+function gradeButtons(w, suggest) {
+  return `<div class="grades">${['again', 'hard', 'good', 'easy'].map((g, k) => {
+    const n = nextFor(w, g);
+    return `<button class="btn ${suggest === g ? 'sugg' : ''}" type="button" data-grade="${g}"><span>${['Again', 'Hard', 'Good', 'Easy'][k]}</span><small>${whenLabel(n)}</small></button>`;
+  }).join('')}</div><p class="note">Keys: 1 Again, 2 Hard, 3 Good, 4 Easy</p>`;
+}
+function renderRev() {
+  const R = S.rev, el = $('#rev'); if (!R) return;
+  const total = R.q.length;
+  $('#revCount').textContent = total ? `${Math.min(R.i + 1, total)} of ${total}` : '';
+  if (!total) {
+    el.innerHTML = `<div class="rev-done"><div class="hz" lang="zh">好</div><h3>Nothing to review right now</h3><p class="note">${S.words.length ? `Your next words come back ${nextDueLabel()}.` : 'Save a few words while reading and they’ll show up here.'}</p><button class="btn primary" type="button" data-rev="close">Back to reading</button></div>`;
+    return;
+  }
+  if (R.i >= total) {
+    const t = todayStats(), first = !t.reviewed; t.reviewed = true; saveStats(); updateProgress();
+    el.innerHTML = `<div class="rev-done"><div class="hz" lang="zh">完</div><h3>Review done</h3>
+      <p>You went through ${R.done} card${R.done === 1 ? '' : 's'}.${R.graduated.length ? ` ${R.graduated.length} word${R.graduated.length === 1 ? '' : 's'} graduated to known: <span lang="zh">${esc(R.graduated.join('、'))}</span>.` : ''}</p>
+      ${first ? '<p class="note">That counts for today’s streak.</p>' : ''}
+      <button class="btn primary" type="button" data-rev="close">Back to reading</button></div>`;
+    return;
+  }
+  const item = R.q[R.i], w = revWord();
+  if (!w) { R.i++; renderRev(); return; }
+  const pct = Math.round(R.i / total * 100);
+  const bar = `<div class="revbar" aria-hidden="true"><i style="width:${pct}%"></i></div>`;
+  if (item.type === 'write') return renderWriteCard(item, w, bar);
+  R.card = { type:'read', shown:false };
+  const alt = altForm(w.w, (w.py || '').split(' '));
+  el.innerHTML = `${bar}<p class="kind">Do you know this word?</p>
+    <div class="big-hz" lang="zh">${esc(w.w)}${alt ? `<span class="alt">${esc(alt)}</span>` : ''}</div>
+    <div id="revBack" hidden></div>
+    <button class="btn primary wide" type="button" data-rev="show">Show answer</button>`;
+}
+function readBackHTML(w) {
+  const sent = w.sent ? `<p class="ctx" lang="zh">${markTerm(w.sent, w.w)}</p>` : '';
+  const pl = Array.from(w.w).length === 1 ? partsLine(w.w) : '';
+  return `<div class="pyl pybig">${esc(w.py || '')}</div><p class="gl">${esc(w.gloss || '')}</p>${pl ? `<p class="note">${pl}</p>` : ''}${sent}
+    <button class="btn" type="button" data-rev="listen">${ICON.speaker}Listen</button>`;
+}
+function showReadAnswer() {
+  const R = S.rev, w = revWord(); if (!R?.card || R.card.shown || !w) return;
+  R.card.shown = true;
+  const back = $('#revBack'); back.hidden = false; back.innerHTML = readBackHTML(w) + gradeButtons(w, '');
+  $('#rev [data-rev=show]')?.remove();
+  if (S.settings.autoplay) speak(w.w);
+}
+function renderWriteCard(item, w, bar) {
+  const R = S.rev, chs = practiceChars(w), size = Math.max(200, Math.min(300, Math.round(innerHeight * 0.38)));
+  R.card = { type:'write', ci:0, mistakes:0, hinted:false, done:false, writer:null, size };
+  $('#rev').innerHTML = `${bar}<p class="kind">Write it from memory</p>
+    <div class="pyl pybig">${esc(w.py || '')}</div><p class="gl">${esc(w.gloss || '')}</p>
+    ${w.sent ? `<p class="ctx" lang="zh">${blanked(w.sent, w.w)}</p>` : ''}
+    <button class="btn" type="button" data-rev="listen">${ICON.speaker}Listen</button>
+    <p class="note" id="revStep">${chs.length > 1 ? `Character 1 of ${chs.length}` : ''}</p>
+    <div class="tzg" style="width:${size}px;height:${size}px">
+      <svg class="grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="0.5" y="0.5" width="99" height="99" stroke-width="2"/>
+        <line class="dash" x1="50" y1="0" x2="50" y2="100" stroke-width="1"/><line class="dash" x1="0" y1="50" x2="100" y2="50" stroke-width="1"/>
+        <line class="dash" x1="0" y1="0" x2="100" y2="100" stroke-width="1"/><line class="dash" x1="100" y1="0" x2="0" y2="100" stroke-width="1"/>
+      </svg><div class="target" id="revTarget"></div>
+    </div>
+    <div id="revBack" hidden></div>
+    <button class="btn wide" type="button" data-rev="giveup">I don’t remember</button>`;
+  startWriteChar();
+}
+function startWriteChar() {
+  const R = S.rev, c = R.card, w = revWord(), chs = practiceChars(w), ch = chs[c.ci];
+  const t = $('#revTarget'); if (!t) return; t.innerHTML = '';
+  if (chs.length > 1) $('#revStep').textContent = `Character ${c.ci + 1} of ${chs.length}`;
+  try {
+    c.writer = HanziWriter.create(t, ch, {
+      width:c.size, height:c.size, padding:Math.round(c.size * 0.06), showCharacter:false, showOutline:false,
+      strokeColor:css('--ink') || '#1B1F24', outlineColor:css('--line') || '#C6CDD3', drawingColor:css('--jade') || '#1F7A5C', highlightColor:css('--jade') || '#1F7A5C',
+      drawingWidth:Math.round(c.size / 14),
+      onLoadCharDataError:() => { R.q[R.i].type = 'read'; renderRev(); }
+    });
+    c.writer.quiz({
+      showHintAfterMisses:3,
+      onMistake:d => { if ((d?.mistakesOnStroke || 0) >= 3) c.hinted = true; },
+      onComplete:sum => {
+        c.mistakes += sum?.totalMistakes || 0;
+        if (c.ci < chs.length - 1) { c.ci++; setTimeout(startWriteChar, 500); }
+        else setTimeout(finishWrite, 400);
+      }
+    });
+  } catch (e) { R.q[R.i].type = 'read'; renderRev(); }
+}
+function finishWrite(gaveUp) {
+  const R = S.rev, c = R.card, w = revWord(); if (!c || c.done || !w) return;
+  c.done = true;
+  try { c.writer?.cancelQuiz(); } catch (e) {}
+  const suggest = gaveUp || c.hinted || c.mistakes >= 5 ? 'again' : c.mistakes >= 2 ? 'hard' : 'good';
+  const msg = gaveUp ? 'Here it is.' : c.mistakes === 0 && !c.hinted ? 'Written with no mistakes.' : `Written with ${c.mistakes} mistake${c.mistakes === 1 ? '' : 's'}${c.hinted ? ' and a hint' : ''}.`;
+  const back = $('#revBack'); back.hidden = false;
+  back.innerHTML = `<p class="result">${msg} <span class="ans" lang="zh">${esc(w.w)}</span></p>${gradeButtons(w, suggest)}`;
+  $('#rev [data-rev=giveup]')?.remove();
+  back.scrollIntoView({ behavior:'smooth', block:'end' });
+  if (S.settings.autoplay) speak(w.w);
+}
+function grade(g) {
+  const R = S.rev, item = R?.q[R.i], w = revWord(); if (!item || !w) return;
+  if (item.again) { /* a repeat later in the same session: practice only, schedule already set */ }
+  else {
+    const n = nextFor(w, g);
+    w.reviews = (w.reviews || 0) + 1; w.lastRev = Date.now();
+    if (n.graduate) { R.graduated.push(w.w); markKnown(w.w, true); }
+    else { w.box = n.box; w.due = dayPlus(n.days); saveWords(); }
+    if (g === 'again' && !R.again.has(w.w)) { R.again.add(w.w); R.q.push({ w:w.w, type:'read', again:true }); }
+  }
+  R.done++; R.i++; renderRev();
+}
+function nextDueLabel() {
+  const next = S.words.map(w => w.due).filter(Boolean).sort()[0];
+  if (!next) return 'soon';
+  const days = Math.round((new Date(next + 'T12:00:00') - new Date(dayKey() + 'T12:00:00')) / 864e5);
+  return days <= 1 ? 'tomorrow' : `in ${days} days`;
+}
+$('#rev').addEventListener('click', e => {
+  const b = e.target.closest('[data-rev],[data-grade]'); if (!b) return;
+  if (b.dataset.grade) { grade(b.dataset.grade); return; }
+  const w = revWord();
+  switch (b.dataset.rev) {
+    case 'show': showReadAnswer(); break;
+    case 'listen': if (w) speak(w.w); break;
+    case 'giveup': finishWrite(true); break;
+    case 'close': closeReview(); break;
+  }
+});
+document.addEventListener('keydown', e => {
+  if (!revSheet.classList.contains('open') || !S.rev?.card) return;
+  if (document.activeElement?.tagName === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;
+  const c = S.rev.card, answered = c.type === 'read' ? c.shown : c.done;
+  if ((e.key === ' ' || e.key === 'Enter') && c.type === 'read' && !c.shown) { e.preventDefault(); showReadAnswer(); }
+  else if (answered && ['1', '2', '3', '4'].includes(e.key)) grade(['again', 'hard', 'good', 'easy'][+e.key - 1]);
+});
+$('#revClose').addEventListener('click', closeReview);
+
+/* ================= Your pages: open, reorder, delete ================= */
+const pageCache = new Map(); // id -> { url, done }
+function bookPages(sp) {
+  const byPara = new Map();
+  for (const c of (sp?.chars || [])) byPara.set(c.para, (byPara.get(c.para) || '') + c.ch);
+  const nums = [...byPara.values()].map(t => t.replace(/[\s·.\-–—]/g, '')).filter(t => /^\d{1,4}$/.test(t)).map(Number).filter(n => n > 0);
+  return nums.length ? [Math.min(...nums), Math.max(...nums)] : null;
+}
+async function openPages() {
+  closeSheet(statSheet); openSheet(pagesSheet);
+  for (const e of S.index) if (!pageCache.has(e.id)) {
+    const sp = await idbGet('sp:' + e.id);
+    pageCache.set(e.id, { url:sp?.blob ? URL.createObjectURL(sp.blob) : '', done:!!sp?.done, pages:bookPages(sp) });
+  }
+  renderPages();
+}
+function closePages() {
+  closeSheet(pagesSheet);
+  for (const v of pageCache.values()) if (v.url) URL.revokeObjectURL(v.url);
+  pageCache.clear();
+}
+function renderPages() {
+  const n = S.index.length;
+  $('#pagesTitle').textContent = `Your pages (${n})`;
+  navigator.storage?.estimate?.().then(e => { if (e?.usage != null) $('#pagesTitle').textContent = `Your pages (${n}, ${Math.round(e.usage / 1048576)} MB used)`; }).catch(() => {});
+  if (!n) { $('#pgrid').innerHTML = '<p class="note">No photos yet.</p>'; return; }
+  $('#pgrid').innerHTML = S.index.map((e, i) => {
+    const c = pageCache.get(e.id) || {}, date = new Date(e.at || Date.now()).toLocaleDateString(undefined, { month:'short', day:'numeric' });
+    return `<div class="pcard" aria-current="${S.spread?.id === e.id}">
+      <button class="thumb" type="button" data-open="${e.id}" aria-label="Open photo ${i + 1}">${c.url ? `<img src="${c.url}" alt="" loading="lazy">` : ''}</button>
+      <div class="meta">Photo ${i + 1}${c.pages ? `, p. ${c.pages[0]}${c.pages[1] !== c.pages[0] ? '–' + c.pages[1] : ''}` : ''}${e.demo ? ' (sample)' : ''}${S.spread?.id === e.id ? ' (open)' : ''}</div>
+      <div class="sub">${esc(date)}, ${c.done ? 'finished' : 'not finished'}${c.done ? ` <button class="linklike" type="button" data-unfinish="${e.id}">Undo finish</button>` : ''} <button class="linklike del" type="button" data-del="${e.id}" aria-label="Delete photo ${i + 1}">Delete</button></div>
+      <div class="row">
+        <button class="btn" type="button" data-move="-1" data-id="${e.id}" aria-label="Move photo ${i + 1} earlier" ${i === 0 ? 'disabled' : ''}>←</button>
+        <select class="moveto" data-id="${e.id}" aria-label="Move photo ${i + 1} to position">${S.index.map((_, k) => `<option value="${k}" ${k === i ? 'selected' : ''}>${k === i ? 'Move' : 'Spot ' + (k + 1)}</option>`).join('')}</select>
+        <button class="btn" type="button" data-move="1" data-id="${e.id}" aria-label="Move photo ${i + 1} later" ${i === n - 1 ? 'disabled' : ''}>→</button>
+
+      </div></div>`;
+  }).join('');
+}
+async function movePage(id, d) { const i = S.index.findIndex(x => x.id === id); return moveTo(id, i + d); }
+async function moveTo(id, j) {
+  const i = S.index.findIndex(x => x.id === id);
+  if (i < 0 || j < 0 || j >= S.index.length || i === j) return;
+  const [item] = S.index.splice(i, 1); S.index.splice(j, 0, item);
+  await idbSet('spreads:index', S.index);
+  renderPages(); updateFlip();
+}
+async function sortPages(by) {
+  const key = e => by === 'page' ? (pageCache.get(e.id)?.pages?.[0] ?? Infinity) : (e.at || 0);
+  S.index = S.index.map((e, i) => [e, i]).sort((a, b) => key(a[0]) - key(b[0]) || a[1] - b[1]).map(x => x[0]);
+  await idbSet('spreads:index', S.index);
+  renderPages(); updateFlip();
+  toast(by === 'page' ? 'Sorted by the page numbers printed in the book' : 'Sorted by when you took each photo');
+}
+async function deletePage(id) {
+  if (!confirm('Delete this photo and its reading progress? Saved words stay.')) return;
+  const i = S.index.findIndex(x => x.id === id); if (i < 0) return;
+  await idbDel('sp:' + id); S.index.splice(i, 1); await idbSet('spreads:index', S.index);
+  const c = pageCache.get(id); if (c?.url) URL.revokeObjectURL(c.url); pageCache.delete(id);
+  if (S.spread?.id === id) {
+    const next = S.index[Math.min(i, S.index.length - 1)], sp = next ? await idbGet('sp:' + next.id) : null;
+    if (sp) await showSpread(sp);
+    else { S.spread = null; S.model = null; S.info = null; S.sel = null; showEmpty(); renderInfo(); }
+  }
+  renderPages(); updateFlip(); toast('Photo deleted');
+}
+$('#pgrid').addEventListener('change', e => { const sel = e.target.closest('.moveto'); if (sel) moveTo(sel.dataset.id, +sel.value); });
+$('#sortDate').addEventListener('click', () => sortPages('date'));
+$('#sortPage').addEventListener('click', () => sortPages('page'));
+$('#pgrid').addEventListener('click', async e => {
+  const o = e.target.closest('[data-open]'), m = e.target.closest('[data-move]'), d = e.target.closest('[data-del]');
+  if (o) { const sp = await idbGet('sp:' + o.dataset.open); closePages(); if (sp) await showSpread(sp); }
+  else if (m && !m.disabled) movePage(m.dataset.id, +m.dataset.move);
+  else if (d) deletePage(d.dataset.del);
+  else if (e.target.closest('[data-unfinish]')) { const id = e.target.closest('[data-unfinish]').dataset.unfinish; const sp = S.spread?.id === id ? S.spread : await idbGet('sp:' + id); if (sp) undoFinish(sp); }
+});
+$('#pagesClose').addEventListener('click', closePages);
+$('#counter').addEventListener('click', openPages);
+
+$('#pracClose').addEventListener('click', () => { try { S.writer?.cancelQuiz(); } catch (e) {} closeSheet(pracSheet); });
+$('#nextWordBtn').addEventListener('click', practiceNext);
+$('#exportBtn').addEventListener('click', exportWords);
+$('#importBtn').addEventListener('click', () => $('#importPick').click());
+$('#importPick').addEventListener('change', e => { const f = e.target.files?.[0]; e.target.value = ''; if (f) importWords(f); });
+$('#setCancel').addEventListener('click', () => closeSheet(setSheet));
+$('#setSave').addEventListener('click', saveSettingsForm);
+document.querySelectorAll('[data-show]').forEach(b => b.addEventListener('click', () => { const k = $('#' + b.dataset.show), show = k.type === 'password'; k.type = show ? 'text' : 'password'; b.textContent = show ? 'Hide' : 'Show'; }));
+$('#fRate').addEventListener('input', e => { $('#fRateVal').textContent = `(${(+e.target.value).toFixed(2)}×)`; });
+if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+// After a tap or mouse click, drop focus from the button so keyboard shortcuts go back to the page.
+document.addEventListener('click', e => { const b = e.composedPath().find(n => n.tagName === 'BUTTON'); if (b && e.detail > 0) b.blur(); });
+
+(async function init() {
+  // Ask the browser to keep this app's data even when the tablet is low on space.
+  try { navigator.storage?.persist?.(); } catch (e) {}
+  updateBar(); updateProgress(); renderSide();
+  loadDict().then(loadParts);
+  S.index = (await idbGet('spreads:index')) || [];
+  if (!S.index.length) { const old = await idbGet('spread'); if (old && old.blob) { await saveNewSpread(old); await idbDel('spread'); } }
+  const cur = load('rd.cur', null), pick = S.index.find(x => x.id === cur) || S.index[S.index.length - 1];
+  const sp = pick ? await idbGet('sp:' + pick.id) : null;
+  if (sp && sp.blob && Array.isArray(sp.chars)) await showSpread(sp); else showEmpty();
+})();
+})();
+</script>
+</body>
+</html>
