@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="title" content="Reading Desk">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1F7A5C">
@@ -54,7 +53,10 @@ button,input,select{font:inherit;color:inherit}
 /* Top bar */
 .bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;position:relative;z-index:5}
 .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;white-space:nowrap}
-.seal{width:34px;height:34px;border-radius:8px;background:var(--jade);color:var(--jade-ink);display:grid;place-items:center;font-family:"Noto Serif SC","Songti SC",serif;font-size:21px;font-weight:700;line-height:1}
+.brand{border:0;background:transparent;padding:0 4px 0 0;margin:0;min-height:44px;cursor:pointer;color:inherit;font:inherit;font-weight:700;font-size:17px;border-radius:10px}
+.seal{position:relative;width:34px;height:34px;border-radius:8px;background:var(--jade);color:var(--jade-ink);display:grid;place-items:center;font-family:"Noto Serif SC","Songti SC",serif;font-size:21px;font-weight:700;line-height:1}
+.seal.due::after{content:"";position:absolute;top:-4px;right:-4px;width:12px;height:12px;border-radius:50%;background:var(--flame);box-shadow:0 0 0 2px var(--panel)}
+.idle .btn{align-self:flex-start;margin-top:4px}
 .streak{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-weight:700;font-size:15px;white-space:nowrap;border:1px solid transparent;background:transparent;min-height:44px;padding:0 8px;border-radius:10px;cursor:pointer}
 .streak:hover{border-color:var(--line)}
 .streak.on{color:var(--flame)}
@@ -89,7 +91,8 @@ svg.i{width:20px;height:20px;flex:none}
 #info{height:212px;flex:none;background:var(--panel);border-bottom:1px solid var(--line);display:flex;flex-direction:column}
 .info-main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(140px,230px) minmax(0,1fr) auto;gap:16px;padding:10px 14px 8px}
 .info-main.is-sent{grid-template-columns:minmax(0,1fr) auto}
-.ih{min-width:0;overflow:hidden}
+.ih{min-width:0;overflow:auto}
+.hz.m{font-size:34px}.hz.s{font-size:28px}
 .ib{min-width:0;overflow:auto;padding-right:6px}
 .ia{display:grid;grid-template-columns:auto auto;gap:6px;align-content:start}
 .ia .btn{min-height:40px;padding:0 11px;font-size:15px}
@@ -254,13 +257,29 @@ body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !im
 .hl.word{background:var(--jade-soft);box-shadow:0 0 0 2px var(--jade)}
 .hl.sent{background:var(--amber-soft)}
 .mk{position:absolute;height:0;border-bottom:3px solid var(--saved);border-radius:2px}
+.lc{position:absolute;height:0;border-bottom:2px dotted #6B7480}
+.bm{position:absolute;background:var(--saved);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+#sideSeg button{min-height:38px;font-size:14.5px}
+.frow{display:flex;gap:8px;align-items:flex-start;padding:9px 12px;border-bottom:1px solid var(--line)}
+.fopen{flex:1;min-width:0;text-align:left;border:0;background:transparent;padding:0;cursor:pointer;color:inherit}
+.fopen .ft{display:block;font-family:"Noto Serif SC","Songti SC",serif;font-size:18px;line-height:1.5}
+.fopen .fe{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.frow .btn{min-height:38px;font-size:14px;padding:0 10px}
+.sentq{font-family:"Noto Serif SC","Songti SC",serif;font-size:26px;line-height:2.1;margin:0;text-align:left}
+.sentq .blank{display:inline-block;color:var(--muted);letter-spacing:.05em;vertical-align:top;line-height:1.5;text-align:center}
+.sentq .blank.cur{color:var(--jade);font-weight:700}
+.sentq .bpy{display:block;font-family:"Source Sans 3",system-ui,sans-serif;font-size:14px;line-height:1.1;color:var(--pinyin);letter-spacing:0}
+.sentq mark{background:var(--jade-soft);color:inherit;border-radius:3px}
+.pgl{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px}
+.pgnum{width:96px;min-height:40px;font-size:16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:0 10px}
+.cal i.trav,.legend i.trav{background:repeating-linear-gradient(45deg,var(--panel-2) 0 3px,var(--line) 3px 6px) !important}
 .pyl,.sent rt,.part .p,.wrow .p{color:var(--pinyin)}
 .mdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:0}
 .wrow .c{text-decoration:underline;text-decoration-color:var(--mk,transparent);text-decoration-thickness:3px;text-underline-offset:6px}
 /* Details panel on the left */
 body.info-left #info{width:min(380px,36vw);height:auto;border-bottom:0;border-right:1px solid var(--line)}
 body.info-left .info-main,body.info-left .info-main.is-sent{grid-template-columns:minmax(0,1fr);align-content:start;overflow:auto}
-body.info-left .ib{overflow:visible}
+body.info-left .ib,body.info-left .ih{overflow:visible}
 body.info-left .info-main .ih{order:0}
 body.info-left .info-main .ia{order:1;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
 body.info-left .info-main .ib{order:2}
@@ -317,7 +336,7 @@ body.info-left .idle{justify-content:flex-start;padding-top:18px}
 .charpick{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .charpick button{font-family:"Noto Serif SC","Songti SC",serif;font-size:26px;font-weight:700;width:54px;height:54px;border-radius:10px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
 .charpick button[aria-pressed="true"]{border-color:var(--jade);box-shadow:inset 0 0 0 2px var(--jade)}
-.tzg{position:relative;background:var(--panel);border-radius:4px;box-shadow:var(--shadow)}
+.tzg{flex:none;position:relative;background:var(--panel);border-radius:4px;box-shadow:var(--shadow)}
 .tzg svg.grid{position:absolute;inset:0;width:100%;height:100%}
 .tzg svg.grid *{stroke:var(--grid);fill:none;vector-effect:non-scaling-stroke}
 .tzg svg.grid .dash{stroke-dasharray:6 6}
@@ -363,9 +382,8 @@ input[type=range]{width:100%;accent-color:var(--jade)}
 <body>
 
 <header class="bar">
-  <div class="brand"><span class="seal" aria-hidden="true">读</span><span class="brand-name">Reading Desk</span></div>
+  <button class="brand" id="brandBtn" type="button" aria-label="Show the start panel and daily review"><span class="seal" aria-hidden="true">读</span><span class="brand-name">Reading Desk</span></button>
   <button class="streak" id="streak" type="button"></button>
-  <button class="btn" id="reviewBtn" type="button" hidden></button>
   <div class="progress" aria-live="polite">
     <div class="meta"><span id="pct">No pages yet</span><span id="goal"></span></div>
     <div class="track" role="progressbar" aria-label="Progress through these pages" aria-valuemin="0" aria-valuemax="100" id="track"><div class="fill" id="fill"></div></div>
@@ -426,7 +444,7 @@ input[type=range]{width:100%;accent-color:var(--jade)}
       <input id="lookupInput" type="text" lang="zh" placeholder="Look up a word" aria-label="Look up a word. Type it or handwrite it with your keyboard." autocomplete="off">
       <button class="btn" id="lookupBtn" type="button">Look up</button>
     </div>
-    <div class="side-head"><span id="sideCount">Saved words</span><span><button class="btn" id="practiceBtn" type="button">Practice</button> <button class="btn ghost" id="sideHide" type="button">Hide</button></span></div>
+    <div class="side-head"><div class="seg" id="sideSeg" role="group" aria-label="Which list"><button type="button" data-tab="words" aria-pressed="true">Words</button><button type="button" data-tab="favs" aria-pressed="false"><span lang="zh">摘抄</span></button></div><span><button class="btn" id="practiceBtn" type="button">Practice</button> <button class="btn" id="tutorBtn" type="button" title="Share this week’s words with your tutor">Share</button> <button class="btn ghost" id="sideHide" type="button">Hide</button></span></div>
     <div id="sideList"></div>
   </aside>
 </div>
@@ -440,7 +458,7 @@ input[type=range]{width:100%;accent-color:var(--jade)}
     <p class="cam-msg" id="camMsg" hidden></p>
   </div>
   <div class="cam-controls" id="liveCtl">
-    <button class="btn" id="pickBtn" type="button">Choose a photo</button>
+    <button class="btn" id="pickBtn" type="button">Choose photos</button>
     <button class="shutter" id="shutter" type="button" aria-label="Take photo"></button>
     <button class="btn" id="flipCamBtn" type="button">Switch camera</button>
   </div>
@@ -456,6 +474,7 @@ input[type=range]{width:100%;accent-color:var(--jade)}
 <section class="sheet" id="pracSheet" aria-label="Writing practice">
   <div class="sheet-bar">
     <h2 id="pracTitle">Writing practice</h2>
+    <div class="seg" id="pracMode" role="group" aria-label="Practice mode"><button type="button" data-pm="chars" aria-pressed="true">Characters</button><button type="button" data-pm="sents" aria-pressed="false">Sentences</button></div>
     <button class="btn" id="nextWordBtn" type="button">Practice next</button>
     <button class="btn" id="exportBtn" type="button">Export</button>
     <button class="btn" id="importBtn" type="button">Import</button>
@@ -485,6 +504,7 @@ input[type=range]{width:100%;accent-color:var(--jade)}
       <p class="help">The Details button in the top bar shows or hides it. On small screens it always sits above the page.</p>
     </div>
     <div class="field"><label class="check"><input id="fSentPy" type="checkbox"> Show pinyin over sentences</label></div>
+    <div class="field"><label class="check"><input id="fTones" type="checkbox"> Show spoken tones for 一 and 不</label><p class="help">On: 一样 shows yí yàng, as it is said. Off: yī yàng, as in the dictionary.</p></div>
     <div class="field"><label class="check"><input id="fColor" type="checkbox"> Give each word on the page its own color</label></div>
     <div class="field"><label class="check"><input id="fAuto" type="checkbox"> Speak words and sentences when I tap them</label></div>
     <div class="field">
@@ -549,16 +569,16 @@ input[type=range]{width:100%;accent-color:var(--jade)}
 </section>
 <section class="sheet" id="pagesSheet" aria-label="Your pages">
   <div class="sheet-bar"><h2 id="pagesTitle">Your pages</h2><button class="btn" id="pagesClose" type="button">Close</button></div>
-  <div class="scroll"><div class="pages-help"><p class="note">Tap a photo to open it. Use the arrows, Move, or sort to change the order you flip through them.</p><div class="sortrow"><span class="note">Sort by</span><button class="btn" id="sortPage" type="button">Book page number</button><button class="btn" id="sortDate" type="button">Date taken</button></div></div><div class="pgrid" id="pgrid"></div></div>
+  <div class="scroll"><div class="pages-help"><p class="note">Tap a photo to open it. Photos follow the book’s page numbers; type a number to move a photo.</p></div><div class="pgrid" id="pgrid"></div></div>
 </section>
 <section class="sheet" id="revSheet" aria-label="Daily review">
   <div class="sheet-bar"><h2>Daily review</h2><span class="note" id="revCount"></span><button class="btn" id="revClose" type="button">Close</button></div>
   <div class="scroll"><div class="rev" id="rev"></div></div>
 </section>
 <div id="loupe" aria-hidden="true"></div>
-<div id="busy"><div class="busy-card"><div class="spin" aria-hidden="true"></div><span id="busyMsg">Reading the pages…</span></div></div>
+<div id="busy"><div class="busy-card"><div class="spin" aria-hidden="true"></div><span id="busyMsg">Reading the pages…</span><button class="btn" id="busyCancel" type="button" hidden>Cancel</button></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
-<input type="file" id="filePick" accept="image/*" hidden>
+<input type="file" id="filePick" accept="image/*" multiple hidden>
 <input type="file" id="importPick" accept="application/json,.json" hidden>
 
 <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.25.0/dist/index.js"></script>
@@ -591,14 +611,14 @@ const ICON = {
 };
 
 /* ================= Storage ================= */
-const LS = { settings:'rd.settings', words:'rd.words', stats:'rd.stats', tcache:'rd.tcache', lex:'rd.lex', ai:'rd.ai', known:'rd.known' };
+const LS = { favs:'rd.favs', settings:'rd.settings', words:'rd.words', stats:'rd.stats', tcache:'rd.tcache', lex:'rd.lex', ai:'rd.ai', known:'rd.known' };
 const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
 const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const DEFAULTS = {
-  apiKey:'', aiKey:'', aiModel:'gemini-3.8-flash',
+  apiKey:'', aiKey:'', aiModel:'gemini-flash-latest',
   rotate:0, mirror:false, facing:'environment', straighten:true, lighting:false,
   rate:0.85, autoplay:true, goal:4, script:'simplified', voiceURI:'',
-  defLang:'en', sentPinyin:true, colorWords:false, sideOpen:null, infoOpen:true, infoPos:'top'
+  defLang:'en', sentPinyin:true, spokenTones:true, colorWords:false, sideOpen:null, infoOpen:true, infoPos:'top'
 };
 function idbOpen() {
   return new Promise((res, rej) => { const r = indexedDB.open('reading-desk', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
@@ -611,7 +631,7 @@ const storedSettings = load(LS.settings, {});
 const S = {
   settings:{ ...DEFAULTS, ...storedSettings },
   words:load(LS.words, []), stats:load(LS.stats, { days:{} }),
-  tcache:load(LS.tcache, {}), lex:load(LS.lex, {}), ai:load(LS.ai, {}), known:load(LS.known, {}), mt:{},
+  tcache:load(LS.tcache, {}), lex:load(LS.lex, {}), ai:load(LS.ai, {}), known:load(LS.known, {}), favs:load(LS.favs, []), sideTab:'words', mt:{},
   spread:null, model:null, imgW:0, imgH:0, imgURL:null, view:'spread',
   sel:null, info:null,
   dictS:null, dictT:null, dictState:'loading', lexMax:0,
@@ -622,7 +642,7 @@ const S = {
 };
 if (!S.stats.days) S.stats.days = {};
 if ((storedSettings.v || 0) < 3) { S.settings.colorWords = false; S.settings.v = 3; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
-if (S.settings.aiModel === 'gemini-3.1-flash-lite') { S.settings.aiModel = DEFAULTS.aiModel; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
+if (['gemini-3.1-flash-lite', 'gemini-3.8-flash'].includes(S.settings.aiModel)) { S.settings.aiModel = DEFAULTS.aiModel; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
 // Each saved word keeps its own underline color.
 const MARK_COLORS = ['#D99A00', '#2B6FD6', '#D6336C', '#1E9A50', '#7B4BD1', '#E2600B', '#0F9AA0'];
 S.words.slice().reverse().forEach((w, i) => { if (w.c == null) w.c = i % MARK_COLORS.length; });
@@ -640,11 +660,19 @@ function cacheAI(k, v) { S.ai[k] = v; const keys = Object.keys(S.ai); if (keys.l
 /* ================= Dates, streaks ================= */
 const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 function todayStats() { const k = dayKey(); if (!S.stats.days[k]) S.stats.days[k] = { pages:0, lookups:0 }; return S.stats.days[k]; }
+const weekKey = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return dayKey(x); };
+// One missed day per Monday-to-Sunday week bridges the streak without adding to it.
+// Travel days neither break nor extend it. Today doesn't count against you until it's over.
 function streak() {
-  const has = k => activeDay(S.stats.days[k]);
+  const days = S.stats.days, travel = new Set(S.stats.travel || []), used = new Set();
   const d = new Date(); let n = 0;
-  if (!has(dayKey(d))) d.setDate(d.getDate() - 1);
-  while (has(dayKey(d))) { n++; d.setDate(d.getDate() - 1); }
+  if (!activeDay(days[dayKey(d)])) d.setDate(d.getDate() - 1);
+  for (let k = 0; k < 4000; k++) {
+    const key = dayKey(d);
+    if (activeDay(days[key])) n++;
+    else if (!travel.has(key)) { const wk = weekKey(d); if (used.has(wk)) break; used.add(wk); }
+    d.setDate(d.getDate() - 1);
+  }
   return n;
 }
 
@@ -814,8 +842,19 @@ function segmentPlain(chs) {
   }
   return out;
 }
-// Your own words and names (from "Make one word" / "Mark as name") win over the dictionary.
+// Book titles in 《》 are one word; elsewhere your own words and names win over the dictionary.
 function segmentChars(chs) {
+  const out = []; let start = 0;
+  const part = (a, b) => { if (b > a) for (const [x, y] of segmentLex(chs.slice(a, b))) out.push([a + x, a + y]); };
+  for (let i = 0; i < chs.length; i++) {
+    if (chs[i] !== '《') continue;
+    const j = chs.indexOf('》', i + 1);
+    if (j > i + 1) { part(start, i + 1); out.push([i + 1, j]); start = j; i = j; }
+  }
+  part(start, chs.length);
+  return out;
+}
+function segmentLex(chs) {
   const out = [];
   const gap = (a, b) => { if (b > a) for (const [x, y] of segmentPlain(chs.slice(a, b))) out.push([a + x, a + y]); };
   if (!S.lexMax) { gap(0, chs.length); return out; }
@@ -835,17 +874,17 @@ function pinyinFor(chs) {
     if (!isCJK(chs[i])) { i++; continue; }
     let j = i; while (j < chs.length && isCJK(chs[j])) j++;
     const run = chs.slice(i, j); let arr = null;
-    if (P) { try { arr = P.pinyin(run.join(''), { type:'array', toneSandhi:false }); if (!Array.isArray(arr) || arr.length !== run.length) arr = null; } catch (e) { arr = null; } }
+    if (P) { try { arr = P.pinyin(run.join(''), { type:'array', toneSandhi:S.settings.spokenTones !== false }); if (!Array.isArray(arr) || arr.length !== run.length) arr = null; } catch (e) { arr = null; } }
     if (!arr) arr = run.map(c => { if (P) { try { const p = P.pinyin(c); if (p && p !== c) return p; } catch (e) {} } const r = rankEntries(lookup(c), '')[0]; return r ? r.m.toLowerCase() : ''; });
     for (let k = 0; k < run.length; k++) out[i + k] = (arr[k] && arr[k] !== run[k]) ? arr[k] : '';
     i = j;
   }
   return out;
 }
-const TERM = new Set(['。', '！', '？', '!', '?', '；', ';', '…']);
+const TERM = new Set(['。', '！', '？', '!', '?', '；', ';']);
 const CLOSE = new Set(['”', '’', '」', '』', '）', ')', '】', '》', '"', '〕']);
 function buildModel(raw) {
-  const chars = raw.map(c => ({ ch:c.ch, box:c.box, para:c.para, line:c.line, s:-1, w:-1, py:'' }));
+  const chars = raw.map(c => ({ ch:c.ch, box:c.box, para:c.para, line:c.line, conf:c.conf, s:-1, w:-1, py:'' }));
   const sentences = [], words = [];
   let i = 0;
   while (i < chars.length) {
@@ -891,7 +930,10 @@ function friendlyError(e) {
   return m;
 }
 async function googlePost(url, body, key) {
-  const res = await fetch(url + (url.includes('?') ? '&' : '?') + 'key=' + encodeURIComponent(key), { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(body) });
+  const opts = extra => ({ method:'POST', headers:{ 'Content-Type':'application/json', ...extra }, body:JSON.stringify(body) });
+  let res;
+  try { res = await fetch(url, opts({ 'X-Goog-Api-Key':key })); }
+  catch (e) { res = await fetch(url + (url.includes('?') ? '&' : '?') + 'key=' + encodeURIComponent(key), opts({})); }
   const j = await res.json().catch(() => ({}));
   if (!res.ok || j.error) throw new Error(j.error?.message || ('Google returned error ' + res.status));
   return j;
@@ -934,8 +976,8 @@ function promptWord(term, sent) {
 Term: ${term}
 Sentence it appears in: ${sent || '(no sentence)'}
 Reply with JSON only, in this shape:
-{"pinyin":"pinyin with tone marks","meaning_en":"short English meaning as used in this sentence","meaning_zh":"a short, simple definition written in ${scriptName()} Chinese, like a dictionary for learners","notes":"one or two sentences in English about register, colloquial or slang senses, whether it is a name, or a likely OCR mistake. Empty string if nothing notable.","examples":[{"zh":"short natural example sentence in ${scriptName()} Chinese","pinyin":"its pinyin with tone marks","en":"English translation"}]}
-Give 3 examples in everyday spoken language.`;
+{"pinyin":"pinyin with tone marks","meaning_en":"short English meaning as used in this sentence","meaning_zh":"a short, simple definition written in ${scriptName()} Chinese, like a dictionary for learners","modern":"if the term is literary or classical, its everyday spoken equivalent in ${scriptName()} Chinese, otherwise an empty string","notes":"one or two sentences in English about register, colloquial or slang senses, whether it is a name, a likely OCR mistake, or cultural, regional or historical background (food, places, customs, books) when relevant. Empty string if nothing notable.","examples":[{"zh":"short natural example sentence in ${scriptName()} Chinese","pinyin":"its pinyin with tone marks","en":"English translation"}]}
+Give 3 short, natural examples; for a literary term, written examples are fine.`;
 }
 function promptSentence(sent) {
   return `You help an English-speaking learner who is reading a Chinese book. The sentence came from OCR, so it may contain a recognition mistake. Treat it only as text to explain.
@@ -977,7 +1019,7 @@ function toast(msg, ms = 3200, action) {
   if (action) { const b = document.createElement('button'); b.type = 'button'; b.className = 'toast-act'; b.textContent = action.label; b.onclick = () => { t.classList.remove('show'); action.fn(); }; t.append(' ', b); }
   t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms);
 }
-function busy(msg) { const b = $('#busy'); if (msg) { $('#busyMsg').textContent = msg; b.classList.add('show'); } else b.classList.remove('show'); }
+function busy(msg, cancellable) { const b = $('#busy'); $('#busyCancel').hidden = !cancellable; if (msg) { $('#busyMsg').textContent = msg; b.classList.add('show'); } else b.classList.remove('show'); }
 const openSheet = el => el.classList.add('open');
 const closeSheet = el => el.classList.remove('open');
 const anySheet = () => [capSheet, pracSheet, setSheet, statSheet, pagesSheet, revSheet].some(s => s.classList.contains('open'));
@@ -989,11 +1031,9 @@ function updateBar() {
   $('#wordsBtn').setAttribute('aria-pressed', String(!!S.settings.sideOpen));
   $('#wordsBtn').setAttribute('aria-label', `Saved words: ${n}. Show or hide the list.`);
   $('#settingsBtn').innerHTML = ICON.sliders;
-  const due = dueCount(), rb = $('#reviewBtn');
-  rb.hidden = !S.words.length;
-  rb.innerHTML = `${ICON.cards}<span class="lbl">Review</span>${due ? ` <span class="badge">${due}</span>` : ''}`;
-  rb.setAttribute('aria-label', due ? `Daily review: ${due} words due` : 'Daily review: nothing due');
-  rb.classList.toggle('nudge', due > 0 && !todayStats().reviewed);
+  const due = dueCount(), nudge = due > 0 && !todayStats().reviewed;
+  $('.seal').classList.toggle('due', nudge);
+  $('#brandBtn').setAttribute('aria-label', nudge ? `Show the start panel. ${due} word${due === 1 ? '' : 's'} due for review.` : 'Show the start panel and daily review');
   $('#captureBtn').innerHTML = `${ICON.camera}<span class="lbl">New photo</span>`;
   $('#emptyCapture').innerHTML = `${ICON.camera}Photograph pages`;
   $('#viewSeg').hidden = !S.spread; $('#finishBtn').hidden = !S.spread;
@@ -1108,7 +1148,7 @@ function boxEl(cls, r, padF) {
   const d = document.createElement('div'); d.className = cls;
   const p = (r.y1 - r.y0) * padF, x0 = r.x0 - p, y0 = r.y0 - p, x1 = r.x1 + p, y1 = r.y1 + p;
   d.style.left = (x0 / S.imgW * 100) + '%'; d.style.width = ((x1 - x0) / S.imgW * 100) + '%';
-  if (cls === 'mk') d.style.top = ((r.y1 + (r.y1 - r.y0) * 0.06) / S.imgH * 100) + '%';
+  if (cls === 'mk' || cls === 'lc') d.style.top = ((r.y1 + (r.y1 - r.y0) * 0.06) / S.imgH * 100) + '%';
   else { d.style.top = (y0 / S.imgH * 100) + '%'; d.style.height = ((y1 - y0) / S.imgH * 100) + '%'; }
   return d;
 }
@@ -1124,6 +1164,9 @@ function drawHighlights() {
   const f = document.createDocumentFragment();
   const colors = new Map(S.words.map(x => [x.w, MARK_COLORS[(x.c || 0) % MARK_COLORS.length]]));
   m.words.forEach(w => { const col = colors.get(w.text); if (col) rectsFor(w.idx).forEach(r => { const d = boxEl('mk', r, 0); d.style.borderBottomColor = col; f.appendChild(d); }); });
+  m.chars.forEach(c => { if (c.box && unsure(c) && !colors.has(S.model.words[c.w]?.text)) f.appendChild(boxEl('lc', c.box, 0)); });
+  // 11. Bookmark at the next unread sentence (cleared by the first tap)
+  if (S.resume != null) { const s = m.sentences[S.resume], r = s && rectsFor(range(s.a, s.b))[0]; if (r) { const h = r.y1 - r.y0; f.appendChild(boxEl('bm', { x0:r.x0 - h * 0.62, x1:r.x0 - h * 0.22, y0:r.y0 - h * 0.1, y1:r.y1 + h * 0.15 }, 0)); } }
   if (S.sel?.type === 'sent') { const s = m.sentences[S.sel.si]; if (s) rectsFor(range(s.a, s.b)).forEach(r => f.appendChild(boxEl('hl sent', r, 0.12))); }
   if (S.sel?.type === 'span') rectsFor(range(S.sel.a, S.sel.b)).forEach(r => f.appendChild(boxEl('hl word', r, 0.1)));
   hl.appendChild(f);
@@ -1196,7 +1239,7 @@ page.addEventListener('pointercancel', () => { hideLoupe(); if (press) { clearTi
 page.addEventListener('pointerleave', () => { if (S.mag && !press) hideLoupe(); });
 // Swipe left or right on the page to flip between saved photos.
 let swipe = null;
-stage.addEventListener('touchstart', e => { if (e.touches.length !== 1 || S.mag) { swipe = null; return; } const t = e.touches[0]; swipe = { x:t.clientX, y:t.clientY, t:performance.now() }; }, { passive:true });
+stage.addEventListener('touchstart', e => { const t = e.touches[0]; if (e.touches.length !== 1 || S.mag || t.clientX < 24 || t.clientX > innerWidth - 24) { swipe = null; return; } swipe = { x:t.clientX, y:t.clientY, t:performance.now() }; }, { passive:true });
 stage.addEventListener('touchend', e => {
   if (!swipe) return; const t = e.changedTouches[0], dx = t.clientX - swipe.x, dy = t.clientY - swipe.y, dt = performance.now() - swipe.t; swipe = null;
   if (dt < 600 && Math.abs(dx) > 90 && Math.abs(dy) < 60 && stage.scrollWidth <= stage.clientWidth + 2) flip(dx < 0 ? 1 : -1);
@@ -1232,11 +1275,23 @@ async function saveNewSpread(sp) {
   let idx = (await idbGet('spreads:index')) || [];
   if (sp.demo) for (const old of idx.filter(x => x.demo)) await idbDel('sp:' + old.id);
   idx = idx.filter(x => x.id !== sp.id && !(sp.demo && x.demo));
-  idx.push({ id:sp.id, at:sp.at, demo:!!sp.demo });
+  const entry = { id:sp.id, at:sp.at, demo:!!sp.demo }, found = bookPages(sp);
+  if (found) entry.page = found[0];
+  else if (!sp.demo) { const prev = idx.filter(x => x.page != null && !x.demo).pop(); if (prev) entry.page = prev.page + 2; }
+  idx.push(entry); idx = sortIndex(idx);
   // No automatic deleting: photos stay until you delete them in Your pages.
   if (!(await idbSet('sp:' + sp.id, sp))) throw new Error('STORAGE_FULL');
   await idbSet('spreads:index', idx);
   S.index = idx;
+}
+// Photos are kept in book-page order; photos without a page number follow, by date taken.
+function sortIndex(idx) {
+  return idx.map((e, i) => [e, i]).sort(([a, i], [b, j]) => {
+    const pa = a.page ?? null, pb = b.page ?? null;
+    if (pa != null && pb != null) return pa - pb || (a.at || 0) - (b.at || 0) || i - j;
+    if (pa != null) return -1; if (pb != null) return 1;
+    return (a.at || 0) - (b.at || 0) || i - j;
+  }).map(x => x[0]);
 }
 const curPos = () => S.spread ? S.index.findIndex(x => x.id === S.spread.id) : -1;
 async function flip(d) {
@@ -1277,12 +1332,12 @@ function reach(si) { if (S.spread && !S.spread.done && si > S.spread.maxReached)
 
 /* ================= Selections ================= */
 function hiddenHint() { if (!S.settings.infoOpen && !S.hintedHidden) { S.hintedHidden = true; toast('Word details are hidden. Tap Details in the top bar to show them.', 4500); } }
-function clearSel() { S.sel = null; S.info = null; drawHighlights(); renderInfo(); renderSide(); }
+function clearSel() { S.resume = null; S.sel = null; S.info = null; drawHighlights(); renderInfo(); renderSide(); }
 function openSpan(a, b, fromSent) {
   const m = S.model, n = m.chars.length;
   a = clamp(a, 0, n - 1); b = clamp(b, a + 1, n);
   const idx = range(a, b), si = m.chars[a].s;
-  S.sel = { type:'span', a, b };
+  S.resume = null; S.sel = { type:'span', a, b };
   noteLookup(idx.map(i => m.chars[i].ch).join('').trim());
   S.info = { kind:'word', text:idx.map(i => m.chars[i].ch).join('').trim(), pys:idx.map(i => m.chars[i].py), sent:m.sentences[si]?.text || '', si, span:{ a, b }, fromSent, ai:null, fix:false };
   reach(si); drawHighlights(); afterOpen(); ensureVisible(idx); hiddenHint();
@@ -1311,14 +1366,14 @@ function afterOpen() {
 }
 function openSentence(si) {
   const m = S.model, s = m?.sentences[si]; if (!s) return;
-  S.sel = { type:'sent', si };
+  S.resume = null; S.sel = { type:'sent', si };
   const inf = S.info = { kind:'sent', si, text:s.text, tr:null, trErr:null, ai:null };
   reach(si); drawHighlights(); renderInfo(); ensureVisible(range(s.a, s.b)); hiddenHint();
   if (S.settings.autoplay) speak(s.text);
   translate(s.text).then(t => { inf.tr = t; }).catch(e => { inf.trErr = friendlyError(e); }).finally(() => { if (S.info === inf) renderInfo(); });
 }
 function askAI(inf) {
-  const key = (inf.kind === 'sent' ? 's|' : 'w|') + scriptName() + '|' + inf.text + '|' + (inf.sent || '');
+  const key = (inf.kind === 'sent' ? 's|' : 'w2|') + scriptName() + '|' + inf.text + '|' + (inf.sent || '');
   if (S.ai[key]) { inf.ai = S.ai[key]; if (S.info === inf) renderInfo(); return; }
   inf.ai = 'loading'; if (S.info === inf) renderInfo();
   aiJSON(inf.kind === 'sent' ? promptSentence(inf.text) : promptWord(inf.text, inf.sent))
@@ -1346,6 +1401,8 @@ function adjust(kind) {
 }
 const isModelWord = sp => { const c = S.model.chars[sp.a]; if (!c || c.w < 0) return false; const [a, b] = wordSpan(S.model.words[c.w]); return a === sp.a && b === sp.b; };
 const isSaved = t => S.words.some(x => x.w === t);
+const LOW_CONF = 0.8, unsure = c => typeof c?.conf === 'number' && c.conf < LOW_CONF;
+const isTitleSpan = sp => !!(sp && S.model && S.model.chars[sp.a - 1]?.ch === '《' && S.model.chars[sp.b]?.ch === '》');
 function glossFor(inf) {
   const r = rankEntries(lookup(inf.text), inf.pys.join(' '))[0];
   if (r) return usefulDefs(r.e).slice(0, 3).join('; ');
@@ -1360,7 +1417,7 @@ function toggleSave() {
   else {
     if (inf.span && Array.from(t).length >= 2 && !isModelWord(inf.span) && !S.lex[t]) { S.lex[t] = { name:false }; saveLex(); rebuild(); }
     if (S.known[t]) { delete S.known[t]; saveKnown(); }
-    S.words.unshift({ w:t, py:inf.pys.filter(Boolean).join(' '), gloss:glossFor(inf), sent:inf.sent, added:Date.now(), n:0, last:0, c:nextColor(), box:0, due:dayKey() });
+    S.words.unshift({ w:t, py:inf.pys.filter(Boolean).join(' '), gloss:glossFor(inf), sent:inf.sent, added:Date.now(), n:0, last:0, c:nextColor(), box:0, due:dayKey(), ...(inf.span && S.spread ? { sp:S.spread.id } : {}) });
     toast(`Saved ${t}`);
   }
   saveWords(); updateBar(); drawHighlights(); renderInfo(); renderSide();
@@ -1439,6 +1496,9 @@ function linksHTML(t) {
     <a href="https://tatoeba.org/en/sentences/search?from=cmn&to=eng&query=${q}" target="_blank" rel="noopener">Example sentences on Tatoeba</a>
     <a href="https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=${q}" target="_blank" rel="noopener">MDBG</a>
     <a href="https://${S.settings.defLang === 'zh' ? 'zh' : 'en'}.wiktionary.org/wiki/${q}" target="_blank" rel="noopener">Wiktionary</a>
+    <a href="https://www.zdic.net/${S.settings.script === 'traditional' ? 'hant' : 'hans'}/${q}" target="_blank" rel="noopener" lang="zh">汉典</a>
+    <a href="https://www.baidu.com/s?wd=${q}" target="_blank" rel="noopener" lang="zh">百度</a>
+    <a href="https://www.google.com/search?tbm=isch&amp;q=${q}" target="_blank" rel="noopener">Pictures</a>
   </div>`;
 }
 function wordBody(inf) {
@@ -1449,7 +1509,7 @@ function wordBody(inf) {
   if (zh && hasCJK(inf.text)) {
     if (ai && ai !== 'loading' && !ai.error && ai.meaning_zh) out += `<p class="zhdef" lang="zh">${esc(ai.meaning_zh)}</p>`;
     else if (ai === 'loading') out += `<p class="note">正在查…</p>`;
-    else if (ai?.error) out += `<p class="note">${esc(ai.error)}</p>`;
+    else if (ai?.error) out += `<p class="note">${esc(ai.error)} The links below work without a key.</p>`;
     if (ranked.length) out += `<p class="note">English: ${esc(usefulDefs(ranked[0].e).slice(0, 3).join('; '))}</p>`;
   } else {
     if (ranked.length) out += defsHTML(ranked);
@@ -1460,10 +1520,11 @@ function wordBody(inf) {
       else out += `<p class="note">Not in the dictionary.${inf.mtErr ? ' ' + esc(inf.mtErr) : ''} Try Ask AI, or fix the selection below if the text looks wrong.</p>`;
     }
     if (ai === 'loading') out += `<div class="sec"><p class="note">Asking AI…</p></div>`;
-    else if (ai?.error) out += `<div class="sec"><p class="note">${esc(ai.error)}</p></div>`;
+    else if (ai?.error) out += `<div class="sec"><p class="note">${esc(ai.error)} The links below work without a key.</p></div>`;
     else if (ai) out += `<div class="sec"><h4>AI notes</h4><p>${esc(ai.meaning_en || '')}</p></div>`;
   }
   if (ai && ai !== 'loading' && !ai.error) {
+    if (ai.modern && ai.modern !== inf.text) out += `<p class="note" style="margin-top:6px">Everyday: <span lang="zh">${esc(ai.modern)}</span></p>`;
     if (ai.notes) out += `<p class="note" style="margin-top:6px">${esc(ai.notes)}</p>`;
     out += exHTML(ai.examples, inf.text);
   }
@@ -1507,12 +1568,14 @@ function sentenceHTML(inf) {
       <div class="tr">${inf.tr ? esc(inf.tr) : inf.trErr ? `<span class="note">${esc(inf.trErr)}</span>` : '<span class="note">Translating…</span>'}</div>
       ${aiOut}
       <p class="note" style="margin:6px 0 0">Tap a character to look up its word.</p>
+      <div class="links"><a href="https://translate.google.com/?sl=${S.settings.script === 'traditional' ? 'zh-TW' : 'zh-CN'}&amp;tl=en&amp;op=translate&amp;text=${encodeURIComponent(inf.text)}" target="_blank" rel="noopener">Open in Google Translate</a></div>
     </div>
     <div class="ia">
       <button class="btn" data-act="listen">${ICON.speaker}Listen</button>
       <button class="btn" data-act="slow">${ICON.speaker}Slowly</button>
       <button class="btn" data-act="pinyin" aria-pressed="${py}">Pinyin ${py ? 'on' : 'off'}</button>
       <button class="btn" data-act="ai">${ICON.spark}Explain</button>
+      <button class="btn${isFav(inf.text) ? ' saved' : ''}" data-act="fav" aria-pressed="${isFav(inf.text)}"><span aria-hidden="true">★</span><span lang="zh">摘抄</span></button>
     </div>
   </div>`;
 }
@@ -1523,6 +1586,7 @@ function renderInfo() {
   if (!inf) {
     info.innerHTML = `<div class="idle">
       <p><b>Tap</b> a word for its meaning. <b>Double-tap</b> to save or unsave it. <b>Press and hold</b> for the whole sentence.</p>
+      ${S.words.length ? (() => { const due = dueCount(); return `<button class="btn${due && !todayStats().reviewed ? ' nudge' : ''}" type="button" data-review="1">${ICON.cards}Review${due ? ` <span class="badge">${due}</span>` : ''}</button>`; })() : ''}
       <p>Keyboard: <kbd>←</kbd> <kbd>→</kbd> next word. <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> adds a character on that side, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> removes one. <kbd>S</kbd> save, <kbd>Space</kbd> listen, <kbd>Enter</kbd> whole sentence.</p>
     </div>`;
     return;
@@ -1532,9 +1596,9 @@ function renderInfo() {
   const chs = Array.from(inf.text), saved = isSaved(inf.text), name = S.lex[inf.text]?.name;
   info.innerHTML = `<div class="info-main">
       <div class="ih">
-        <div class="hz" lang="zh">${hzSpans(chs, inf.pys)}${(() => { const a = altForm(inf.text, inf.pys); return a ? `<span class="alt" title="${altLabel()} form">${esc(a)}</span>` : ""; })()}</div>
+        <div class="hz${chs.length > 5 ? ' s' : chs.length > 3 ? ' m' : ''}" lang="zh">${hzSpans(chs, inf.pys)}${(() => { const a = altForm(inf.text, inf.pys); return a ? `<span class="alt" title="${altLabel()} form">${esc(a)}</span>` : ""; })()}</div>
         <div class="pyl">${pySpans(inf.pys)}</div>
-        <div class="tags">${saved ? `<span class="tag"><span class="mdot" style="background:${markColor(inf.text)}"></span>Saved</span>` : ''}${name ? '<span class="tag">Name</span>' : ''}${isKnown(inf.text) ? '<span class="tag">Known</span>' : ''}</div>
+        <div class="tags">${saved ? `<span class="tag"><span class="mdot" style="background:${markColor(inf.text)}"></span>Saved</span>` : ''}${name ? '<span class="tag">Name</span>' : ''}${isTitleSpan(inf.span) ? '<span class="tag">Title</span>' : ''}${inf.span && range(inf.span.a, inf.span.b).some(i => unsure(S.model.chars[i])) ? '<span class="tag">OCR unsure</span>' : ''}${isKnown(inf.text) ? '<span class="tag">Known</span>' : ''}</div>
       </div>
       <div class="ib defs">${wordBody(inf)}</div>
       <div class="ia">
@@ -1543,6 +1607,7 @@ function renderInfo() {
         <button class="btn ${saved ? 'saved' : ''}" data-act="save">${ICON.bookmark}${saved ? 'Saved' : 'Save'}</button>
         <button class="btn" data-act="ai">${ICON.spark}Ask AI</button>
         <button class="btn" data-act="practice">${ICON.brush}Practice</button>
+        ${(() => { const sw = S.words.find(x => x.w === inf.text); return sw?.sp && sw.sp !== S.spread?.id && S.index.some(x => x.id === sw.sp) ? `<button class="btn" data-act="goto">${ICON.bookmark}Go to page</button>` : ''; })()}
         ${hasCJK(inf.text) ? `<button class="btn" data-act="known" aria-pressed="${isKnown(inf.text)}">${ICON.check}${isKnown(inf.text) ? 'Known' : 'I know this'}</button>` : ''}
       </div>
     </div>${fixHTML(inf)}`;
@@ -1555,6 +1620,7 @@ info.addEventListener('keydown', e => {
   if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); act('fixCancel'); }
 });
 info.addEventListener('click', e => {
+  if (e.target.closest('[data-review]')) { openReview(); return; }
   const say = e.target.closest('[data-say]'); if (say) { speak(say.dataset.say); return; }
   const r = e.target.closest('ruby[data-i]');
   if (r) { const c = S.model.chars[+r.dataset.i]; if (c && c.w >= 0) { const [a, b] = wordSpan(S.model.words[c.w]); openSpan(a, b, S.info.si); } return; }
@@ -1578,6 +1644,8 @@ function act(name) {
     case 'fixSave': { const v = $('#fixInput')?.value ?? ''; if (inf.span) applyCorrection(inf.span.a, inf.span.b, v); break; }
     case 'name': toggleName(); break;
     case 'join': toggleJoin(); break;
+    case 'goto': { const sw = S.words.find(x => x.w === inf.text); if (sw) gotoPage(sw.sp, sw.w, sw.sent); break; }
+    case 'fav': toggleFav(inf); break;
   }
 }
 
@@ -1591,28 +1659,76 @@ function rowsHTML(current) {
 }
 function renderSide() {
   if (side.hidden) return;
-  $('#sideCount').textContent = `Saved words (${S.words.length})`;
-  $('#sideList').innerHTML = rowsHTML(S.info?.kind === 'word' ? S.info.text : null);
+  const favs = S.sideTab === 'favs';
+  $('#sideSeg').innerHTML = `<button type="button" data-tab="words" aria-pressed="${!favs}">Words (${S.words.length})</button><button type="button" data-tab="favs" aria-pressed="${favs}"><span lang="zh">摘抄</span> (${S.favs.length})</button>`;
+  $('#practiceBtn').hidden = favs; $('#tutorBtn').hidden = favs;
+  $('#sideList').innerHTML = favs ? favsHTML() : rowsHTML(S.info?.kind === 'word' ? S.info.text : null);
 }
-$('#sideList').addEventListener('click', e => { const b = e.target.closest('.wrow'); if (b) openQuery(b.dataset.w); });
+function favsHTML() {
+  if (!S.favs.length) return `<p class="wempty">Press and hold a sentence, then tap 摘抄 to keep it here.</p>`;
+  return S.favs.map((f, i) => `<div class="frow"><button class="fopen" type="button" data-fav="${i}"><span class="ft" lang="zh">${esc(f.text)}</span>${f.tr ? `<span class="fe">${esc(f.tr)}</span>` : ''}</button><button class="btn" type="button" data-share-fav="${i}">Share</button></div>`).join('');
+}
+$('#sideSeg').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { S.sideTab = b.dataset.tab; renderSide(); } });
+$('#sideList').addEventListener('click', e => {
+  const sh = e.target.closest('[data-share-fav]'); if (sh) { const f = S.favs[+sh.dataset.shareFav]; if (f) share(f.text + (f.tr ? '\n' + f.tr : '')); return; }
+  const fo = e.target.closest('[data-fav]'); if (fo) { const f = S.favs[+fo.dataset.fav]; if (f) gotoPage(f.sp, null, f.text); return; }
+  const b = e.target.closest('.wrow'); if (b) openQuery(b.dataset.w);
+});
+$('#tutorBtn').addEventListener('click', () => { const t = tutorText(); if (t) share(t); else toast('No words saved in the last 7 days.'); });
 $('#lookupBtn').addEventListener('click', () => { openQuery($('#lookupInput').value); });
 $('#lookupInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); openQuery(e.target.value); } });
 $('#practiceBtn').addEventListener('click', () => openPractice());
 
+/* ================= Sharing (plain text: share sheet, or copy) ================= */
+async function share(text) {
+  if (navigator.share) { try { await navigator.share({ text }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(text); toast('Copied. Paste it into WeChat or WhatsApp.'); }
+  catch (e) { toast('This device can’t share or copy from here.'); }
+}
+const lastWeekWords = () => { const since = Date.now() - 7 * 864e5; return S.words.filter(w => (w.added || 0) >= since).reverse(); };
+function weekText() {
+  let pages = 0; for (let i = 0; i < 7; i++) { const d = new Date(); d.setDate(d.getDate() - i); pages += S.stats.days[dayKey(d)]?.pages || 0; }
+  const fresh = lastWeekWords(), log = S.stats.knownLog || [], pct = log.length ? log[log.length - 1].pct : null, st = streak();
+  const lines = [`Reading Desk, the week to ${new Date().toLocaleDateString(undefined, { month:'short', day:'numeric' })}`,
+    [`${st}-day streak`, `${pages} page${pages === 1 ? '' : 's'} read`, `${fresh.length} new word${fresh.length === 1 ? '' : 's'}`, pct != null ? `${pct}% of words known` : ''].filter(Boolean).join(', ')];
+  if (fresh.length) lines.push('New words: ' + fresh.slice(0, 10).map(w => `${w.w} ${w.py || ''}`.trim()).join(', '));
+  return lines.join('\n');
+}
+function tutorText() {
+  const list = lastWeekWords(); if (!list.length) return '';
+  return ['Words for my tutor', ...list.map((w, i) => `${i + 1}. ${w.w} ${w.py || ''}: ${w.gloss || ''}`.trim() + (w.sent ? `\n   ${w.sent}` : ''))].join('\n');
+}
+
+/* ================= Closing things: Escape and Android's Back ================= */
+// Closes the top-most open thing. Returns false when only the plain reading screen is left.
+function closeTop() {
+  const open = el => el.classList.contains('open');
+  if (open(setSheet)) closeSheet(setSheet);
+  else if (open(capSheet)) closeCapture();
+  else if (open(pracSheet)) { try { S.writer?.cancelQuiz(); } catch (e) {} closeSheet(pracSheet); }
+  else if (open(revSheet)) closeReview();
+  else if (open(pagesSheet)) closePages();
+  else if (open(statSheet)) closeSheet(statSheet);
+  else if (S.tilt) endTilt(false);
+  else if (S.mag) toggleMag();
+  else if (S.sel || S.info) clearSel();
+  else return false;
+  return true;
+}
+// One history entry keeps a Back swipe inside the app. It is added on a tap, because Chrome
+// skips history entries made without one. A Back with nothing left to close warns once;
+// the next Back, before any tap, leaves.
+let backGuard = false;
+const guardBack = () => { if (!backGuard) { try { history.pushState({ rd:1 }, ''); backGuard = true; } catch (e) {} } };
+document.addEventListener('pointerdown', guardBack, { passive:true, capture:true });
+addEventListener('popstate', () => {
+  backGuard = false;
+  if (!closeTop()) toast('Swipe back again to leave', 2500);
+});
+
 /* ================= Keyboard ================= */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    if (setSheet.classList.contains('open')) closeSheet(setSheet);
-    else if (capSheet.classList.contains('open')) closeCapture();
-    else if (pracSheet.classList.contains('open')) closeSheet(pracSheet);
-    else if (revSheet.classList.contains('open')) closeReview();
-    else if (pagesSheet.classList.contains('open')) closePages();
-    else if (statSheet.classList.contains('open')) closeSheet(statSheet);
-    else if (S.tilt) endTilt(false);
-    else if (S.mag) toggleMag();
-    else clearSel();
-    return;
-  }
+  if (e.key === 'Escape') { closeTop(); return; }
   if (anySheet() || /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || '') || !S.model || S.tilt) return;
   if ((e.key === 'Enter' || e.key === ' ') && document.activeElement?.tagName === 'BUTTON') return;
   if (e.key === 'PageDown' || e.key === 'PageUp') { flip(e.key === 'PageDown' ? 1 : -1); e.preventDefault(); return; }
@@ -1750,12 +1866,16 @@ async function showSpread(sp) {
   store('rd.cur', sp.id);
   S.sel = null; S.info = null;
   $('#empty').hidden = true; page.classList.add('show');
-  updateBar(); rebuild(); renderInfo(); renderSide();
+  updateBar(); S.resume = null; rebuild(); renderInfo(); renderSide();
   setView('spread'); requestWake(); updateFlip();
+  if (!sp.done && sp.maxReached >= 0) {
+    const si = S.model.sentences.findIndex((x, i) => i > sp.maxReached && x.hasWords);
+    if (si >= 0) { S.resume = si; drawHighlights(); const x = S.model.sentences[si]; requestAnimationFrame(() => ensureVisible(range(x.a, x.b))); }
+  }
 }
 function showEmpty() { updateFlip(); $('#empty').hidden = false; page.classList.remove('show'); wrap.style.width = ''; wrap.style.height = ''; updateBar(); updateProgress(); renderSide(); }
 async function requestWake() { try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !S.wake) { S.wake = await navigator.wakeLock.request('screen'); S.wake.addEventListener('release', () => { S.wake = null; }); } } catch (e) {} }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.spread) requestWake(); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') return; if (S.spread) requestWake(); checkTravel(); });
 addEventListener('resize', () => { applyPanels(); if (pracSheet.classList.contains('open')) renderPane(); });
 
 /* ================= Camera + review ================= */
@@ -1834,7 +1954,10 @@ function evenLighting(c) {
 }
 /* --- Straighten: read each page's text angle from Vision's boxes, rotate each page on its own, crop to the text --- */
 const DEG = Math.PI / 180;
-const visionBlocks = fta => { const out = []; (fta.pages || []).forEach(p => (p.blocks || []).forEach(b => out.push(b))); return out; };
+const blockText = b => (b.paragraphs || []).map(p => (p.words || []).map(w => (w.symbols || []).map(s => s.text || '').join('')).join('')).join('');
+// Drop text that isn't the book (labels, stickers, covers in the frame), but keep page numbers.
+const keepBlock = b => { const t = blockText(b); return hasCJK(t) || /^\d{1,4}$/.test(t.replace(/[\s·.\-–—]/g, '')); };
+const visionBlocks = fta => { const out = []; (fta.pages || []).forEach(p => (p.blocks || []).forEach(b => { if (keepBlock(b)) out.push(b); })); return out; };
 function vbox(bp, map) {
   const v = (bp && bp.vertices) || []; if (!v.length) return null;
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
@@ -1872,7 +1995,7 @@ function parseVision(blocks, sideOf, mapOf) {
       para++; line++;
       for (const w of (p.words || [])) for (const s of (w.symbols || [])) {
         const t = s.text || ''; if (!t.trim()) continue;
-        chars.push({ ch:t, box:vbox(s.boundingBox, map), para, line, side:o.side });
+        chars.push({ ch:t, box:vbox(s.boundingBox, map), para, line, side:o.side, ...(typeof s.confidence === 'number' ? { conf:s.confidence } : {}) });
         const br = s.property?.detectedBreak?.type;
         if ((br === 'SPACE' || br === 'SURE_SPACE') && /[A-Za-z0-9]$/.test(t)) chars.push({ ch:' ', box:null, para, line, side:o.side });
         if (br === 'EOL_SURE_SPACE' || br === 'LINE_BREAK') line++;
@@ -1932,8 +2055,8 @@ function composePages(src, chars, Rs, split) {
   }
   return out;
 }
-function layoutFromVision(c, fta) {
-  const W = c.width, H = c.height, blocks = visionBlocks(fta), straighten = S.settings.straighten;
+function layoutFromVision(c, fta, straighten = S.settings.straighten) {
+  const W = c.width, H = c.height, blocks = visionBlocks(fta);
   const all = straighten ? textAngle(blocks) : 0;
   if (straighten && Math.abs(all) > 20 * DEG) { // photo taken sideways or upside down: turn it as a whole
     const R = rotator(W, H, all), cx = b => { const bb = vbox(b.boundingBox, R.map); return bb ? (bb.x0 + bb.x1) / 2 : 0; };
@@ -1950,22 +2073,42 @@ function layoutFromVision(c, fta) {
   const chars = parseVision(blocks, sideOf, s => Rs[s].map);
   return { chars, out:composePages(c, chars, Rs, split) };
 }
+// Reads one photo with Vision and returns a spread, not yet saved.
+async function readPhoto(src, rot, mirror, straighten) {
+  const c = drawTransformed(src, rot, mirror, 3200);
+  const blob0 = await canvasBlob(c, 'image/jpeg', 0.9);
+  const fta = await visionOCR(await blobB64(blob0));
+  if (!fta) throw new Error('No text found. Check focus and lighting, then try again.');
+  const { chars, out } = layoutFromVision(c, fta, straighten);
+  if (!chars.some(x => isCJK(x.ch))) throw new Error('No Chinese text found. Check focus and lighting, then try again.');
+  const blob = out === c ? blob0 : await canvasBlob(out, 'image/jpeg', 0.9);
+  return { blob, chars, w:out.width, h:out.height, maxReached:-1, done:false, demo:false, at:Date.now() };
+}
+// Several photos picked at once: no review step; the saved rotation is used and Straighten stays on,
+// since it is what turns a sideways photo upright.
+async function readPhotos(files) {
+  if (!S.settings.apiKey) { toast('Add your Google Cloud API key in Settings first.', 5000); openSettings(); return; }
+  stopCamera(); S.batchStop = false;
+  const added = [], failed = [];
+  for (let i = 0; i < files.length && !S.batchStop; i++) {
+    busy(`Reading photo ${i + 1} of ${files.length}…`, true); await nextFrame();
+    try {
+      const sp = await readPhoto(await createImageBitmap(files[i]), S.settings.rotate || 0, !!S.settings.mirror, true);
+      sp.at = files[i].lastModified || Date.now();
+      await saveNewSpread(sp); added.push(sp);
+    } catch (e) { failed.push(friendlyError(e)); if (String(e?.message) === 'STORAGE_FULL') break; }
+  }
+  busy(false);
+  if (added.length) { closeCapture(); await showSpread(added[0]); } else setCapMode('live');
+  toast(`Added ${added.length} photo${added.length === 1 ? '' : 's'}.${failed.length ? ` ${failed.length} couldn’t be read: ${failed[0]}` : ''}${S.batchStop ? ' Stopped early.' : ''}`, 9000);
+}
 async function commitCapture() {
   if (!S.raw) return;
   if (!S.settings.apiKey) { toast('Add your Google Cloud API key in Settings first.', 5000); openSettings(); return; }
   S.settings.rotate = S.revRot; S.settings.mirror = S.revMir; S.settings.straighten = S.revStraight; saveSettings();
   try {
-    busy('Preparing the photo…'); await nextFrame();
-    const c = drawTransformed(S.raw, S.revRot, S.revMir, 3200);
-    busy('Reading the pages…');
-    const blob0 = await canvasBlob(c, 'image/jpeg', 0.9);
-    const fta = await visionOCR(await blobB64(blob0));
-    if (!fta) throw new Error('No text found. Check focus and lighting, then try again.');
-    if (S.settings.straighten) { busy('Straightening the pages…'); await nextFrame(); }
-    const { chars, out } = layoutFromVision(c, fta);
-    if (!chars.some(x => isCJK(x.ch))) throw new Error('No Chinese text found. Check focus and lighting, then try again.');
-    const blob = out === c ? blob0 : await canvasBlob(out, 'image/jpeg', 0.9);
-    const sp = { blob, chars, w:out.width, h:out.height, maxReached:-1, done:false, demo:false, at:Date.now() };
+    busy('Reading the pages…'); await nextFrame();
+    const sp = await readPhoto(S.raw, S.revRot, S.revMir, S.revStraight);
     await saveNewSpread(sp);
     closeCapture(); await showSpread(sp); busy(false);
     toast('Tap a word. Double-tap to save. Press and hold for the sentence.', 4500);
@@ -2050,7 +2193,74 @@ function renderList() {
 }
 $('#wlist').addEventListener('click', e => { const b = e.target.closest('.wrow'); if (!b) return; S.practiceWord = S.words.find(x => x.w === b.dataset.w) || null; S.practiceChar = 0; renderList(); renderPane(); });
 const practiceChars = w => Array.from(w.w).filter(isCJK);
+const GRID_SVG = `<svg class="grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect x="0.5" y="0.5" width="99" height="99" stroke-width="2"/><line class="dash" x1="50" y1="0" x2="50" y2="100" stroke-width="1"/><line class="dash" x1="0" y1="50" x2="100" y2="50" stroke-width="1"/><line class="dash" x1="0" y1="0" x2="100" y2="100" stroke-width="1"/><line class="dash" x1="100" y1="0" x2="0" y2="100" stroke-width="1"/></svg>`;
+/* ---------- 29. Sentence practice: write the missing words ---------- */
+const usableSent = w => !!(w.sent && w.sent.includes(w.w) && practiceChars(w).length);
+// Every saved word in the sentence becomes a blank, left to right; longer words win overlaps.
+function sentBlanks(sent) {
+  const hits = [];
+  S.words.filter(x => practiceChars(x).length && sent.includes(x.w)).sort((a, b) => b.w.length - a.w.length).forEach(x => {
+    for (let i = sent.indexOf(x.w); i >= 0; i = sent.indexOf(x.w, i + 1)) {
+      const j = i + x.w.length;
+      if (!hits.some(h => i < h.j && j > h.i)) { hits.push({ i, j, w:x }); break; }
+    }
+  });
+  return hits.sort((a, b) => a.i - b.i);
+}
+function renderSentPane() {
+  const pane = $('#pane'), w = S.practiceWord; S.writer = null;
+  if (!w || !usableSent(w)) {
+    pane.innerHTML = `<div class="p-head"><p class="note">${S.words.some(usableSent) ? 'This word has no saved sentence. Tap Practice next.' : 'Words you save while reading bring their sentence along. Those sentences show up here.'}</p></div>`;
+    return;
+  }
+  if (!S.sp || S.sp.w !== w) S.sp = { w, sent:w.sent, blanks:sentBlanks(w.sent), bi:0, ci:0, hint:new Set(), done:false };
+  const P = S.sp, size = Math.max(200, Math.min(300, pane.clientWidth - 40, Math.round(innerHeight * 0.4)));
+  let html = '', pos = 0;
+  P.blanks.forEach((b, k) => {
+    html += esc(P.sent.slice(pos, b.i));
+    html += P.done || k < P.bi ? `<mark>${esc(b.w.w)}</mark>`
+      : `<span class="blank${k === P.bi ? ' cur' : ''}">${'＿'.repeat(Array.from(b.w.w).length)}${P.hint.has(k) ? `<small class="bpy">${esc(b.w.py || '')}</small>` : ''}</span>`;
+    pos = b.j;
+  });
+  html += esc(P.sent.slice(pos));
+  const tr = S.tcache[P.sent.replace(/\s+/g, '')], cur = P.blanks[P.bi], n = cur ? practiceChars(cur.w).length : 0;
+  pane.innerHTML = `<div class="p-head"><p class="sentq" lang="zh">${html}</p>
+      ${P.done ? (tr ? `<p class="g">${esc(tr)}</p>` : '') : `<p class="note">Blank ${P.bi + 1} of ${P.blanks.length}${n > 1 ? `, character ${P.ci + 1} of ${n}` : ''}</p>`}</div>
+    ${P.done ? '' : `<div class="tzg" style="width:${size}px;height:${size}px">${GRID_SVG}<div class="target" id="writerTarget"></div></div>`}
+    <div class="modes">${P.done
+      ? `<button class="btn" type="button" data-sp="listen">${ICON.speaker}Listen</button><button class="btn primary" type="button" data-sp="next">Next sentence</button>`
+      : `<button class="btn" type="button" data-sp="hint" ${P.hint.has(P.bi) ? 'disabled' : ''}>Show pinyin</button><button class="btn ghost" type="button" data-sp="skip">Show the answer</button>`}</div>
+    <p class="status" id="pStatus" aria-live="polite">${P.done ? (P.skipped ? 'Here are the missing words.' : 'All blanks written.') : 'Write the missing word from memory.'}</p>`;
+  if (!P.done) startSentChar(size);
+}
+function startSentChar(size) {
+  const P = S.sp, ch = practiceChars(P.blanks[P.bi].w)[P.ci], t = $('#writerTarget'), st = $('#pStatus');
+  if (!t) return;
+  if (!window.HanziWriter) { st.textContent = 'Writing needs the Hanzi Writer library, which didn’t load. Check your connection.'; return; }
+  try {
+    S.writer = HanziWriter.create(t, ch, {
+      width:size, height:size, padding:Math.round(size * 0.06), showCharacter:false, showOutline:false,
+      strokeColor:css('--ink') || '#1B1F24', outlineColor:css('--line') || '#C6CDD3', drawingColor:css('--jade') || '#1F7A5C', highlightColor:css('--jade') || '#1F7A5C',
+      drawingWidth:Math.round(size / 14), onLoadCharDataError:() => { st.textContent = `Stroke data for ${ch} isn’t available. Tap Show the answer.`; }
+    });
+    S.writer.quiz({ showHintAfterMisses:3, onComplete:() => setTimeout(advanceSent, 450) });
+  } catch (e) { st.textContent = 'Couldn’t start writing practice: ' + e.message; }
+}
+function advanceSent() {
+  const P = S.sp; if (!P || P.done || !pracSheet.classList.contains('open')) return;
+  if (P.ci < practiceChars(P.blanks[P.bi].w).length - 1) P.ci++; else { P.bi++; P.ci = 0; }
+  if (P.bi >= P.blanks.length) finishSent(false); else renderSentPane();
+}
+function finishSent(skipped) {
+  const P = S.sp; if (!P) return;
+  try { S.writer?.cancelQuiz(); } catch (e) {}
+  P.done = true; P.skipped = skipped;
+  if (!skipped) { const now = Date.now(); for (const b of P.blanks) { b.w.n = (b.w.n || 0) + 1; b.w.last = now; } saveWords(); renderList(); }
+  renderSentPane();
+  if (S.settings.autoplay) speak(P.sent);
+}
 function renderPane() {
+  if (S.pracMode === 'sents') return renderSentPane();
   const pane = $('#pane'), w = S.practiceWord; S.writer = null;
   if (!w) { pane.innerHTML = `<div class="p-head"><div class="hz" style="font-size:40px" lang="zh">写字</div><p class="note">Save words while reading and they appear here for writing practice.</p></div>`; return; }
   const chs = practiceChars(w), pys = (w.py || '').split(' '), allCh = Array.from(w.w);
@@ -2120,15 +2330,33 @@ function runMode(mode) {
     } });
   }
 }
+$('#pracMode').addEventListener('click', e => {
+  const b = e.target.closest('[data-pm]'); if (!b) return;
+  S.pracMode = b.dataset.pm; S.sp = null; try { S.writer?.cancelQuiz(); } catch (err) {}
+  document.querySelectorAll('#pracMode button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  if (S.pracMode === 'sents' && !(S.practiceWord && usableSent(S.practiceWord))) S.practiceWord = S.words.slice().sort((a, c) => (a.n || 0) - (c.n || 0)).find(usableSent) || S.practiceWord;
+  renderList(); renderPane();
+});
+$('#pane').addEventListener('click', e => {
+  const sb = e.target.closest('[data-sp]'); if (!sb || !S.sp) return;
+  const P = S.sp;
+  if (sb.dataset.sp === 'hint') { P.hint.add(P.bi); const cur = $('#pane .blank.cur'); if (cur && !cur.querySelector('.bpy')) cur.insertAdjacentHTML('beforeend', `<small class="bpy">${esc(P.blanks[P.bi].w.py || '')}</small>`); sb.disabled = true; }
+  else if (sb.dataset.sp === 'skip') finishSent(true);
+  else if (sb.dataset.sp === 'listen') speak(P.sent);
+  else if (sb.dataset.sp === 'next') { S.sp = null; practiceNext(); }
+});
 $('#pane').addEventListener('click', e => { const ci = e.target.closest('[data-ci]'); if (ci) { S.practiceChar = +ci.dataset.ci; renderPane(); return; } const m = e.target.closest('[data-mode]'); if (m) runMode(m.dataset.mode); });
 function practiceNext() {
   if (!S.words.length) return;
-  const pool = S.words.filter(x => x !== S.practiceWord), list = pool.length ? pool : S.words;
+  const all = S.pracMode === 'sents' ? S.words.filter(usableSent) : S.words;
+  if (!all.length) { toast('None of your saved words has its sentence yet.'); return; }
+  S.sp = null;
+  const pool = all.filter(x => x !== S.practiceWord), list = pool.length ? pool : all;
   S.practiceWord = list.slice().sort((a, b) => (a.n || 0) - (b.n || 0) || (a.last || 0) - (b.last || 0))[0]; S.practiceChar = 0;
   renderList(); renderPane();
 }
 function exportWords() {
-  const data = JSON.stringify({ app:'reading-desk', version:2, exported:new Date().toISOString(), words:S.words, customWords:S.lex, knownWords:Object.keys(S.known), stats:S.stats }, null, 2);
+  const data = JSON.stringify({ app:'reading-desk', version:2, exported:new Date().toISOString(), words:S.words, customWords:S.lex, knownWords:Object.keys(S.known), favorites:S.favs, stats:S.stats }, null, 2);
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([data], { type:'application/json' })); a.download = `reading-desk-words-${dayKey()}.json`;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   toast('Exported your words');
@@ -2140,8 +2368,16 @@ async function importWords(file) {
     let n = 0;
     for (const w of list) {
       if (!w || typeof w.w !== 'string' || !w.w.trim() || S.words.some(x => x.w === w.w)) continue;
-      S.words.unshift({ w:w.w, py:String(w.py || ''), gloss:String(w.gloss || ''), sent:String(w.sent || ''), added:+w.added || Date.now(), n:0, last:0, c:nextColor(), box:0, due:dayKey() }); n++;
+      const num = v => (typeof v === 'number' && isFinite(v) && v >= 0) ? v : 0;
+      const rec = { w:w.w, py:String(w.py || ''), gloss:String(w.gloss || ''), sent:String(w.sent || ''), added:+w.added || Date.now(),
+        n:num(w.n), last:num(w.last), c:nextColor(), box:Math.min(3, Math.floor(num(w.box))),
+        due:/^\d{4}-\d{2}-\d{2}$/.test(w.due || '') ? w.due : dayKey() };
+      if (w.reviews) rec.reviews = num(w.reviews);
+      if (w.lastRev) rec.lastRev = num(w.lastRev);
+      if (typeof w.sp === 'string') rec.sp = w.sp;
+      S.words.unshift(rec); n++;
     }
+    if (Array.isArray(j.favorites)) { for (const f of j.favorites) if (f && typeof f.text === 'string' && !isFav(f.text)) S.favs.push({ text:f.text, tr:String(f.tr || ''), sp:String(f.sp || ''), at:+f.at || Date.now() }); saveFavs(); }
     if (Array.isArray(j.knownWords)) { for (const k of j.knownWords) if (typeof k === 'string' && !S.known[k] && !S.words.some(x => x.w === k)) S.known[k] = Date.now(); saveKnown(); }
     if (j.customWords && typeof j.customWords === 'object') { for (const [k, v] of Object.entries(j.customWords)) if (typeof k === 'string' && !S.lex[k]) S.lex[k] = { name:!!v?.name }; saveLex(); rebuild(); }
     saveWords(); updateBar(); drawHighlights(); renderList(); renderSide();
@@ -2152,6 +2388,15 @@ async function importWords(file) {
 
 /* ================= Known words (tracked quietly, no page coloring) ================= */
 const saveKnown = () => store(LS.known, S.known);
+const saveFavs = () => store(LS.favs, S.favs);
+const isFav = t => S.favs.some(f => f.text === t);
+function toggleFav(inf) {
+  if (!inf || inf.kind !== 'sent') return;
+  const i = S.favs.findIndex(f => f.text === inf.text);
+  if (i >= 0) { S.favs.splice(i, 1); toast('Removed from 摘抄'); }
+  else { S.favs.unshift({ text:inf.text, tr:inf.tr || '', sp:S.spread?.id || '', at:Date.now() }); toast('Kept in 摘抄'); }
+  saveFavs(); renderInfo(); renderSide();
+}
 const isKnown = t => !!S.known[t];
 function markKnown(t, on = true) {
   if (on) {
@@ -2198,10 +2443,27 @@ const activeDay = d => !!d && ((d.pages || 0) > 0 || !!d.reviewed || (d.secs || 
 
 /* ================= Your reading (streak + stats) ================= */
 function longestStreak() {
-  const keys = Object.keys(S.stats.days).filter(k => activeDay(S.stats.days[k])).sort();
-  let best = 0, run = 0, prev = null;
-  for (const k of keys) { const d = new Date(k + 'T12:00:00'); run = prev && Math.round((d - prev) / 864e5) === 1 ? run + 1 : 1; best = Math.max(best, run); prev = d; }
-  return best;
+  const days = S.stats.days, keys = Object.keys(days).filter(k => activeDay(days[k])).sort(); if (!keys.length) return 0;
+  const travel = new Set(S.stats.travel || []), d = new Date(keys[0] + 'T12:00:00'), end = dayKey();
+  let best = 0, run = 0, used = new Set();
+  for (let k = dayKey(d); k < end; d.setDate(d.getDate() + 1), k = dayKey(d)) {
+    if (activeDay(days[k])) { run++; best = Math.max(best, run); }
+    else if (!travel.has(k)) { const wk = weekKey(d); if (used.has(wk)) { run = 0; used = new Set([wk]); } else used.add(wk); }
+  }
+  return Math.max(best, streak());
+}
+// After 3 or more missed days, ask once whether the reader was traveling.
+function checkTravel() {
+  const days = S.stats.days, keys = Object.keys(days).filter(k => activeDay(days[k])).sort(), last = keys[keys.length - 1];
+  if (!last || S.stats.travelAsked === last) return;
+  const travel = new Set(S.stats.travel || []), missed = [], today = dayKey(), d = new Date(last + 'T12:00:00');
+  for (d.setDate(d.getDate() + 1); dayKey(d) < today; d.setDate(d.getDate() + 1)) if (!travel.has(dayKey(d))) missed.push(dayKey(d));
+  if (missed.length < 3) return;
+  S.stats.travelAsked = last; saveStats();
+  toast(`Were you traveling? You missed ${missed.length} days.`, 12000, { label:'Mark as travel', fn:() => {
+    S.stats.travel = [...new Set([...(S.stats.travel || []), ...missed])].sort(); saveStats(); updateProgress();
+    toast('Marked as travel days. They don’t break your streak.');
+  } });
 }
 function weeklyKnown() {
   const log = S.stats.knownLog || [], weeks = [];
@@ -2216,14 +2478,14 @@ function openStats() {
   const days = S.stats.days, sum = f => Object.values(days).reduce((a, d) => a + (f(d) || 0), 0);
   let week = 0; for (let i = 0; i < 7; i++) { const d = new Date(); d.setDate(d.getDate() - i); week += days[dayKey(d)]?.pages || 0; }
   const realPhotos = S.index.filter(x => !x.demo).length, due = dueCount(), mins = Math.floor((t.secs || 0) / 60);
-  const msg = activeDay(t) ? 'You’ve kept it going today.' : st ? 'Do any one of these today to keep it going:' : 'Do any one of these today to start one:';
+  const msg = activeDay(t) ? 'You’ve kept it going today.' : 'Read or review today to keep your streak. One missed day a week doesn’t break it.';
   const today = new Date(); today.setHours(12, 0, 0, 0);
   const start = new Date(today); start.setDate(start.getDate() - start.getDay() - 7 * 11);
   let cells = '';
   for (let i = 0; i < 84; i++) {
     const d = new Date(start); d.setDate(start.getDate() + i);
     const k = dayKey(d), day = days[k], pg = day?.pages || 0, future = d > today;
-    const lv = pg >= goal ? 'l3' : pg && pg * 2 >= goal ? 'l2' : activeDay(day) ? 'l1' : '';
+    const lv = pg >= goal ? 'l3' : pg && pg * 2 >= goal ? 'l2' : activeDay(day) ? 'l1' : (S.stats.travel || []).includes(k) ? 'trav' : '';
     cells += `<i class="${lv}${k === dayKey() ? ' today' : ''}${future ? ' future' : ''}" title="${k}: ${pg} page${pg === 1 ? '' : 's'}${day?.reviewed ? ', review done' : ''}"></i>`;
   }
   const wk = weeklyKnown(), anyKnown = wk.some(x => x.avg != null);
@@ -2231,9 +2493,10 @@ function openStats() {
   const pagePct = knownPct(S.model);
   $('#stats').innerHTML = `
     <div class="big"><span class="num">${st}</span><div><div class="lab">${st === 1 ? 'day' : 'days'} in a row</div><p>Longest streak: ${best} day${best === 1 ? '' : 's'}. ${esc(msg)}</p>
-      ${activeDay(t) ? '' : '<ul class="mini"><li>finish a pair of pages</li><li>read for 5 minutes</li><li>do the daily review</li></ul>'}</div></div>
+</div></div>
     <div class="revcta"><div><b>${due ? `${due} word${due === 1 ? '' : 's'} to review` : 'No words due for review'}</b><p class="note">${t.reviewed ? 'Today’s review is done.' : 'About 3 minutes: recall some words and write a few from memory.'}</p></div>
       <button class="btn primary" type="button" id="statReview" ${due ? '' : 'disabled'}>Start daily review</button></div>
+    <div><button class="btn" type="button" id="shareWeek">Share my week</button></div>
     <div class="tiles">
       <div class="tile"><b>${t.pages}/${goal}</b><span>pages today</span></div>
       <div class="tile"><b>${mins}</b><span>minute${mins === 1 ? '' : 's'} reading today</span></div>
@@ -2246,9 +2509,10 @@ function openStats() {
       ${anyKnown ? `<div class="kchart" role="img" aria-label="Average percent of words known per week, last 8 weeks">${bars}</div>` : '<p class="note">Finish a pair of pages to start this chart.</p>'}
       <p class="note" style="margin-top:8px">${pagePct != null ? `On the pages open now, you know ${pagePct}% of the words. ` : ''}When you finish pages, the words you read without looking up count as known. Use the Known button in the word panel to change one.</p></div>
     <div><h3>Last 12 weeks</h3><div class="cal" role="img" aria-label="Reading days over the last 12 weeks">${cells}</div>
-      <div class="legend">None <i></i><i class="l1"></i> Read <i class="l2"></i><i class="l3"></i> Goal met</div></div>
+      <div class="legend">None <i></i><i class="l1"></i> Read <i class="l2"></i><i class="l3"></i> Goal met <i class="trav"></i> Travel</div></div>
     ${S.spread ? `<div><h3>These pages</h3><p class="note" style="margin:0 0 8px">${realPhotos} photo${realPhotos === 1 ? '' : 's'} kept on this device. Nothing is deleted unless you delete it.</p><button class="btn" type="button" id="delSpread">Reorder or delete pages</button></div>` : ''}`;
   $('#delSpread')?.addEventListener('click', openPages);
+  $('#shareWeek')?.addEventListener('click', () => share(weekText()));
   $('#statReview')?.addEventListener('click', () => { closeSheet(statSheet); openReview(); });
   openSheet(statSheet);
 }
@@ -2262,7 +2526,7 @@ function openSettings() {
   ['fKey', 'fAiKey'].forEach(id => { $('#' + id).type = 'password'; });
   document.querySelectorAll('[data-show]').forEach(b => { b.textContent = 'Show'; });
   radio('fScript', st.script); radio('fFacing', st.facing); radio('fDef', st.defLang); radio('fInfoPos', st.infoPos);
-  $('#fSentPy').checked = !!st.sentPinyin; $('#fColor').checked = !!st.colorWords; $('#fAuto').checked = !!st.autoplay;
+  $('#fSentPy').checked = !!st.sentPinyin; $('#fTones').checked = st.spokenTones !== false; $('#fColor').checked = !!st.colorWords; $('#fAuto').checked = !!st.autoplay;
   $('#fStraight').checked = !!st.straighten;
   $('#fRate').value = st.rate; $('#fRateVal').textContent = `(${(+st.rate).toFixed(2)}×)`; $('#fGoal').value = st.goal;
   loadVoices();
@@ -2276,12 +2540,12 @@ function saveSettingsForm() {
   const st = S.settings;
   st.apiKey = $('#fKey').value.trim(); st.aiKey = $('#fAiKey').value.trim(); st.aiModel = $('#fAiModel').value.trim() || DEFAULTS.aiModel;
   st.script = radioVal('fScript', 'simplified'); st.facing = radioVal('fFacing', 'environment'); st.defLang = radioVal('fDef', 'en'); st.infoPos = radioVal('fInfoPos', 'top');
-  st.sentPinyin = $('#fSentPy').checked; st.colorWords = $('#fColor').checked; st.autoplay = $('#fAuto').checked;
+  const tonesBefore = st.spokenTones !== false; st.sentPinyin = $('#fSentPy').checked; st.spokenTones = $('#fTones').checked; st.colorWords = $('#fColor').checked; st.autoplay = $('#fAuto').checked;
   st.straighten = $('#fStraight').checked;
   st.rate = clamp(parseFloat($('#fRate').value) || 0.85, 0.5, 1.2);
   st.goal = clamp(parseInt($('#fGoal').value, 10) || 4, 1, 60);
   st.voiceURI = $('#fVoice').value;
-  saveSettings(); closeSheet(setSheet); updateBar(); updateProgress(); drawTints(); renderInfo();
+  saveSettings(); closeSheet(setSheet); updateBar(); if (tonesBefore !== st.spokenTones) rebuild(); updateProgress(); drawTints(); renderInfo();
   toast('Settings saved');
 }
 
@@ -2299,8 +2563,11 @@ $('#viewSeg').addEventListener('click', e => { const b = e.target.closest('[data
 $('#capClose').addEventListener('click', closeCapture);
 $('#shutter').addEventListener('click', shoot);
 $('#pickBtn').addEventListener('click', () => $('#filePick').click());
+$('#busyCancel').addEventListener('click', () => { S.batchStop = true; $('#busyMsg').textContent = 'Stopping after this photo…'; $('#busyCancel').hidden = true; });
 $('#filePick').addEventListener('change', async e => {
-  const f = e.target.files?.[0]; e.target.value = ''; if (!f) return;
+  const files = [...(e.target.files || [])]; e.target.value = '';
+  if (files.length > 1) { readPhotos(files); return; }
+  const f = files[0]; if (!f) return;
   try { const bmp = await createImageBitmap(f); stopCamera(); toReview(bmp); } catch (err) { toast('That photo couldn’t be opened. Try a JPEG or PNG.', 5000); }
 });
 $('#flipCamBtn').addEventListener('click', () => { S.settings.facing = S.settings.facing === 'user' ? 'environment' : 'user'; saveSettings(); startCamera(); });
@@ -2321,7 +2588,11 @@ $('#adjBar').addEventListener('click', e => { const b = e.target.closest('[data-
 $('#lightBtn').addEventListener('click', async () => { S.settings.lighting = !S.settings.lighting; saveSettings(); updateFlip(); await setPageImage(); });
 $('#streak').addEventListener('click', openStats);
 $('#statClose').addEventListener('click', () => closeSheet(statSheet));
-$('#reviewBtn').addEventListener('click', openReview);
+$('#brandBtn').addEventListener('click', () => {
+  if (!S.spread) { openStats(); return; }
+  if (S.sel || S.info) clearSel();
+  if (!S.settings.infoOpen) toggleDetails(true); else renderInfo();
+});
 /* ================= Daily review (spaced repetition) ================= */
 // Boxes: a word in box 0 comes back in 1 day, box 1 in 3, box 2 in 7, box 3 in 16.
 // Getting it right after the 16-day wait graduates it to known (its underline goes away).
@@ -2351,7 +2622,7 @@ function openReview() {
   S.rev = { q, i:0, done:0, graduated:[], again:new Set(), card:null };
   openSheet(revSheet); renderRev();
 }
-function closeReview() { try { S.rev?.card?.writer?.cancelQuiz(); } catch (e) {} closeSheet(revSheet); S.rev = null; updateBar(); renderSide(); }
+function closeReview() { try { S.rev?.card?.writer?.cancelQuiz(); } catch (e) {} closeSheet(revSheet); S.rev = null; updateBar(); renderSide(); if (!S.info) renderInfo(); }
 const revWord = () => S.words.find(x => x.w === S.rev.q[S.rev.i]?.w);
 function blanked(sent, t) { return sent && sent.includes(t) ? esc(sent).split(esc(t)).join('<span class="blank">' + '＿'.repeat(Array.from(t).length) + '</span>') : ''; }
 function gradeButtons(w, suggest) {
@@ -2388,11 +2659,21 @@ function renderRev() {
     <div id="revBack" hidden></div>
     <button class="btn primary wide" type="button" data-rev="show">Show answer</button>`;
 }
+// Opens a saved photo and selects a word on it, or else a sentence.
+async function gotoPage(spId, word, sentText) {
+  const sp = spId && S.index.some(x => x.id === spId) ? (S.spread?.id === spId ? S.spread : await idbGet('sp:' + spId)) : null;
+  if (!sp) { toast('That photo was deleted.'); return; }
+  if (S.spread?.id !== sp.id) await showSpread(sp);
+  const w = word && S.model.words.find(x => x.text === word);
+  if (w) { const [a, b] = wordSpan(w); openSpan(a, b, null); return; }
+  const si = sentText ? S.model.sentences.findIndex(x => x.text === sentText) : -1;
+  if (si >= 0) openSentence(si); else toast('Couldn’t find it on that photo.');
+}
 function readBackHTML(w) {
   const sent = w.sent ? `<p class="ctx" lang="zh">${markTerm(w.sent, w.w)}</p>` : '';
   const pl = Array.from(w.w).length === 1 ? partsLine(w.w) : '';
   return `<div class="pyl pybig">${esc(w.py || '')}</div><p class="gl">${esc(w.gloss || '')}</p>${pl ? `<p class="note">${pl}</p>` : ''}${sent}
-    <button class="btn" type="button" data-rev="listen">${ICON.speaker}Listen</button>`;
+    <button class="btn" type="button" data-rev="listen">${ICON.speaker}Listen</button>${w.sp && S.index.some(x => x.id === w.sp) ? ` <button class="btn" type="button" data-rev="goto">${ICON.bookmark}Go to page</button>` : ''}`;
 }
 function showReadAnswer() {
   const R = S.rev, w = revWord(); if (!R?.card || R.card.shown || !w) return;
@@ -2479,6 +2760,7 @@ $('#rev').addEventListener('click', e => {
   switch (b.dataset.rev) {
     case 'show': showReadAnswer(); break;
     case 'listen': if (w) speak(w.w); break;
+    case 'goto': if (w) { closeReview(); gotoPage(w.sp, w.w, w.sent); } break;
     case 'giveup': finishWrite(true); break;
     case 'close': closeReview(); break;
   }
@@ -2502,10 +2784,13 @@ function bookPages(sp) {
 }
 async function openPages() {
   closeSheet(statSheet); openSheet(pagesSheet);
+  let found = false;
   for (const e of S.index) if (!pageCache.has(e.id)) {
-    const sp = await idbGet('sp:' + e.id);
-    pageCache.set(e.id, { url:sp?.blob ? URL.createObjectURL(sp.blob) : '', done:!!sp?.done, pages:bookPages(sp) });
+    const sp = await idbGet('sp:' + e.id), pages = bookPages(sp);
+    pageCache.set(e.id, { url:sp?.blob ? URL.createObjectURL(sp.blob) : '', done:!!sp?.done });
+    if (e.page == null && pages) { e.page = pages[0]; found = true; }
   }
+  if (found) { S.index = sortIndex(S.index); await idbSet('spreads:index', S.index); updateFlip(); }
   renderPages();
 }
 function closePages() {
@@ -2522,30 +2807,17 @@ function renderPages() {
     const c = pageCache.get(e.id) || {}, date = new Date(e.at || Date.now()).toLocaleDateString(undefined, { month:'short', day:'numeric' });
     return `<div class="pcard" aria-current="${S.spread?.id === e.id}">
       <button class="thumb" type="button" data-open="${e.id}" aria-label="Open photo ${i + 1}">${c.url ? `<img src="${c.url}" alt="" loading="lazy">` : ''}</button>
-      <div class="meta">Photo ${i + 1}${c.pages ? `, p. ${c.pages[0]}${c.pages[1] !== c.pages[0] ? '–' + c.pages[1] : ''}` : ''}${e.demo ? ' (sample)' : ''}${S.spread?.id === e.id ? ' (open)' : ''}</div>
+      <div class="meta">Photo ${i + 1}${e.page != null ? `, p. ${e.page}` : ''}${e.demo ? ' (sample)' : ''}${S.spread?.id === e.id ? ' (open)' : ''}</div>
       <div class="sub">${esc(date)}, ${c.done ? 'finished' : 'not finished'}${c.done ? ` <button class="linklike" type="button" data-unfinish="${e.id}">Undo finish</button>` : ''} <button class="linklike del" type="button" data-del="${e.id}" aria-label="Delete photo ${i + 1}">Delete</button></div>
-      <div class="row">
-        <button class="btn" type="button" data-move="-1" data-id="${e.id}" aria-label="Move photo ${i + 1} earlier" ${i === 0 ? 'disabled' : ''}>←</button>
-        <select class="moveto" data-id="${e.id}" aria-label="Move photo ${i + 1} to position">${S.index.map((_, k) => `<option value="${k}" ${k === i ? 'selected' : ''}>${k === i ? 'Move' : 'Spot ' + (k + 1)}</option>`).join('')}</select>
-        <button class="btn" type="button" data-move="1" data-id="${e.id}" aria-label="Move photo ${i + 1} later" ${i === n - 1 ? 'disabled' : ''}>→</button>
-
-      </div></div>`;
+      <div class="row"><label class="pgl">Book page <input class="pgnum" type="number" inputmode="numeric" min="1" max="9999" data-id="${e.id}" value="${e.page ?? ''}" aria-label="Book page number for photo ${i + 1}"></label></div></div>`;
   }).join('');
 }
-async function movePage(id, d) { const i = S.index.findIndex(x => x.id === id); return moveTo(id, i + d); }
-async function moveTo(id, j) {
-  const i = S.index.findIndex(x => x.id === id);
-  if (i < 0 || j < 0 || j >= S.index.length || i === j) return;
-  const [item] = S.index.splice(i, 1); S.index.splice(j, 0, item);
-  await idbSet('spreads:index', S.index);
+async function setPageNumber(id, value) {
+  const e = S.index.find(x => x.id === id); if (!e) return;
+  const v = parseInt(value, 10);
+  if (v > 0) e.page = v; else delete e.page;
+  S.index = sortIndex(S.index); await idbSet('spreads:index', S.index);
   renderPages(); updateFlip();
-}
-async function sortPages(by) {
-  const key = e => by === 'page' ? (pageCache.get(e.id)?.pages?.[0] ?? Infinity) : (e.at || 0);
-  S.index = S.index.map((e, i) => [e, i]).sort((a, b) => key(a[0]) - key(b[0]) || a[1] - b[1]).map(x => x[0]);
-  await idbSet('spreads:index', S.index);
-  renderPages(); updateFlip();
-  toast(by === 'page' ? 'Sorted by the page numbers printed in the book' : 'Sorted by when you took each photo');
 }
 async function deletePage(id) {
   if (!confirm('Delete this photo and its reading progress? Saved words stay.')) return;
@@ -2559,13 +2831,10 @@ async function deletePage(id) {
   }
   renderPages(); updateFlip(); toast('Photo deleted');
 }
-$('#pgrid').addEventListener('change', e => { const sel = e.target.closest('.moveto'); if (sel) moveTo(sel.dataset.id, +sel.value); });
-$('#sortDate').addEventListener('click', () => sortPages('date'));
-$('#sortPage').addEventListener('click', () => sortPages('page'));
+$('#pgrid').addEventListener('change', e => { const inp = e.target.closest('.pgnum'); if (inp) setPageNumber(inp.dataset.id, inp.value); });
 $('#pgrid').addEventListener('click', async e => {
-  const o = e.target.closest('[data-open]'), m = e.target.closest('[data-move]'), d = e.target.closest('[data-del]');
+  const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]');
   if (o) { const sp = await idbGet('sp:' + o.dataset.open); closePages(); if (sp) await showSpread(sp); }
-  else if (m && !m.disabled) movePage(m.dataset.id, +m.dataset.move);
   else if (d) deletePage(d.dataset.del);
   else if (e.target.closest('[data-unfinish]')) { const id = e.target.closest('[data-unfinish]').dataset.unfinish; const sp = S.spread?.id === id ? S.spread : await idbGet('sp:' + id); if (sp) undoFinish(sp); }
 });
@@ -2595,6 +2864,7 @@ document.addEventListener('click', e => { const b = e.composedPath().find(n => n
   const cur = load('rd.cur', null), pick = S.index.find(x => x.id === cur) || S.index[S.index.length - 1];
   const sp = pick ? await idbGet('sp:' + pick.id) : null;
   if (sp && sp.blob && Array.isArray(sp.chars)) await showSpread(sp); else showEmpty();
+  setTimeout(checkTravel, 2500);
 })();
 })();
 </script>
