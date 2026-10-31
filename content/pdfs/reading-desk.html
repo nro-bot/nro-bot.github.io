@@ -57,8 +57,11 @@ button,input,select{font:inherit;color:inherit}
 .seal{position:relative;width:34px;height:34px;border-radius:8px;background:var(--jade);color:var(--jade-ink);display:grid;place-items:center;font-family:"Noto Serif SC","Songti SC",serif;font-size:21px;font-weight:700;line-height:1}
 .idle .btn{align-self:flex-start;margin-top:4px}
 .streak{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-weight:700;font-size:15px;white-space:nowrap;border:1px solid transparent;background:transparent;min-height:44px;padding:0 8px;border-radius:10px;cursor:pointer}
-.streak:hover{border-color:var(--line)}
+.streak:hover{background:var(--panel-2)}
 .streak.on{color:var(--flame)}
+.desk-btn{font-size:22px;border-color:transparent;width:auto !important;min-width:44px;padding:0 6px !important;gap:2px}
+@media (max-width:900px){.desk-btn span:nth-child(n+4){display:none}}
+@media (max-width:600px){.desk-btn span:nth-child(n+2){display:none}}
 .progress{flex:1 1 180px;min-width:130px;display:flex;flex-direction:column;gap:5px}
 .progress .meta{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted);white-space:nowrap}
 .progress .meta span{overflow:hidden;text-overflow:ellipsis;min-width:0}
@@ -76,7 +79,7 @@ button,input,select{font:inherit;color:inherit}
 .btn.saved{background:var(--saved);color:var(--saved-ink);border-color:transparent}
 .btn.nudge{border-color:var(--jade);box-shadow:inset 0 0 0 1px var(--jade)}
 .btn[aria-pressed="true"]{border-color:var(--jade);box-shadow:inset 0 0 0 1px var(--jade)}
-.icon-btn{width:44px;padding:0}
+.icon-btn{width:44px;padding:0;position:relative}
 .badge{display:inline-grid;place-items:center;min-width:24px;height:22px;padding:0 6px;border-radius:99px;background:var(--panel);border:1px solid var(--line);font-size:13px}
 svg.i{width:20px;height:20px;flex:none}
 @media (max-width:1400px){.brand-name{display:none}#wordsBtn .lbl{display:none}#wordsBtn{padding:0 11px}}
@@ -203,7 +206,7 @@ body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !im
 .tile b{display:block;font-size:26px;line-height:1.2}
 .tile span{color:var(--muted);font-size:15px}
 .stats h3{margin:0 0 8px;font-size:18px}
-.cal{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,18px);grid-auto-columns:18px;gap:4px;overflow-x:auto;padding-bottom:4px}
+.cal{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,18px);grid-auto-columns:18px;gap:4px;overflow-x:auto;padding:4px}
 .cal i,.legend i{width:18px;height:18px;border-radius:4px;background:var(--panel-2);border:1px solid var(--line);display:inline-block}
 .l1{background:color-mix(in srgb,var(--jade) 35%,var(--panel)) !important}
 .l2{background:color-mix(in srgb,var(--jade) 65%,var(--panel)) !important}
@@ -386,13 +389,25 @@ input[type=range]{width:100%;accent-color:var(--jade)}
 .bar{gap:6px;border-bottom:0;box-shadow:0 1px 0 var(--line);padding:6px 12px}
 .bar .btn:not(.primary):not(.nudge){background:transparent;border-color:transparent}
 .bar .btn:not(.primary):hover{background:var(--panel-2)}
+/* Buttons: hover shades; a button that is on gets a soft jade fill; the chosen segment is solid jade. No outlines. */
+.btn[aria-pressed="true"],.bar .btn[aria-pressed="true"]:not(.primary),.stagebar .btn[aria-pressed="true"]{background:var(--jade-soft);border-color:transparent;box-shadow:none;color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--jade);color:var(--jade-ink)}
+.seg button:not([aria-pressed="true"]):hover{background:var(--panel-2)}
 .bar .spacer{flex:1}
+/* Every top bar (reading screen and sheets) is 56px tall and never wraps to a second row; labels drop away as the screen narrows. */
+.bar{flex-wrap:nowrap;min-height:56px}
+.bar > *{flex-shrink:0}
+.sheet-bar{min-height:56px;padding:6px 12px 5px;flex-wrap:nowrap}
+@media (max-width:1000px){#captureBtn .lbl{display:none}#captureBtn{padding:0 11px}.streak .goal .wk{display:none}}
+@media (max-width:480px){.streak .goal{display:none}.bar{gap:2px;padding-left:6px;padding-right:6px}.bar .btn:not(.icon-btn){padding:0 8px}.streak{padding:0 4px}}
 .progress{position:absolute;left:0;right:0;bottom:-1px;margin:0;min-width:0;width:auto}
 .progress .meta{display:none}
 .progress .track{height:3px;border-radius:0;background:transparent}
 .progress .fill{border-radius:0 2px 2px 0}
 .streak{gap:6px;font-variant-numeric:tabular-nums}
-.streak .goal{color:var(--muted);font-weight:600}
+.streak .goal{color:var(--muted);font-weight:400;margin-left:8px;font-family:"Noto Serif SC",serif;font-size:14px}
+.streak .goal b{color:var(--ink);font-family:"Source Sans 3",system-ui,sans-serif;font-size:16px;font-weight:700}
+@media (max-width:600px){.streak .goal .wk{display:none}}
 #info{position:relative}
 #info{padding-right:40px}
 .xclose{position:absolute;top:4px;right:2px;z-index:2;width:36px;height:36px;border-radius:50%;border:0;background:transparent;color:var(--muted);font-size:22px;line-height:1;cursor:pointer}
@@ -483,6 +498,12 @@ input[type=range]{width:100%;accent-color:var(--jade)}
   box-shadow:inset 0 2px 0 rgba(255,255,255,.25),inset 0 -14px 24px rgba(0,0,0,.18),0 6px 18px rgba(0,0,0,.18)}
 .board .it{position:absolute;transform:translate(-50%,-70%) scale(var(--s,1));font-size:38px;line-height:1;cursor:grab;filter:drop-shadow(0 6px 4px rgba(0,0,0,.28))}
 .board .it.drag{cursor:grabbing;filter:drop-shadow(0 14px 8px rgba(0,0,0,.3))}
+/* The ledge's top edge sits at 95% of the board minus its 9px: 27.8% of the dock's 18% is 5% of the board. */
+.board .dock{position:absolute;left:0;right:0;bottom:0;height:18%;background:linear-gradient(rgba(0,0,0,.04),rgba(0,0,0,.14));pointer-events:none;transition:background .15s}
+.board .dock::after{content:"";position:absolute;left:2%;right:2%;bottom:27.8%;height:9px;border-radius:3px;background:linear-gradient(#DDB98F,#B4875A);box-shadow:0 4px 6px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.4)}
+.board.docking .dock{background:linear-gradient(rgba(31,122,92,.12),rgba(31,122,92,.32))}
+.board .dslot{position:absolute;top:95%;width:56px;height:56px;transform:translate(-50%,calc(-100% - 9px));border:2px dashed rgba(255,255,255,.3);border-bottom:0;border-radius:10px 10px 0 0;pointer-events:none}
+.board .it.docked{transform-origin:50% 100%;transform:translate(-50%,calc(-100% - 9px)) scale(var(--s))}
 .board .hint{position:absolute;inset:auto 0 10px;text-align:center;color:rgba(255,255,255,.85);font-size:14px;pointer-events:none}
 .tray{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:28px}
 .tray button{border:0;background:var(--panel-2);border-radius:10px;padding:4px 8px;font-size:26px;cursor:pointer}
@@ -490,7 +511,80 @@ input[type=range]{width:100%;accent-color:var(--jade)}
 .tasks .seal{width:52px;height:52px;font-size:30px;flex:none;border-radius:10px}
 .tasks ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
 .tasks li.ok{color:var(--muted);text-decoration:line-through}
+.tasks{align-items:flex-start}
+.tasks > div{min-width:0}
+.tasks .btn{margin-top:10px}
+.notices{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.notices .btn{min-height:40px;padding:0 8px;font-weight:600;color:var(--ink);white-space:normal;text-align:left}
+.tasks > div{flex:1}
+body.info-left .tasks{gap:10px;padding:12px}
+body.info-left .tasks .seal{width:40px;height:40px;font-size:24px}
+.hello{display:flex;flex-direction:column;gap:2px;padding:0 4px 2px;font-size:15px;color:var(--muted)}
+.hello > b{font-family:"Noto Serif SC",serif;font-size:19px;color:var(--ink)}
+.hello span b{color:var(--ink)}
+.idle .kbd-tip{margin-top:auto;padding-top:8px}
+.idle .kbd-tip{font-size:13px}
 
+/* Desk tab: the board, then small sections with plain headings; Today uses the same card rows as Settings. */
+.desk{gap:20px}
+.dhead{display:flex;align-items:baseline;gap:12px}
+.dhead .coins{font-size:24px}
+.dsec{display:grid;gap:8px}
+.dsec h4{margin:0;font-size:15px;font-weight:700;color:var(--muted)}
+.dsec h4 .note{font-weight:400;margin-left:4px}
+.dsec .scard .srow{font-weight:400}
+.te{font-size:28px;line-height:1;width:34px;text-align:center;flex:none}
+.te.dim{opacity:.35;filter:grayscale(.7)}
+.dsec .tx{flex:1;min-width:0;font-weight:600}
+.dsec .tx small{display:block;font-weight:400;color:var(--muted);font-size:14px}
+.cookie-row .cy{font-family:"Noto Serif SC",serif;font-size:22px;font-weight:700}
+.cookie-row .fx{font-style:italic;font-weight:400}
+.cookie-row.gold{background:linear-gradient(135deg,#FFF3C4,#F6D77A);color:#3A2A00}
+.ladder{gap:4px}
+.ladder span{padding:3px 8px;font-size:13px}
+.cookies{margin:0;gap:6px}
+.cookies li{padding:8px 12px;font-size:15px}
+.more > summary{cursor:pointer;color:var(--muted);font-size:14px;min-height:32px;display:flex;align-items:center}
+.later{display:grid;gap:8px;margin-top:4px}
+.rules ul{margin:4px 0 0;padding-left:20px;color:var(--muted);font-size:14px;display:grid;gap:4px}
+.shop{grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:6px}
+.shop button{padding:6px 2px;border-radius:10px;gap:0}
+.shop button .e{font-size:26px}
+.shop button small{font-size:12px;font-variant-numeric:tabular-nums}
+.shop button.dear{opacity:.5}
+.shop .sh{grid-column:1/-1;font-size:13px;color:var(--muted);margin-top:4px}
+.sbar{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--panel);border:2px solid var(--jade)}
+.sbar .e{font-size:34px;line-height:1}
+.sbar .tx{flex:1;min-width:0}
+.sbar small{display:block;color:var(--muted);font-size:14px}
+.sbar .btn{min-height:44px;padding:0 18px;font-size:16px}
+.crow{display:grid;grid-template-columns:1fr auto;gap:4px 8px;align-items:baseline}
+.crow .coll{grid-column:1/-1}
+.coll span{width:36px;height:36px;font-size:21px;cursor:pointer}
+.dsec .tip{margin:0;min-height:1.3em}
+.achv{margin-top:0}
+.achv .tx{font-size:15px}
+
+/* Your reading: 读 and folder tabs in the bar; the chosen tab joins the page below it. */
+#statSheet .sheet-bar{padding:5px 12px 0;align-items:flex-end;gap:10px;flex-wrap:nowrap}
+#statSheet .sheet-bar > .brand{margin-bottom:5px;flex:none}
+.ftabs{display:flex;gap:2px;margin-right:auto;margin-bottom:-1px;min-width:0}
+.ftabs button{border:1px solid transparent;border-bottom:0;border-radius:10px 10px 0 0;background:transparent;padding:0 18px;min-height:50px;font:inherit;font-weight:700;color:var(--muted);cursor:pointer}
+.ftabs button:hover{background:var(--panel-2)}
+.ftabs button[aria-selected="true"]{background:var(--surround);border-color:var(--line);color:var(--ink)}
+.streakline{display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px}
+.streakline .snum{display:inline-flex;align-items:center;gap:4px;font-size:34px;color:var(--flame);font-variant-numeric:tabular-nums}
+.streakline .snum svg{width:28px;height:28px}
+.streakline small{display:block;font-weight:400;font-size:14px;color:var(--muted)}
+.stats .tiles{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.tile b small{font-size:16px;color:var(--muted);font-weight:600}
+.stats .dsec .note{margin:0}
+.cal-days{padding-top:4px}
+.stats .foot{justify-content:center}
+.stats .cal{grid-template-rows:repeat(7,22px);grid-auto-columns:22px}
+.stats .cal i{width:22px;height:22px}
+.stats .cal-days{grid-template-rows:repeat(7,22px);line-height:22px}
+.stats .foot .btn{font-size:15px;min-height:40px}
 /* The start panel scrolls inside the word panel when it is taller than the panel. */
 #info > .idle{flex:1;min-height:0;overflow:auto;padding-bottom:12px;justify-content:flex-start}
 
@@ -498,6 +592,43 @@ input[type=range]{width:100%;accent-color:var(--jade)}
 .form details[open] > summary{margin-bottom:8px}
 #setSheet h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:26px 0 2px;padding-top:16px;border-top:1px solid var(--line)}
 #setSheet h3:first-child{margin-top:0;padding-top:0;border-top:0}
+/* Settings: grouped cards of rows, label on the left, control on the right. */
+.form.settings{max-width:600px;gap:22px}
+.sgroup{display:grid;gap:6px;margin:0}
+#setSheet .sgroup h3,#setSheet .sgroup > summary b{margin:0;padding:0 4px;border:0;font-size:15px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--muted)}
+.scard{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:8px 14px;margin:0;font-weight:600;cursor:default}
+.srow.wrap{flex-wrap:wrap}
+label.srow{cursor:pointer}
+.scard > .srow + .srow,.scard > .srow + p,.scard > .kfield + .kfield{border-top:1px solid var(--line)}
+.srow small,.kfield small{display:block;font-size:14px;font-weight:400;color:var(--muted)}
+.srow select{max-width:58%;font-size:16px;padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink)}
+.srow input[type=number]{width:76px;font-size:17px;padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);text-align:center}
+.srow input[type=text]{width:58%;font-size:15px;padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink)}
+.srow input[type=range]{width:46%;accent-color:var(--jade)}
+#fRateVal{font-weight:400;color:var(--muted)}
+.sw{appearance:none;-webkit-appearance:none;width:46px;height:28px;border-radius:99px;background:var(--line);position:relative;flex:none;cursor:pointer;margin:0;transition:background .15s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s}
+.sw:checked{background:var(--jade)}
+.sw:checked::after{transform:translateX(18px)}
+.segr{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;flex:none}
+.segr label{position:relative;padding:7px 13px;cursor:pointer;font-weight:600;font-size:15px;color:var(--muted);background:var(--panel)}
+.segr label + label{border-left:1px solid var(--line)}
+.segr input{position:absolute;opacity:0;pointer-events:none}
+.segr label:has(input:checked){background:var(--jade);color:var(--jade-ink)}
+.segr label:has(input:focus-visible){outline:3px solid var(--jade);outline-offset:-3px}
+.settings .btns{display:flex;gap:8px;flex-wrap:wrap}
+.settings .usage{margin:0;padding:8px 14px 10px;font-size:13px;color:var(--muted)}
+.sgroup > summary{list-style:none;min-height:40px;padding:0;cursor:pointer;justify-content:flex-start}
+.sgroup > summary::-webkit-details-marker{display:none}
+.sgroup > summary::after{content:"▸";color:var(--muted);margin-left:6px}
+.sgroup[open] > summary::after{content:"▾"}
+.kstate{margin-left:auto;font-weight:400;font-size:14px;color:var(--muted)}
+.klead{margin:0;padding:12px 14px 0;font-weight:600}
+.kfield{padding:10px 14px 12px}
+.kfield label{display:block;font-weight:600;margin-bottom:6px}
+.kfield .row{display:flex;gap:8px}
+.kfield input{flex:1;min-width:0;font-size:16px;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink)}
 
 /* Week strip and heatmap: the same colors as the 12-week calendar. */
 .week .wcells{display:flex;gap:6px}
@@ -507,7 +638,11 @@ input[type=range]{width:100%;accent-color:var(--jade)}
 .week .wd.today i{outline:2px solid var(--ink);outline-offset:1px}
 .week .wd.future i{opacity:.35}
 .week .note{margin:6px 0 0}
-.week .wd i.l3{color:#fff}
+.week .wd i{position:relative}
+.week .wd i.rd{background:var(--jade);border-color:var(--jade);color:var(--jade-ink)}
+.week .wd i.goal{color:transparent}
+.week .wd i.goal::after{content:"读";position:absolute;inset:-4px;display:grid;place-items:center;border-radius:6px;background:#C8322B;color:#FFF4EC;font:700 15px/1 "Noto Serif SC",serif;transform:rotate(-9deg);box-shadow:inset 0 0 0 2px #C8322B,inset 0 0 0 3px rgba(255,244,236,.55),0 1px 2px rgba(0,0,0,.25);z-index:1}
+.week.big .wd i.goal::after{inset:-5px;border-radius:9px;font-size:24px;box-shadow:inset 0 0 0 3px #C8322B,inset 0 0 0 5px rgba(255,244,236,.55),0 2px 3px rgba(0,0,0,.25)}
 .week .wd i.trav{background:repeating-linear-gradient(45deg,var(--panel-2) 0 3px,var(--line) 3px 6px)}
 .calwrap{display:flex;gap:6px}
 .cal-days{display:grid;grid-template-rows:repeat(7,18px);gap:4px;font-size:11px;color:var(--muted);line-height:18px}
@@ -536,6 +671,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 <header class="bar">
   <button class="brand" id="brandBtn" type="button" aria-label="Show the start panel and daily review"><span class="seal" aria-hidden="true">读</span><span class="brand-name">Reading Desk</span></button>
   <button class="streak" id="streak" type="button"></button>
+  <button class="btn ghost icon-btn desk-btn" id="deskBtn" type="button" title="Your desk" aria-label="Your desk"></button>
   <div class="progress" aria-live="polite">
     <div class="meta"><span id="pct">No pages yet</span><span id="goal"></span></div>
     <div class="track" role="progressbar" aria-label="Progress through these pages" aria-valuemin="0" aria-valuemax="100" id="track"><div class="fill" id="fill"></div></div>
@@ -631,106 +767,81 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
     <button class="btn" id="nextWordBtn" type="button">Practice next</button>
     <button class="btn" id="exportBtn" type="button">Export</button>
     <button class="btn" id="importBtn" type="button">Import</button>
-    <button class="btn" id="pracClose" type="button">Close</button>
+    <button class="btn" id="pracClose" type="button">Return to reading</button>
   </div>
   <div class="practice"><div class="wlist" id="wlist"></div><div class="pane" id="pane"></div></div>
 </section>
 
 <section class="sheet" id="setSheet" aria-label="Settings">
   <div class="sheet-bar"><h2>Settings</h2><button class="btn" id="setCancel" type="button">Cancel</button><button class="btn primary" id="setSave" type="button">Save</button></div>
-  <div class="scroll"><div class="form">
+  <div class="scroll"><div class="form settings">
 
-    <h3>Keys</h3>
-    <div class="field">
-      <label for="fKey">Google Cloud API key</label>
-      <div class="row"><input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your key"><button class="btn" data-show="fKey" type="button">Show</button></div>
-      <p class="help">Needed to read photos. Turn on the Cloud Vision API and the Cloud Translation API for this key. Keys stay on this device.</p>
-    </div>
-    <div class="field">
-      <label for="fAiKey">Gemini API key <span class="note">(optional)</span></label>
-      <div class="row"><input id="fAiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your key from Google AI Studio"><button class="btn" data-show="fAiKey" type="button">Show</button></div>
-      <p class="help">For Ask AI, Chinese definitions, and marking names and misreads. Create a key at aistudio.google.com.</p>
-    </div>
+    <details class="sgroup keys" id="keysBox">
+      <summary class="srow"><b>Keys</b><span class="kstate" id="keysState"></span></summary>
+      <div class="scard">
+      <p class="klead" id="keysLead">Needed once, to read photos. Stored only on this device.</p>
+      <div class="kfield"><label for="fKey">Google Cloud <small>Vision + Translation APIs on</small></label>
+        <div class="row"><input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste key"><button class="btn" data-show="fKey" type="button">Show</button></div></div>
+      <div class="kfield"><label for="fAiKey">Gemini <small>optional · Ask AI, 中文 definitions</small></label>
+        <div class="row"><input id="fAiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste key from aistudio.google.com"><button class="btn" data-show="fAiKey" type="button">Show</button></div></div>
+      </div>
+    </details>
 
-    <h3>Your books</h3>
-    <div class="field">
-      <span class="label">Characters</span>
-      <div class="radio-row"><label><input type="radio" name="fScript" value="simplified"> Simplified</label><label><input type="radio" name="fScript" value="traditional"> Traditional</label></div>
-    </div>
-    <div class="field">
-      <span class="label">Definitions</span>
-      <div class="radio-row"><label><input type="radio" name="fDef" value="en"> English (dictionary)</label><label><input type="radio" name="fDef" value="zh"> 中文 (needs the Gemini key)</label></div>
-    </div>
-    <div class="field">
-      <label for="fGoal">Daily goal (pages)</label>
-      <input id="fGoal" type="number" min="1" max="60" step="1" inputmode="numeric">
-      <p class="help">A photo of two pages counts as 2. A one-page photo counts as 1.</p>
-    </div>
+    <section class="sgroup"><h3>Reading</h3><div class="scard">
+      <div class="srow"><label for="fGoal">Daily goal <small>pages</small></label><input id="fGoal" type="number" min="1" max="60" step="1" inputmode="numeric"></div>
+      <div class="srow"><span>Characters</span><span class="segr"><label><input type="radio" name="fScript" value="simplified">简体</label><label><input type="radio" name="fScript" value="traditional">繁體</label></span></div>
+      <div class="srow"><span>Definitions</span><span class="segr"><label><input type="radio" name="fDef" value="en">English</label><label><input type="radio" name="fDef" value="zh">中文</label></span></div>
+      <div class="srow"><span>Word panel</span><span class="segr"><label><input type="radio" name="fInfoPos" value="left">Left</label><label><input type="radio" name="fInfoPos" value="top">Top</label></span></div>
+      <label class="srow"><span>Pinyin over sentences</span><input class="sw" id="fSentPy" type="checkbox"></label>
+      <label class="srow"><span>Spoken tones<small>一样 → yí yàng</small></span><input class="sw" id="fTones" type="checkbox"></label>
+      <label class="srow"><span>Mark unsure characters</span><input class="sw" id="fUnsure" type="checkbox"></label>
+      <label class="srow"><span>Color each word</span><input class="sw" id="fColor" type="checkbox"></label>
+    </div></section>
 
-    <h3>On the page</h3>
-    <div class="field"><label class="check"><input id="fSentPy" type="checkbox"> Pinyin over sentences</label></div>
-    <div class="field"><label class="check"><input id="fTones" type="checkbox"> Spoken tones for 一 and 不</label><p class="help">On: 一样 shows yí yàng, as it is said. Off: yī yàng, as in the dictionary.</p></div>
-    <div class="field"><label class="check"><input id="fUnsure" type="checkbox"> Dotted underline under unsure characters</label></div>
-    <div class="field"><label class="check"><input id="fColor" type="checkbox"> A color for each word</label></div>
-    <div class="field">
-      <span class="label">Word panel</span>
-      <div class="radio-row"><label><input type="radio" name="fInfoPos" value="top"> Above the page</label><label><input type="radio" name="fInfoPos" value="left"> Left of the page</label></div>
-      <p class="help">It opens when you tap a word. On small screens it is always above the page.</p>
-    </div>
+    <section class="sgroup"><h3>Sound</h3><div class="scard">
+      <label class="srow"><span>Speak on tap</span><input class="sw" id="fAuto" type="checkbox"></label>
+      <div class="srow"><label for="fVoice">Voice<small id="voiceHelp"></small></label><select id="fVoice"></select></div>
+      <div class="srow"><label for="fRate">Speed <span id="fRateVal"></span></label><input id="fRate" type="range" min="0.5" max="1.2" step="0.05"></div>
+      <label class="srow"><span>Shadowing<small>Pause after each sentence</small></span><input class="sw" id="fShadow" type="checkbox"></label>
+    </div></section>
 
-    <h3>Sound</h3>
-    <div class="field"><label class="check"><input id="fAuto" type="checkbox"> Speak words and sentences when I tap them</label></div>
-    <div class="field">
-      <label for="fVoice">Voice</label>
-      <select id="fVoice"></select>
-      <p class="help" id="voiceHelp"></p>
-    </div>
-    <div class="field">
-      <label for="fRate">Speed <span id="fRateVal"></span></label>
-      <input id="fRate" type="range" min="0.5" max="1.2" step="0.05">
-    </div>
-    <div class="field"><label class="check"><input id="fShadow" type="checkbox"> Pause after each sentence when reading aloud</label>
-      <p class="help">For shadowing. Read aloud waits after each sentence, about as long as it took to say, so you can repeat it.</p></div>
+    <section class="sgroup"><h3>Photos</h3><div class="scard">
+      <div class="srow"><span>Camera</span><span class="segr"><label><input type="radio" name="fFacing" value="environment">Back</label><label><input type="radio" name="fFacing" value="user">Front</label></span></div>
+      <label class="srow"><span>Straighten and crop</span><input class="sw" id="fStraight" type="checkbox"></label>
+    </div></section>
 
-    <h3>Photos</h3>
-    <div class="field">
-      <span class="label">Camera</span>
-      <div class="radio-row"><label><input type="radio" name="fFacing" value="environment"> Back</label><label><input type="radio" name="fFacing" value="user"> Front</label></div>
-    </div>
-    <div class="field"><label class="check"><input id="fStraight" type="checkbox"> Straighten new photos and crop to the text</label>
-      <p class="help">Rotate, Mirror and One page are on the photo review screen. For a shadowy photo, use Adjust photo → Clean up.</p></div>
-
-    <h3>Your data</h3>
-    <div class="field">
-      <p class="help" style="margin-top:0">A backup is one file with your photos, words, 摘抄, rewards and settings. It does not include your keys. Restoring adds what is missing and keeps what is here.</p>
-      <div class="row" style="flex-wrap:wrap;gap:8px"><button class="btn" id="backupBtn" type="button">Back up</button><button class="btn" id="restoreBtn" type="button">Restore</button><button class="btn" id="ankiBtn" type="button">Export words for Anki</button></div>
-      <p class="help" id="usageLine"></p>
+    <section class="sgroup"><h3>Data</h3><div class="scard">
+      <div class="srow wrap"><span><span id="backupLine"></span><small>Photos, words and rewards. No keys.</small></span>
+        <span class="btns"><button class="btn" id="backupBtn" type="button">Back up</button><button class="btn" id="restoreBtn" type="button">Restore</button></span></div>
+      <div class="srow"><span>Anki</span><button class="btn" id="ankiBtn" type="button">Export words</button></div>
+      <p class="usage" id="usageLine"></p>
       <input type="file" id="restorePick" accept=".jsonl,.json,application/json,application/x-ndjson" hidden>
-    </div>
+    </div></section>
 
-    <details class="field">
-      <summary><b>Developer</b></summary>
-      <div class="field"><label for="fAiModel">Gemini model</label><input id="fAiModel" type="text" autocomplete="off" spellcheck="false">
-        <p class="help">Google renames models. If AI stops working, check the model list in the Gemini API docs.</p></div>
-      <div class="field"><label class="check"><input id="fDevVision" type="checkbox"> Save Vision’s reply for each photo</label><p class="help">Downloads a .json file with the reply and the image that was sent. No keys.</p></div>
-      <div class="field"><label class="check"><input id="fDebug" type="checkbox"> Debug mode</label><p class="help">Console logs, error toasts, and RD in DevTools. Reload to apply.</p></div>
-      <div class="row" style="flex-wrap:wrap;gap:8px"><button class="btn" id="replayBtn" type="button">Read a saved Vision reply</button><button class="btn" id="reportBtn" type="button">Copy debug report</button><button class="btn" id="coinsBtn" type="button">Add 888 coins</button></div>
+    <details class="sgroup" id="devBox">
+      <summary class="srow"><b>Developer</b></summary>
+      <div class="scard">
+      <div class="srow"><label for="fAiModel">Gemini model</label><input id="fAiModel" type="text" autocomplete="off" spellcheck="false"></div>
+      <label class="srow"><span>Save Vision replies</span><input class="sw" id="fDevVision" type="checkbox"></label>
+      <label class="srow"><span>Debug mode<small>Reload to apply</small></span><input class="sw" id="fDebug" type="checkbox"></label>
+      <div class="srow wrap"><span class="btns"><button class="btn" id="replayBtn" type="button">Read saved reply</button><button class="btn" id="reportBtn" type="button">Copy debug report</button><button class="btn" id="coinsBtn" type="button">+888 coins</button><button class="btn" id="cookieBtn" type="button">Fortune cookie</button></span></div>
       <input type="file" id="replayPick" accept=".json,application/json" hidden>
+      </div>
     </details>
 
   </div></div>
 </section>
 
 <section class="sheet" id="statSheet" aria-label="Your reading">
-  <div class="sheet-bar"><h2>Your reading</h2><button class="btn" id="statClose" type="button">Close</button></div>
+  <div class="sheet-bar ftabbar"><button class="brand" id="statHome" type="button" aria-label="Return to reading" title="Return to reading"><span class="seal" id="statSeal" aria-hidden="true">读</span></button><div class="ftabs" role="tablist" aria-label="Your reading"><button type="button" role="tab" data-stab="progress">Progress</button><button type="button" role="tab" data-stab="desk">Desk</button></div></div>
   <div class="scroll"><div class="stats" id="stats"></div></div>
 </section>
 <section class="sheet" id="pagesSheet" aria-label="Your pages">
-  <div class="sheet-bar"><h2 id="pagesTitle">Your pages</h2><button class="btn" id="pagesClose" type="button">Close</button></div>
+  <div class="sheet-bar"><h2 id="pagesTitle">Your pages</h2><button class="btn" id="pagesClose" type="button">Return to reading</button></div>
   <div class="scroll"><div class="pages-help"><p class="note">Tap a photo to open it. Photos follow the book’s page numbers; type a number to move a photo.</p><p class="note" id="storageLine"></p><button class="btn" id="dropOrig" type="button" hidden></button></div><div class="pgrid" id="pgrid"></div></div>
 </section>
 <section class="sheet" id="revSheet" aria-label="Daily review">
-  <div class="sheet-bar"><h2 id="revTitle">Daily review</h2><span class="note" id="revCount"></span><button class="btn" id="revClose" type="button">Close</button></div>
+  <div class="sheet-bar"><h2 id="revTitle">Daily review</h2><span class="note" id="revCount"></span><button class="btn" id="revClose" type="button">Return to reading</button></div>
   <div class="scroll"><div class="rev" id="rev"></div></div>
 </section>
 <div id="loupe" aria-hidden="true"></div>
@@ -788,7 +899,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
     - RD.errors keeps the last 20 errors. "Copy debug report" copies them without keys or book text.
     - "Read a saved Vision reply" runs Photo layout on a saved reply, with no API call.
 */
-const APP_VERSION = '2026.10.31b';
+const APP_VERSION = '2026.10.31l';
 const DEBUG = (() => { try { return localStorage.getItem('rd.debug') === '1' || /[?&]debug\b/.test(location.search); } catch (e) { return false; } })();
 const log = (area, ...a) => { if (DEBUG) console.log(`%c[${area}]`, 'color:#1F7A5C;font-weight:600', ...a); };
 /* #################  FOUNDATION  ################# */
@@ -827,7 +938,7 @@ const DEFAULTS = {
   apiKey:'', aiKey:'', aiModel:'gemini-flash-latest',
   rotate:0, mirror:false, facing:'environment', straighten:true, lighting:false,
   rate:0.85, autoplay:true, goal:4, script:'simplified', voiceURI:'',
-  defLang:'en', sentPinyin:true, spokenTones:true, colorWords:false, sideOpen:false, infoOpen:false, infoPos:'top', shadow:false
+  defLang:'en', sentPinyin:true, spokenTones:true, colorWords:false, sideOpen:false, infoOpen:false, infoPos:'left', shadow:false
 };
 function idbOpen() {
   return new Promise((res, rej) => { const r = indexedDB.open('reading-desk', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
@@ -851,6 +962,7 @@ const S = {
 };
 if (!S.stats.days) S.stats.days = {};
 if ((storedSettings.v || 0) < 3) { S.settings.colorWords = false; S.settings.v = 3; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
+if ((S.settings.v || 0) < 4) { S.settings.infoPos = 'left'; S.settings.v = 4; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} } // the panel moved to the left by default
 if (['gemini-3.1-flash-lite', 'gemini-3.8-flash'].includes(S.settings.aiModel)) { S.settings.aiModel = DEFAULTS.aiModel; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
 // Each saved word keeps its own underline color.
 const MARK_COLORS = ['#D99A00', '#2B6FD6', '#D6336C', '#1E9A50', '#7B4BD1', '#E2600B', '#0F9AA0'];
@@ -1853,8 +1965,13 @@ function updateProgress() {
   updateSeal(); checkAwards();
   $('#goal').innerHTML = `<b>${t.pages}</b>/${goal} pages today`;
   const sk = $('#streak');
-  sk.innerHTML = ICON.flame + `<span>${st}</span><span class="goal">· ${t.pages}/${goal} pages</span>`;
-  sk.setAttribute('aria-label', `Reading streak: ${st} day${st === 1 ? '' : 's'} in a row. Open your reading stats.`);
+  const mon = new Date(); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7)); let wk = 0;
+  for (let d = new Date(mon); dayKey(d) <= dayKey(); d.setDate(d.getDate() + 1)) wk += S.stats.days[dayKey(d)]?.pages || 0;
+  sk.innerHTML = ICON.flame + `<span>${st}</span><span class="goal" lang="zh">今天 <b>${t.pages}</b> 页<span class="wk"> · 本周 <b>${wk}</b> 页</span></span>`;
+  sk.setAttribute('aria-label', `Reading streak: ${st} day${st === 1 ? '' : 's'} in a row. ${t.pages} page${t.pages === 1 ? '' : 's'} today, ${wk} this week. Open your reading stats.`);
+  const c = collect(), db = $('#deskBtn'), docked = dockSlots(c).filter(Boolean);
+  if (giftReady()) db.textContent = '🎁'; else db.innerHTML = (docked.length ? docked : [c.last || '🪴']).map(e => `<span>${e}</span>`).join('');
+  db.setAttribute('aria-label', giftReady() ? 'Your desk: today’s gift is ready' : 'Your desk');
   sk.classList.toggle('on', st > 0);
   const fin = $('#finishBtn');
   if (!S.model) { $('#pct').textContent = 'No pages yet'; $('#fill').style.width = '0%'; $('#track').setAttribute('aria-valuenow', '0'); return; }
@@ -1865,7 +1982,7 @@ function updateProgress() {
   $('#fill').style.width = pct + '%'; $('#track').setAttribute('aria-valuenow', String(pct));
   $('#pct').textContent = S.spread.done ? 'Pages finished' : `${pct}% read`;
   if (S.spread.done) { fin.innerHTML = `${ICON.camera}<span class="lbl">Next</span>`; fin.title = 'Photograph the next pages'; fin.classList.remove('nudge'); }
-  else { fin.innerHTML = `${ICON.check}<span class="lbl">Finish</span>`; fin.title = 'Finish these pages'; fin.classList.toggle('nudge', pct >= 80); }
+  else { fin.innerHTML = `${ICON.check}<span class="lbl">Page</span>`; fin.title = 'Finish these pages'; }
 }
 function finishPages() {
   if (!S.spread) return;
@@ -2674,16 +2791,19 @@ function renderInfo() {
 }
 function _renderInfo(inf) {
   if (!inf) {
+    // Start panel, top to bottom: welcome back (after days away), 欢迎 with the three gestures,
+    // today's mission with its one action, quiet notices, and the keyboard line
+    // at the bottom (hidden on touch screens). The backup reminder is in Settings; new desk items show on the Desk.
+    const t = todayStats(), due = dueCount(), parts = sealParts(), n = parts.filter(x => x[1]).length;
+    const notices = [
+      t.sealed && !t.cookie && `<button class="btn ghost" type="button" data-desk="1">🥠 A fortune cookie is waiting</button>`].filter(Boolean);
     info.innerHTML = `<div class="idle">
-      <p><b>Tap</b> a word for its meaning. <b>Double-tap</b> to save it. <b>Press and hold</b> for the whole sentence.</p>
-      ${S.welcome ? `<div class="welcome"><b><span lang="zh">欢迎回来</span> · Welcome back</b><span>${dueCount() ? `${dueCount()} word${dueCount() === 1 ? ' is' : 's are'} ready for you.` : 'Your pages are where you left them.'} You were away ${S.welcome.length} days. Were you traveling?</span><span><button class="btn" type="button" data-travel="1">Mark as travel days</button></span></div>` : ''}
-      ${giftReady() ? `<button class="btn" type="button" data-desk="1">🎁 Today’s gift is ready</button>` : ''}${backupDue() ? `<button class="btn ghost" type="button" data-backup="1">💾 Last backup: ${backupDue()}. Back up now</button>` : ''}${todayStats().sealed && !todayStats().cookie ? `<button class="btn" type="button" data-desk="1">🥠 A fortune cookie is waiting</button>` : ''}${collect().unseen?.length ? `<button class="btn" type="button" data-desk="1">✨ New on your desk: ${collect().unseen.join(' ')}</button>` : ''}
-      ${(() => { const parts = sealParts(), n = parts.filter(x => x[1]).length, t = todayStats();
-        const how = [`${t.pages || 0} of ${S.settings.goal} pages`, 'double-tap a word', dueCount() ? `${dueCount()} due` : 'or practice'];
-        return `<div class="tasks"><span class="seal${n === 3 ? ' done' : ''}" style="--p:${n}" aria-hidden="true">读</span>
-          <div><b>Today’s mission</b> <span class="note">· ${n} of 3</span><ul>${parts.map(([l, ok], k) => `<li class="${ok ? 'ok' : ''}">${ok ? '✓' : '○'} ${esc(l)} <span class="note">· ${how[k]}</span></li>`).join('')}</ul></div></div>${weekStripHTML(false)}`; })()}
-      <p class="today">Today: ${todayStats().pages}/${S.settings.goal} pages · ${S.words.length} saved word${S.words.length === 1 ? '' : 's'}${dueCount() ? ` · ${dueCount()} to review` : ''}</p>
-      ${S.words.length ? (() => { const due = dueCount(); return due ? `<button class="btn primary" type="button" data-review="1">${ICON.cards}Review ${due} word${due === 1 ? '' : 's'}</button>` : `<button class="btn" type="button" data-review="1">${ICON.brush}Practice</button>`; })() : ''}
+      ${S.welcome ? `<div class="welcome"><b><span lang="zh">欢迎回来</span> · Welcome back</b><span>${due ? `${due} word${due === 1 ? ' is' : 's are'} ready for you.` : 'Your pages are where you left them.'} You were away ${S.welcome.length} days. Were you traveling?</span><span><button class="btn" type="button" data-travel="1">Mark as travel days</button></span></div>` : ''}
+      <div class="hello"><b lang="zh">欢迎</b><span><b>Tap</b> meaning · <b>Double-tap</b> save · <b>Hold</b> sentence</span></div>
+      <div class="tasks"><span class="seal${n === 3 ? ' done' : ''}" style="--p:${n}" aria-hidden="true">读</span>
+        <div><b>Today’s mission</b><ul>${parts.map(([l, ok]) => `<li class="${ok ? 'ok' : ''}">${ok ? '✓' : '○'} ${esc(l)}</li>`).join('')}</ul>
+        ${S.words.length ? `<button class="btn${due && !t.reviewed ? ' primary' : ''}" type="button" data-review="1">${due ? `${ICON.cards}Review` : `${ICON.brush}Practice`}</button>` : ''}</div></div>
+      ${notices.length ? `<div class="notices">${notices.join('')}</div>` : ''}
       <p class="kbd-tip">Keyboard: <kbd>←</kbd> <kbd>→</kbd> next word. <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> adds a character on that side, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> removes one. <kbd>S</kbd> save, <kbd>Space</kbd> listen, <kbd>Enter</kbd> whole sentence.</p>
     </div>`;
     return;
@@ -3366,6 +3486,7 @@ function grade(g) {
   else {
     const n = nextFor(w, g);
     w.reviews = (w.reviews || 0) + 1; w.lastRev = Date.now();
+    const t = todayStats(); t.revCards = (t.revCards || 0) + 1; if (t.revCards >= 5 && !t.reviewed) { t.reviewed = true; updateProgress(); } saveStats();
     if (n.graduate) { R.graduated.push(w.w); markKnown(w.w, true); }
     else { w.box = n.box; w.due = dayPlus(n.days); saveWords(); }
     if (g === 'again' && !R.again.has(w.w)) { R.again.add(w.w); R.q.push({ w:w.w, type:'read', again:true }); }
@@ -3444,7 +3565,8 @@ function claimGift() {
 // Today's seal: read today's pages, save a word, do the review (or practice, or nothing to review).
 function sealParts() {
   const t = todayStats();
-  return [['Read today’s pages', (t.pages || 0) >= S.settings.goal], ['Save a word', (t.saved || 0) > 0], ['Review', !!t.reviewed || !!t.practiced || !S.words.length]];
+  const g = S.settings.goal, need = Math.min(dueCount(), 5 - (t.revCards || 0));   // the mission asks for at most 5 cards
+  return [[`Read ${g} page${g === 1 ? '' : 's'}`, (t.pages || 0) >= g], ['Save a word', (t.saved || 0) > 0], [need > 0 && !t.reviewed ? `Review ${need} card${need === 1 ? '' : 's'}` : 'Review or practice', !!t.reviewed || !!t.practiced || !S.words.length]];
 }
 function updateSeal() {
   const parts = sealParts(), n = parts.filter(p => p[1]).length, seal = $('.seal');
@@ -3491,10 +3613,12 @@ function openCookie() {
   if (gold) c.coins += 5;
   (c.cookies || (c.cookies = [])).push(ck); t.cookie = ck; saveStats(); return ck;
 }
+// Today's cookie as a row of the Today card: waiting (Open), opened (the fortune), or not yet earned.
 function cookieHTML(ck) {
-  if (!ck) return `<div class="cookie"><b>🥠 A fortune cookie is waiting</b><span class="note">You completed today’s mission.</span><div class="row"><button class="btn primary" type="button" id="openCookie">Open it</button></div></div>`;
-  const body = ck.kind === 'cy' ? (([zh, py, en]) => `<div class="cy" lang="zh">${zh}</div><div class="pyl">${py}</div><div>${esc(en)}</div>`)(CHENGYU[ck.i % CHENGYU.length]) : `<div class="fx">“${esc(FORTUNES[ck.i % FORTUNES.length])}”</div>`;
-  return `<div class="cookie${ck.gold ? ' gold' : ''}"><b>🥠 Today’s fortune${ck.gold ? ' · golden, +5 铜钱' : ''}</b>${body}<div class="row">${ck.kind === 'cy' ? `<button class="btn" type="button" id="sayCookie">${ICON.speaker}Listen</button>` : ''}<span class="note">Kept in Fortune cookies below. Next cookie: complete tomorrow’s mission.</span></div></div>`;
+  if (!todayStats().sealed) return `<div class="srow"><span class="te dim">🥠</span><span class="tx">Fortune cookie<small>Complete today’s mission</small></span></div>`;
+  if (!ck) return `<div class="srow"><span class="te">🥠</span><span class="tx">Fortune cookie<small>Mission complete</small></span><button class="btn primary" type="button" id="openCookie">Open</button></div>`;
+  const body = ck.kind === 'cy' ? (([zh, py, en]) => `<span class="cy" lang="zh">${zh}</span><small>${py} · ${esc(en)}</small>`)(CHENGYU[ck.i % CHENGYU.length]) : `<span class="fx">“${esc(FORTUNES[ck.i % FORTUNES.length])}”</span>`;
+  return `<div class="srow cookie-row${ck.gold ? ' gold' : ''}"><span class="te">🥠</span><span class="tx">${body}${ck.gold ? '<small>Golden · +5 🪙</small>' : ''}</span>${ck.kind === 'cy' ? `<button class="btn icon-btn" type="button" id="sayCookie" aria-label="Listen">${ICON.speaker}</button>` : ''}</div>`;
 }
 // Price follows size: small things 60, things for the desk 120, furniture 240.
 // At about 20 coins a day that is 3, 6 and 12 days.
@@ -3515,22 +3639,23 @@ function openBag() {
   let r = Math.random() * sum, k = 0; while (r > w[k] && k < w.length - 1) r -= w[k++];
   c.coins -= BAG; c.owned[left[k][0]] = 1; saveStats(); return left[k][0];
 }
-// Tap an item to see what it is; buying needs a second tap on Buy.
-function shopTip() {
-  const c = collect(), sel = S.shopSel; if (!sel) return 'Tap an item to see it. Prices are about 3 to 20 days of reading.';
+// Tap an item to select it; the bar under the grid shows it with a Buy button.
+function shopBar() {
+  const c = collect(), sel = S.shopSel; if (!sel) return '';
+  const act = (price, ok, owned) => owned ? '<span class="note">On your desk</span>' : c.coins >= price ? `<button class="btn primary" type="button" ${ok}>Buy · ${price} 🪙</button>` : `<span class="note">${price - c.coins} 🪙 to go</span>`;
   if (sel === 'bag') { const left = SHOP.filter(x => !c.owned[x[0]]).length;
-    return `👝 Lucky bag 福袋 · ${BAG} 🪙. A random item you don’t have yet: 60% small, 30% for the desk, 10% furniture.${left ? (c.coins >= BAG ? ' <button class="btn primary" type="button" data-bag="1">Open</button>' : ` You have ${c.coins} 🪙.`) : ' You have every item.'}`; }
+    return `<div class="sbar"><span class="e">👝</span><span class="tx"><b>Lucky bag <span lang="zh">福袋</span></b><small>A random item you don’t have</small></span>${left ? act(BAG, 'data-bag="1"', false) : '<span class="note">You have everything</span>'}</div>`; }
   const [e, p, name] = SHOP.find(x => x[0] === sel);
-  return `${e} ${esc(name)} · ${TIER[p]} · ${p} 🪙. ${c.owned[e] ? 'It’s on your desk.' : c.coins >= p ? '<button class="btn primary" type="button" data-buy="' + e + '">Buy</button>' : `You have ${c.coins} 🪙.`}`;
+  return `<div class="sbar"><span class="e">${e}</span><span class="tx"><b>${esc(name)}</b><small>${TIER[p]}</small></span>${act(p, `data-buy="${e}"`, c.owned[e])}</div>`;
 }
 function shopHTML() {
-  const c = collect();
-  const tile = ([e, p]) => `<button type="button" data-pick="${e}" class="${c.owned[e] ? 'own' : ''}${S.shopSel === e ? ' sel' : ''}"><span class="e">${e}</span><small>${c.owned[e] ? 'Yours' : p + ' 🪙'}</small></button>`;
-  const group = (price, label) => `<p class="note" style="margin:10px 0 4px">${label} · ${price} 🪙</p><div class="shop">${SHOP.filter(x => x[1] === price).map(tile).join('')}</div>`;
-  return `<div><b>Shop</b> <span class="note">· ${SHOP.filter(x => c.owned[x[0]]).length} of ${SHOP.length} on your desk · bigger things cost more</span>
-    ${group(60, 'Small things')}${group(120, 'For the desk')}${group(240, 'Furniture')}
-    <p class="note" style="margin:10px 0 4px">Lucky bag · ${BAG} 🪙</p><div class="shop"><button type="button" data-pick="bag" class="${S.shopSel === 'bag' ? 'sel' : ''}"><span class="e">👝</span><small>福袋 · ${BAG} 🪙</small></button></div>
-    <p class="tip">${shopTip()}</p></div>`;
+  const c = collect(), n = SHOP.filter(x => c.owned[x[0]]).length;
+  const tile = (e, label, cls, face = e) => `<button type="button" data-pick="${e}" class="${cls}${S.shopSel === e ? ' sel' : ''}"><span class="e">${face}</span><small>${label}</small></button>`;
+  const item = ([e, p]) => tile(e, c.owned[e] ? '✓' : p, c.owned[e] ? 'own' : c.coins < p ? 'dear' : '');
+  const head = t => `<span class="sh">${t}</span>`;
+  return `<section class="dsec"><h4>Shop <span class="note">${n}/${SHOP.length}</span></h4>
+    <div class="shop">${head('Small')}${SHOP.filter(x => x[1] === 60).map(item).join('')}${head('For the desk')}${SHOP.filter(x => x[1] === 120).map(item).join('')}${head('Furniture')}${SHOP.filter(x => x[1] === 240).map(item).join('')}${head('Lucky bag <span lang="zh">福袋</span>')}${tile('bag', BAG, c.coins < BAG ? 'dear' : '', '👝')}</div>
+    ${shopBar()}</section>`;
 }
 /* ================= Rewards: zodiac, milestones, festivals ================= */
 // checkAwards gives each reward once and adds it to S.stats.collect.unseen.
@@ -3591,69 +3716,87 @@ const FEST_WHEN = { '🧧':'1st day of the 1st lunar month', '🏮':'15th day of
 function collectionsHTML() {
   const c = collect(), z = Object.values(c.zodiac || {}), month = dayKey().slice(0, 7);
   const days = Object.keys(S.stats.days).filter(k => k.startsWith(month) && activeDay(S.stats.days[k])).length;
-  // Each item explains itself on tap (and on hover): what it is and how to get it.
-  const row = (list, has, how) => `<div class="tipwrap"><div class="coll">${list.map(([e, label]) => { const tip = `${e} ${label} · ${how(e)}${has(e) ? ' · Collected' : ''}`; return `<span class="${has(e) ? 'got' : 'no'}" title="${esc(tip)}" data-tip="${esc(tip)}">${e}</span>`; }).join('')}</div><p class="tip">Tap an item to see how to get it.</p></div>`;
-  const nextZ = ZODIAC[z.length % 12];
-  return `${c.unseen?.length ? `<div class="newbar"><b>New on your desk:</b> ${c.unseen.join(' ')}</div>` : ''}
-    <div><b>Zodiac 生肖</b> <span class="note">· ${z.length} of 12 · ${c.zodiac?.[month] ? 'this month’s animal collected' : `${days} of ${ZODIAC_DAYS} reading days this month for ${nextZ[0]}`}</span>${row(ZODIAC, e => z.includes(e), () => `read on ${ZODIAC_DAYS} days in one month`)}</div>
-    <div><b>Achievements</b> <span class="note">· they repeat · coins for reading</span>
-      ${ACHIEVEMENTS.map(([id, e, label, step, coins, value]) => { const v = value(), next = (Math.floor(v / step) + 1) * step, got = c.ach?.[id] || 0;
-        return `<div class="achv"><span class="ae">${e}</span><div><b>${esc(label)}</b> <span class="note">· +${coins} 🪙 · earned ${got}×</span>
-          <div class="abar"><i style="width:${Math.round((v % step) / step * 100)}%"></i></div><span class="note">${v} so far · next at ${next}</span></div></div>`; }).join('')}</div>
-    <div><b>Milestones</b> <span class="note">· one time each · easiest first</span>${row(MILESTONES, e => c.miles?.[e], e => `+${MILESTONES.find(m => m[0] === e)[3]} 🪙`)}</div>
-    <div><b>Festivals</b> <span class="note">· read on the day</span>${row(FESTIVALS, e => c.owned[e], e => `${FEST_WHEN[e]}. Read that day`)}</div>`;
+  // Each item explains itself on tap (and on hover) in the line under the collections.
+  const row = (title, list, has, how) => { const got = list.filter(([e]) => has(e)).length;
+    return `<div class="crow"><b>${title}</b><span class="note">${got}/${list.length}</span><div class="coll">${list.map(([e, label]) => { const tip = `${e} ${label} · ${how(e)}${has(e) ? ' · ✓' : ''}`; return `<span class="${has(e) ? 'got' : 'no'}" title="${esc(tip)}" data-tip="${esc(tip)}">${e}</span>`; }).join('')}</div></div>`; };
+  const ach = ACHIEVEMENTS.map(([id, e, label, step, coins, value]) => { const v = value();
+    return `<div class="achv"><span class="ae">${e}</span><span class="tx">${esc(label)}<div class="abar"><i style="width:${Math.round((v % step) / step * 100)}%"></i></div></span><span class="note">+${coins} 🪙</span></div>`; }).join('');
+  return `<section class="dsec tipwrap"><h4>Collections</h4>
+    ${row('Zodiac <span lang="zh">生肖</span>', ZODIAC, e => z.includes(e), () => `read ${ZODIAC_DAYS} days in a month (${c.zodiac?.[month] ? 'done this month' : `${days}/${ZODIAC_DAYS} now`})`)}
+    ${row('Milestones', MILESTONES, e => c.miles?.[e], e => { const m = MILESTONES.find(x => x[0] === e); return `${m[1]} · +${m[3]} 🪙`; })}
+    ${row('Festivals', FESTIVALS, e => c.owned[e], e => `read on ${FEST_WHEN[e]}`)}
+    <p class="tip"></p>
+    ${ach}</section>`;
 }
 // Items on the desk: S.stats.collect.layout = { emoji: [x, y] }, both 0..1 of the board. Others wait in the tray.
+// The dock is the strip along the bottom of the desk: S.stats.collect.dock = 5 slots (emoji or null).
+// Docked items also show in the top bar, as many as fit. Drag an item onto a slot to dock it.
+const DOCK_N = 5, DOCK_Y = 0.82, BOARD_MAXY = 0.78;
+const dockSlots = c => { const d = (c.dock || []).slice(0, DOCK_N); while (d.length < DOCK_N) d.push(null); return d.map(e => e && c.owned[e] ? e : null); };
+const dockX = i => 0.14 + i * 0.18;
+// Items grow toward the front of the desk: 1× at the back, 1.5× at the front. The dock is a picture ledge at the front, so docked items stay 1.5×.
+const deskScale = y => (1 + 0.5 * clamp(y, 0, BOARD_MAXY) / BOARD_MAXY).toFixed(2);
 function boardHTML() {
-  const c = collect(), L = c.layout || (c.layout = {}), owned = Object.keys(c.owned);
-  const on = owned.filter(e => L[e]), off = owned.filter(e => !L[e]);
-  const item = e => { const [x, y] = L[e]; return `<span class="it" data-e="${e}" style="left:${x * 100}%;top:${y * 100}%;z-index:${Math.round(y * 100)};--s:${(0.8 + 0.45 * y).toFixed(2)}">${e}</span>`; };
-  return `<div class="board" id="board">${on.map(item).join('')}${on.length ? '' : `<div class="hint">${owned.length ? 'Tap an item below to put it on your desk.' : 'Gifts, shop items and rewards will appear here.'}</div>`}</div>
+  const c = collect(), L = c.layout || (c.layout = {}), owned = Object.keys(c.owned), dock = dockSlots(c);
+  const on = owned.filter(e => L[e] && !dock.includes(e)), off = owned.filter(e => !L[e] && !dock.includes(e));
+  const item = (e, x, y, cls = '') => `<span class="it${cls}" data-e="${e}" style="left:${x * 100}%;top:${y * 100}%;z-index:${Math.round(y * 100)};--s:${cls ? 1.5 : deskScale(y)}">${e}</span>`;
+  const slots = dock.map((e, i) => `<span class="dslot" style="left:${dockX(i) * 100}%"></span>${e ? item(e, dockX(i), 0.95, ' docked') : ''}`).join('');
+  return `<div class="board" id="board">${on.map(e => item(e, L[e][0], Math.min(L[e][1], BOARD_MAXY))).join('')}<div class="dock" aria-label="Dock: these show in the top bar"></div>${slots}${on.length || dock.some(Boolean) ? '' : `<div class="hint">${owned.length ? 'Tap an item below to place it.' : 'Your gifts and finds go here.'}</div>`}</div>
     ${off.length ? `<div class="tray" aria-label="Not on the desk yet">${off.map(e => `<button type="button" data-place="${e}" title="Put on the desk">${e}</button>`).join('')}</div>` : ''}`;
 }
-// A free-ish spot: random, away from the edges.
-function placeItem(e) { const c = collect(); (c.layout || (c.layout = {}))[e] = [0.12 + Math.random() * 0.76, 0.3 + Math.random() * 0.6]; saveStats(); }
-// Drag on the board. Dropping below or above the board puts the item back in the tray.
+// A free-ish spot: random, away from the edges and the dock.
+function placeItem(e) { const c = collect(); (c.layout || (c.layout = {}))[e] = [0.12 + Math.random() * 0.76, 0.3 + Math.random() * (BOARD_MAXY - 0.3)]; saveStats(); }
+// Drag on the board. Dropping on the dock strip docks it (a docked item there swaps places or goes back on the desk);
+// dropping below or above the board puts the item back in the tray.
 function startBoardDrag(ev) {
   const el = ev.target.closest('.board .it'); if (!el) return;
   const board = $('#board'), e = el.dataset.e, c = collect(); ev.preventDefault(); el.setPointerCapture(ev.pointerId); el.classList.add('drag'); S.deskDrag = true;
   const move = m => { const r = board.getBoundingClientRect(), x = (m.clientX - r.left) / r.width, y = (m.clientY - r.top) / r.height;
-    el.style.left = (clamp(x, 0, 1) * 100) + '%'; el.style.top = (clamp(y, 0, 1.15) * 100) + '%'; el.style.zIndex = 999; el.style.setProperty('--s', (0.8 + 0.45 * clamp(y, 0, 1)).toFixed(2)); };
+    el.style.left = (clamp(x, 0, 1) * 100) + '%'; el.style.top = (clamp(y, 0, 1.15) * 100) + '%'; el.style.zIndex = 999; el.style.setProperty('--s', y >= DOCK_Y && y <= 1.05 ? 1.5 : deskScale(y));
+    board.classList.toggle('docking', y >= DOCK_Y && y <= 1.05); };
   const up = u => {
-    el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); S.deskDrag = false;
+    el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); S.deskDrag = false; board.classList.remove('docking');
     const r = board.getBoundingClientRect(), x = (u.clientX - r.left) / r.width, y = (u.clientY - r.top) / r.height;
-    if (y > 1.05 || y < -0.05) delete c.layout[e]; else c.layout[e] = [clamp(x, 0.04, 0.96), clamp(y, 0.12, 0.98)];
-    saveStats(); $('#desk').innerHTML = deskHTML();
+    const dock = dockSlots(c), from = dock.indexOf(e); if (from >= 0) dock[from] = null;
+    if (y > 1.05 || y < -0.05) delete c.layout[e];
+    else if (y >= DOCK_Y) {
+      const i = clamp(Math.round((x - dockX(0)) / 0.18), 0, DOCK_N - 1), o = dock[i];
+      if (o) { if (from >= 0) dock[from] = o; else placeItem(o); }
+      dock[i] = e; delete c.layout[e];
+    } else c.layout[e] = [clamp(x, 0.04, 0.96), clamp(y, 0.12, BOARD_MAXY)];
+    c.dock = dock; saveStats(); $('#desk').innerHTML = deskHTML(); updateProgress();
   };
   el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
 }
-const untilTomorrow = () => { const now = new Date(), t = new Date(now); t.setHours(24, 0, 0, 0); const m = Math.ceil((t - now) / 60000); return `${Math.floor(m / 60)}h ${m % 60}m`; };
+// The Desk tab, top to bottom: coins, the desk itself, Today (gift, cookie, coins for reading time),
+// past fortunes, this week's gift set, the shop, collections, and the rules folded away at the end.
 function deskHTML() {
   const c = collect(), t = todayStats(), play = Math.floor((t.play || 0) / 60), paid = t.tiers || 0;
   const today = c.gift === dayKey(), items = setItems(c.track.set), [name, zh] = SETS[c.track.set % SETS.length];
-  const next = TIERS[paid];
   const gift = giftReady()
-    ? `<div class="gift"><span class="big-e">🎁</span><div><b>Today’s gift is ready</b><div class="when">${esc(name)} set, gift ${c.track.slot + 1} of 7</div></div><button class="btn primary" type="button" id="claimGift">Open</button></div>`
-    : today ? `<div class="gift"><span class="big-e">${c.last || '🎁'}</span><div><b>Collected today</b><div class="when">Next gift in ${untilTomorrow()}: ${items[c.track.slot]}</div></div></div>`
-    : `<div class="gift"><span class="big-e">🎁</span><div><b>Read for 2 minutes to open today’s gift</b><div class="when">${play} of 2 minutes so far</div></div></div>`;
-  const slots = (k, cur) => setItems(k).map((e, j) => `<span class="slot${j === 6 ? ' center' : ''}${cur ? (j < c.track.slot ? ' got' : j === c.track.slot ? ' next' : ' future') : ' future'}" title="${j === 6 ? 'Seventh day' : 'Day ' + (j + 1)}">${e}</span>`).join('');
-  let k = c.track.set; const month = [1, 2, 3].map(() => { k = nextSet(k); return `<div><div class="note">${esc(SETS[k][0])} <span lang="zh">${SETS[k][1]}</span></div><div class="set">${slots(k, false)}</div></div>`; }).join('');
-  const owned = Object.keys(c.owned).reverse(), cookies = (c.cookies || []).slice().reverse();
-  const cookieText = ck => ck.kind === 'cy' ? (([zh, py, en]) => `<span lang="zh">${zh}</span> · ${py} · ${esc(en)}`)(CHENGYU[ck.i % CHENGYU.length]) : `“${esc(FORTUNES[ck.i % FORTUNES.length])}”`;
+    ? `<div class="srow"><span class="te">🎁</span><span class="tx">Today’s gift<small>${esc(name)} · ${c.track.slot + 1} of 7</small></span><button class="btn primary" type="button" id="claimGift">Open</button></div>`
+    : today ? `<div class="srow"><span class="te">${c.last || '🎁'}</span><span class="tx">Today’s gift<small>Next one tomorrow: ${items[c.track.slot]}</small></span></div>`
+    : `<div class="srow"><span class="te dim">🎁</span><span class="tx">Today’s gift<small>Read ${Math.max(0, 2 - play)} more min</small></span></div>`;
+  const time = `<div class="srow"><span class="te">⏱️</span><span class="tx">${play} min today</span><span class="ladder">${TIERS.map(([m, v], k) => `<span class="${k < paid ? 'ok' : ''}" title="${m} min">+${v}</span>`).join('')}</span></div>`;
+  const slots = (k, cur) => setItems(k).map((e, j) => `<span class="slot${j === 6 ? ' center' : ''}${cur ? (j < c.track.slot ? ' got' : j === c.track.slot ? ' next' : ' future') : ' future'}">${e}</span>`).join('');
+  let k = c.track.set; const later = [1, 2, 3].map(() => { k = nextSet(k); return `<div><span class="note">${esc(SETS[k][0])} <span lang="zh">${SETS[k][1]}</span></span><div class="set">${slots(k, false)}</div></div>`; }).join('');
+  const owned = Object.keys(c.owned), past = (c.cookies || []).slice().reverse().filter(ck => ck !== t.cookie && ck.d !== dayKey());
+  const cookieLine = ck => `<li class="${ck.gold ? 'gold' : ''}">${ck.kind === 'cy' ? (([zh2, py, en]) => `<span lang="zh">${zh2}</span> <span class="note">${py} · ${esc(en)}</span>`)(CHENGYU[ck.i % CHENGYU.length]) : `“${esc(FORTUNES[ck.i % FORTUNES.length])}”`}</li>`;
   return `<div class="desk">
-    <div><b>My desk</b> <span class="note">· ${owned.length} item${owned.length === 1 ? '' : 's'}. Drag to arrange; drag off the desk to put away.</span>${boardHTML()}</div>
-    <div class="row1"><span class="coins">🪙 ${c.coins} <small class="note" lang="zh">铜钱</small></span></div>
-    ${todayStats().sealed ? cookieHTML(todayStats().cookie) : ''}
-    ${gift}
-    <div><b>This week: ${esc(name)} <span lang="zh">${zh}</span></b><div class="set">${slots(c.track.set, true)}</div><p class="note">One gift for each day you read. The seventh day brings the set’s animal.</p></div>
-    <details class="month"><summary>Coming up</summary>${month}</details>
-    <div><b>Today: ${play} min</b><div class="ladder">${TIERS.map(([m, v], k) => `<span class="${k < paid ? 'ok' : ''}">${m} min · ${v} 🪙</span>`).join('')}</div>
-      <p class="note">${next ? `Next ${next[1]} coins at ${next[0]} minutes.` : 'All of today’s coins collected.'} Time without touching the screen counts at a fifth.</p></div>
-    <div><b>Today’s mission</b><ul class="parts">${sealParts().map(([l, ok]) => `<li class="${ok ? 'ok' : ''}">${ok ? '✓ ' : ''}${esc(l)}</li>`).join('')}</ul>${todayStats().sealed ? '' : '<p class="note">Complete the mission to stamp today’s seal and open a fortune cookie.</p>'}</div>
-    ${collectionsHTML()}
+    <div class="dhead"><span class="coins">🪙 ${c.coins}</span><span class="note">${owned.length} item${owned.length === 1 ? '' : 's'}${owned.length ? ' · drag to arrange' : ''}</span></div>
+    ${boardHTML()}
+    <section class="dsec"><h4>Today</h4><div class="scard">${gift}${cookieHTML(t.cookie)}${time}</div></section>
+    ${past.length ? `<section class="dsec"><h4>Fortunes <span class="note">${past.length}</span></h4><ul class="cookies">${past.slice(0, 3).map(cookieLine).join('')}</ul>${past.length > 3 ? `<details class="more"><summary>All ${past.length}</summary><ul class="cookies">${past.slice(3).map(cookieLine).join('')}</ul></details>` : ''}</section>` : ''}
+    <section class="dsec"><h4>This week · ${esc(name)} <span lang="zh">${zh}</span></h4><div class="set">${slots(c.track.set, true)}</div><details class="more"><summary>Coming up</summary><div class="later">${later}</div></details></section>
     ${shopHTML()}
-    <details><summary><b>Fortune cookies</b> <span class="note">· ${cookies.length}</span></summary>
-      ${cookies.length ? `<ul class="cookies">${cookies.map(ck => `<li class="${ck.gold ? 'gold' : ''}"><div class="d">${ck.d}${ck.gold ? ' · golden' : ''}</div>${cookieText(ck)}</li>`).join('')}</ul>` : '<p class="note">Complete today’s mission to open your first cookie.</p>'}</details>
+    ${collectionsHTML()}
+    <details class="more rules"><summary>How it works</summary><ul>
+      <li>Reading 2, 7, 17 and 32 min a day: +2, +4, +8, +14 🪙. Untouched time counts ⅕.</li>
+      <li>Every 10 pages +10 🪙. Every 7 reading days +20 🪙.</li>
+      <li>A gift after 2 min each day; day 7 brings the set’s animal.</li>
+      <li>Finish today’s mission for a fortune cookie (1 in 20 golden, +5 🪙).</li>
+      <li>Shop: small 60, desk 120, furniture 240. Lucky bag 100: something new.</li>
+      <li>Drag up to 5 items onto the strip at the bottom of the desk to show them in the top bar.</li></ul></details>
   </div>`;
 }
 /* Reading time: counts while these pages are open and you've touched the screen in the last 2 minutes. */
@@ -3666,6 +3809,7 @@ setInterval(() => {
   let paid = t.tiers || 0;
   while (paid < TIERS.length && t.play >= TIERS[paid][0] * 60) { c.coins += TIERS[paid][1]; paid++; }
   t.tiers = paid; saveStats();
+  if (giftReady() && $('#deskBtn').textContent !== '🎁') updateProgress();   // the desk button turns into 🎁
   if (statSheet.classList.contains('open') && $('#desk') && !S.deskDrag && !$('#desk').hidden) $('#desk').innerHTML = deskHTML();
 }, 15000);
 setInterval(() => {
@@ -3735,9 +3879,9 @@ function speedHTML() {
   const shown = r.weeks.filter(w => w.cpm != null), max = Math.max(...shown.map(w => w.cpm), 1);
   const bars = shown.length >= 2 ? `<div class="kchart" role="img" aria-label="Characters a minute per week, last 8 weeks" style="margin-top:10px">${r.weeks.map(w => `<div class="kb"><div class="kbar"><i style="height:${w.cpm == null ? 0 : Math.round(w.cpm / max * 100)}%"></i></div><b>${w.cpm ?? '–'}</b><span>${esc(new Date(w.start + 'T12:00:00').toLocaleDateString(undefined, { month:'short', day:'numeric' }))}</span></div>`).join('')}</div>` : '';
   return `<div><h3>Reading speed</h3>
-    <div class="tiles"><div class="tile"><b>${r.now}</b><span>characters a minute, your last hour of reading</span></div>${r.first != null ? `<div class="tile"><b>${r.first}</b><span>characters a minute, your first hour</span></div>` : ''}</div>
+    <div class="tiles"><div class="tile"><b>${r.now}</b><span>characters a minute, last hour</span></div>${r.first != null ? `<div class="tile"><b>${r.first}</b><span>your first hour</span></div>` : ''}</div>
     ${bars}
-    <p class="note" style="margin-top:8px">Time on each photo until you tap Finish, look-ups included. Breaks over 5 minutes and sentences played with Read aloud aren’t counted.</p></div>`;
+    <p class="note" style="margin-top:8px">Look-ups included; breaks and Read aloud left out.</p></div>`;
 }
 
 /* ================= Your reading ================= */
@@ -3782,7 +3926,8 @@ function weekStripHTML(big) {
   let read = 0, pages = 0;
   const cells = [...'MTWTFSS'].map((l, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); const k = dayKey(d), pg = S.stats.days[k]?.pages || 0, fut = k > dayKey();
     if (activeDay(S.stats.days[k])) read++; pages += pg;
-    return `<div class="wd${k === dayKey() ? ' today' : ''}${fut ? ' future' : ''}"><i class="${dayLevel(k)}">${big && pg ? pg : ''}</i><span>${l}</span></div>`; }).join('');
+    const lv = dayLevel(k), cls = lv === 'trav' ? 'trav' : lv ? `rd${lv === 'l3' ? ' goal' : ''}` : '';
+    return `<div class="wd${k === dayKey() ? ' today' : ''}${fut ? ' future' : ''}"><i class="${cls}"${lv === 'l3' ? ' title="Daily goal met"' : ''}>${big && pg ? pg : ''}</i><span>${l}</span></div>`; }).join('');
   return `<div class="week${big ? ' big' : ''}"><div class="wcells">${cells}</div><p class="note">${read} reading day${read === 1 ? '' : 's'} this week · ${pages} page${pages === 1 ? '' : 's'}</p></div>`;
 }
 function backupDue() {
@@ -3795,8 +3940,7 @@ function openStats(tab) {
   const st = streak(), best = Math.max(longestStreak(), st), t = todayStats(), goal = S.settings.goal;
   const days = S.stats.days, sum = f => Object.values(days).reduce((a, d) => a + (f(d) || 0), 0);
   let week = 0; for (let i = 0; i < 7; i++) { const d = new Date(); d.setDate(d.getDate() - i); week += days[dayKey(d)]?.pages || 0; }
-  const realPhotos = S.index.filter(x => !x.demo).length, due = dueCount(), mins = Math.floor((t.secs || 0) / 60);
-  const msg = activeDay(t) ? 'You’ve kept it going today.' : 'Read or review today to keep your streak. One missed day a week doesn’t break it.';
+  const due = dueCount();
   const today = new Date(); today.setHours(12, 0, 0, 0);
   const start = new Date(today); start.setDate(start.getDate() - ((start.getDay() + 6) % 7) - 7 * 11);
   let cells = '';
@@ -3810,30 +3954,26 @@ function openStats(tab) {
   const bars = wk.map(x => `<div class="kb"><div class="kbar"><i style="height:${x.avg ?? 0}%"></i></div><b>${x.avg == null ? '–' : x.avg + '%'}</b><span>${esc(new Date(x.start + 'T12:00:00').toLocaleDateString(undefined, { month:'short', day:'numeric' }))}</span></div>`).join('');
   const pagePct = knownPct(S.model);
   checkAwards();
-  $('#stats').innerHTML = `<div class="tabs"><div class="seg" role="group" aria-label="Show"><button type="button" data-stab="desk" aria-pressed="${tab === 'desk'}">Desk</button><button type="button" data-stab="progress" aria-pressed="${tab === 'progress'}">Progress</button></div></div>
-    <div id="desk"${tab === 'desk' ? '' : ' hidden'}>${deskHTML()}</div>
-    <div><h3>This week</h3>${weekStripHTML(true)}</div>
-    <div><h3>Last 12 weeks</h3><div class="calwrap"><div class="cal-days" aria-hidden="true"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div><div class="cal" role="img" aria-label="Reading days over the last 12 weeks">${cells}</div></div>
-      <div class="legend">None <i></i><i class="l1"></i> Read <i class="l2"></i><i class="l3"></i> Goal met <i class="trav"></i> Travel</div></div>
-    <div class="big"><span class="num">${st}</span><div><div class="lab">${st === 1 ? 'day' : 'days'} in a row</div><p>Longest streak: ${best} day${best === 1 ? '' : 's'}. ${esc(msg)}</p>
-</div></div>
-    <div class="revcta"><div><b>${due ? `${due} word${due === 1 ? '' : 's'} to review` : 'No words due for review'}</b><p class="note">${t.reviewed ? 'Today’s review is done.' : 'About 3 minutes: recall some words and write a few from memory.'}</p></div>
-      <button class="btn primary" type="button" id="statReview" ${due ? '' : 'disabled'}>Start daily review</button></div>
-    <div class="btns"><button class="btn" type="button" id="shareWeek">Share my week</button><button class="btn" type="button" id="shareWeekText">Share as text</button></div>
+  const total = sum(d => d.pages), learning = S.words.length, known = Object.keys(S.known).length;
+  $('#stats').innerHTML = `<div id="desk"${tab === 'desk' ? '' : ' hidden'}>${deskHTML()}</div>
+    <section class="dsec"><div class="streakline"><span class="snum">${ICON.flame}${st}</span><span>day${st === 1 ? '' : 's'} in a row<small>${activeDay(t) ? `Best ${best}` : `Read today to keep it · best ${best}`}</small></span></div>${weekStripHTML(true)}</section>
+    <section class="dsec"><h4>Last 12 weeks</h4><div class="calwrap"><div class="cal-days" aria-hidden="true"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div><div class="cal" role="img" aria-label="Reading days over the last 12 weeks">${cells}</div></div>
+      <div class="legend"><i class="l1"></i> Read <i class="l3"></i> Goal met <i class="trav"></i> Travel</div></section>
     <div class="tiles">
-      <div class="tile"><b>${t.pages}/${goal}</b><span>pages today</span></div>
-      <div class="tile"><b>${mins}</b><span>minute${mins === 1 ? '' : 's'} reading today</span></div>
-      <div class="tile"><b>${week}</b><span>pages in the last 7 days</span></div>
-      <div class="tile"><b>${sum(d => d.pages)}</b><span>pages read in total</span></div>
-      <div class="tile"><b>${Object.keys(S.known).length}</b><span>words known</span></div>
-      <div class="tile"><b>${S.words.length}</b><span>saved words you’re learning</span></div>
+      <div class="tile"><b>${t.pages}<small>/${goal}</small></b><span>pages today</span></div>
+      <div class="tile"><b>${week}</b><span>pages, 7 days</span></div>
+      <div class="tile"><b>${total}</b><span>pages in all</span></div>
+      <div class="tile"><b>${known}</b><span>words known${learning ? ` · ${learning} learning` : ''}</span></div>
     </div>
-    <div><h3>How much of each page you already knew</h3>
-      ${anyKnown ? `<div class="kchart" role="img" aria-label="Average percent of words known per week, last 8 weeks">${bars}</div>` : '<p class="note">Finish a pair of pages to start this chart.</p>'}
-      <p class="note" style="margin-top:8px">${pagePct != null ? `On the pages open now, you know ${pagePct}% of the words. ` : ''}When you finish pages, the words you read without looking up count as known. Use the Known button in the word panel to change one.</p></div>
+    ${S.words.length ? `<div class="scard"><div class="srow"><span>${due ? `${due} word${due === 1 ? '' : 's'} due` : t.reviewed ? 'Review done ✓' : 'Nothing due'}</span><button class="btn${due ? ' primary' : ''}" type="button" id="statReview" ${due ? '' : 'disabled'}>Review</button></div></div>` : ''}
+    <section class="dsec"><h4>Words you knew per page</h4>
+      ${anyKnown ? `<div class="kchart" role="img" aria-label="Average percent of words known per week, last 8 weeks">${bars}</div>` : '<p class="note">Finish a page to start this chart.</p>'}
+      ${anyKnown ? `<p class="note">${pagePct != null ? `This page: ${pagePct}%. ` : ''}Words you don’t look up count as known.</p>` : ''}</section>
     ${speedHTML()}
-    ${S.spread ? `<div><h3>These pages</h3><p class="note" style="margin:0 0 8px">${realPhotos} photo${realPhotos === 1 ? '' : 's'} kept on this device. Nothing is deleted unless you delete it.</p><button class="btn" type="button" id="delSpread">Reorder or delete pages</button></div>` : ''}`;
-  [...$('#stats').children].forEach(el => { if (!el.classList.contains('tabs') && el.id !== 'desk') el.hidden = tab === 'desk'; });
+    <div class="btns foot"><button class="btn" type="button" id="shareWeek">Share my week</button><button class="btn" type="button" id="shareWeekText">Share as text</button>${S.spread ? '<button class="btn" type="button" id="delSpread">Reorder pages</button>' : ''}</div>`;
+  statSheet.querySelectorAll('.ftabs [data-stab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.stab === tab)));
+  const top = $('.bar .seal'), ss = $('#statSeal'); ss.className = top.className; ss.style.cssText = top.style.cssText;
+  [...$('#stats').children].forEach(el => { if (el.id !== 'desk') el.hidden = tab === 'desk'; });
   $('#delSpread')?.addEventListener('click', openPages);
   $('#shareWeek')?.addEventListener('click', () => shareWeekPicture());
   $('#shareWeekText')?.addEventListener('click', () => share(weekGridText()));
@@ -3958,7 +4098,7 @@ $('#importPick').addEventListener('change', e => { const f = e.target.files?.[0]
 $('#setCancel').addEventListener('click', () => closeSheet(setSheet));
 $('#setSave').addEventListener('click', saveSettingsForm);
 document.querySelectorAll('[data-show]').forEach(b => b.addEventListener('click', () => { const k = $('#' + b.dataset.show), show = k.type === 'password'; k.type = show ? 'text' : 'password'; b.textContent = show ? 'Hide' : 'Show'; }));
-$('#fRate').addEventListener('input', e => { $('#fRateVal').textContent = `(${(+e.target.value).toFixed(2)}×)`; });
+$('#fRate').addEventListener('input', e => { $('#fRateVal').textContent = `${(+e.target.value).toFixed(2)}×`; });
 if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
 // After a tap or mouse click, drop focus from the button so keyboard shortcuts go back to the page.
 document.addEventListener('click', e => { const b = e.composedPath().find(n => n.tagName === 'BUTTON'); if (b && e.detail > 0) b.blur(); });
@@ -3970,20 +4110,26 @@ const radioVal = (name, d) => document.querySelector(`input[name=${name}]:checke
 function openSettings() {
   const st = S.settings, used = S.stats.calls?.[dayKey().slice(0, 7)] || {};
   const parts = Object.entries(used).map(([k, v]) => `${k} ${v}`);
-  $('#usageLine').textContent = `Requests this month: ${parts.length ? parts.join(', ') : 'none yet'}.` + (S.timing ? ` Dictionary ready ${(S.timing.dict / 1000).toFixed(1)} s after start${S.timing.parts ? `, character parts ${(S.timing.parts / 1000).toFixed(1)} s` : ''}.` : '')
-    + (S.dictFrom === 'device' ? ' Dictionary loaded from this device.' : S.dictFrom === 'download' ? (S.dictSaved === false ? ' Dictionary downloaded, but saving it on this device failed, so it will download again next start.' : S.dictSaved ? ' Dictionary downloaded and saved on this device.' : ' Dictionary downloaded; saving it now.') : '');
+  const dict = S.dictFrom === 'device' ? 'on device' : S.dictFrom === 'download' ? (S.dictSaved === false ? 'downloaded, not saved' : 'downloaded') : S.dictState;
+  $('#usageLine').textContent = `This month: ${parts.length ? parts.join(', ') : 'no requests'}. Dictionary: ${dict}${S.timing ? `, ${(S.timing.dict / 1000).toFixed(1)} s` : ''}.`;
+  // Keys: first and open until the Cloud key is set; afterwards a closed section just before Developer.
+  const kb = $('#keysBox'), hasKey = !!st.apiKey, form = kb.parentElement;
+  if (hasKey) form.insertBefore(kb, $('#devBox')); else form.insertBefore(kb, form.firstElementChild);
+  kb.open = !hasKey; $('#keysLead').hidden = hasKey;
+  $('#keysState').textContent = hasKey ? `Cloud ✓${st.aiKey ? ' · Gemini ✓' : ''}` : 'Required';
   $('#fKey').value = st.apiKey; $('#fAiKey').value = st.aiKey; $('#fAiModel').value = st.aiModel;
   ['fKey', 'fAiKey'].forEach(id => { $('#' + id).type = 'password'; });
   document.querySelectorAll('[data-show]').forEach(b => { b.textContent = 'Show'; });
   radio('fScript', st.script); radio('fFacing', st.facing); radio('fDef', st.defLang); radio('fInfoPos', st.infoPos);
   $('#fSentPy').checked = !!st.sentPinyin; $('#fTones').checked = st.spokenTones !== false; $('#fDevVision').checked = !!st.devVision; $('#fUnsure').checked = st.markUnsure !== false; $('#fDebug').checked = DEBUG; $('#fColor').checked = !!st.colorWords; $('#fAuto').checked = !!st.autoplay;
   $('#fStraight').checked = !!st.straighten; $('#fShadow').checked = !!st.shadow;
-  $('#fRate').value = st.rate; $('#fRateVal').textContent = `(${(+st.rate).toFixed(2)}×)`; $('#fGoal').value = st.goal;
+  $('#fRate').value = st.rate; $('#fRateVal').textContent = `${(+st.rate).toFixed(2)}×`; $('#fGoal').value = st.goal;
+  const bd = backupDue(), lb = S.stats.lastBackup; $('#backupLine').textContent = bd === 'never' || !lb ? 'Not backed up yet' : `Backed up ${bd || new Date(lb + 'T12:00:00').toLocaleDateString(undefined, { month:'short', day:'numeric' })}`; $('#backupLine').style.color = bd ? 'var(--flame)' : '';
   loadVoices();
   const sel = $('#fVoice');
   sel.innerHTML = `<option value="">Automatic</option>` + S.voices.map(v => `<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})</option>`).join('');
   sel.value = S.voices.some(v => v.voiceURI === st.voiceURI) ? st.voiceURI : '';
-  $('#voiceHelp').textContent = S.voices.length ? `${S.voices.length} Chinese voice${S.voices.length === 1 ? '' : 's'} on this device.` : 'No Chinese voices found yet. In Android Settings, search “text-to-speech” and install Chinese voice data.';
+  $('#voiceHelp').textContent = S.voices.length ? '' : 'None found. Install Chinese in Android text-to-speech.';
   openSheet(setSheet);
 }
 function saveSettingsForm() {
@@ -4017,7 +4163,7 @@ async function backupAll() {
     }
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(parts, { type:'application/x-ndjson' })); a.download = `reading-desk-backup-${dayKey()}.jsonl`;
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 15000);
-    S.stats.lastBackup = dayKey(); saveStats();
+    S.stats.lastBackup = dayKey(); saveStats(); updateBar();
     busy(false); toast(`Backed up ${n} photo${n === 1 ? '' : 's'} and ${S.words.length} word${S.words.length === 1 ? '' : 's'}.`, 5000);
   } catch (e) { busy(false); toast('Backup failed: ' + friendlyError(e), 6000); }
 }
@@ -4069,6 +4215,8 @@ async function restoreAll(file) {
 }
 $('#backupBtn').addEventListener('click', () => { closeSheet(setSheet); backupAll(); });
 $('#replayBtn').addEventListener('click', () => $('#replayPick').click());
+// Makes today's cookie ready to open (marks the mission done), then shows it on the Desk.
+$('#cookieBtn').addEventListener('click', () => { const t = todayStats(); t.sealed = true; delete t.cookie; saveStats(); updateProgress(); closeSheet(setSheet); openStats('desk'); });
 $('#coinsBtn').addEventListener('click', () => { collect().coins += 888; saveStats(); toast(`+888 coins. You have ${collect().coins} 🪙.`); }); // for testing the shop
 $('#replayPick').addEventListener('change', e => { const f = e.target.files?.[0]; e.target.value = ''; if (f) replayVision(f).catch(err => toast('Replay failed: ' + err.message, 6000)); });
 $('#reportBtn').addEventListener('click', async () => { try { await navigator.clipboard.writeText(debugReport()); toast('Debug report copied. It has no keys and no book text.'); } catch (e) { toast('Couldn’t copy the report.'); } });
@@ -4251,7 +4399,10 @@ $('#perspBtn').addEventListener('click', () => {
   syncTiltUI(); drawTiltPreview();
 });
 $('#streak').addEventListener('click', () => openStats('progress'));
-$('#statClose').addEventListener('click', () => closeSheet(statSheet));
+// The desk button shows 🎁 when today's gift is ready: a tap opens it right there; after that it opens the Desk.
+$('#deskBtn').addEventListener('click', () => { if (giftReady()) { const g = claimGift(); if (g) { toast(`You got ${g}`, 3000); updateProgress(); return; } } openStats('desk'); });
+statSheet.querySelector('.ftabs').addEventListener('click', e => { const b = e.target.closest('[data-stab]'); if (b && b.dataset.stab !== S.statTab) { openStats(b.dataset.stab); statSheet.querySelector('.scroll').scrollTop = 0; } });
+$('#statHome').addEventListener('click', () => closeSheet(statSheet));   // 读 takes you back to the page, as it sits in the same place as on the reading screen
 $('#brandBtn').addEventListener('click', () => {
   if (!S.spread) { openStats(); return; }
   const wasIdle = !S.sel && !S.info;
