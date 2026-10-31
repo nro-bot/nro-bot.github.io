@@ -951,33 +951,46 @@ function partsLine(ch) {
 // buildModel(chars) splits the page text into sentences and words.
 // A book title in 《》 is one word. Names and joined words in S.lex take priority over the dictionary.
 const segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('zh', { granularity:'word' }) : null;
-function fmm(chs, a, b, push) {
-  let i = a;
-  while (i < b) { let found = 1; for (let L = Math.min(8, b - i); L > 1; L--) if (hasWord(chs.slice(i, i + L).join(''))) { found = L; break; } push(i, i + found); i += found; }
+// Dictionary segmentation of chs[a..b): forward and backward maximum matching (words up to 8 characters).
+// The result with fewer words wins; on a tie, the one with fewer single characters; then backward.
+function dictSplit(chs, a, b, push) {
+  const fwd = [], bwd = [];
+  for (let i = a; i < b;) { let L = Math.min(8, b - i); while (L > 1 && !hasWord(chs.slice(i, i + L).join(''))) L--; fwd.push([i, i + L]); i += L; }
+  for (let j = b; j > a;) { let L = Math.min(8, j - a); while (L > 1 && !hasWord(chs.slice(j - L, j).join(''))) L--; bwd.unshift([j - L, j]); j -= L; }
+  const singles = r => r.filter(([x, y]) => y - x === 1).length;
+  const best = fwd.length !== bwd.length ? (fwd.length < bwd.length ? fwd : bwd) : (singles(fwd) < singles(bwd) ? fwd : bwd);
+  for (const [x, y] of best) push(x, y);
 }
+// Splits plain text into words. The browser's word segmenter comes first. Some builds (Chrome on Android)
+// have no Chinese word list and return one character per segment, so runs of single Chinese characters
+// are joined again and split with the dictionary.
 function segmentPlain(chs) {
   const out = [], push = (a, b) => { if (b > a) out.push([a, b]); };
   const ready = S.dictState === 'ready';
-  if (segmenter) {
-    let str = ''; const off = [];
-    chs.forEach((c, i) => { for (let k = 0; k < c.length; k++) off.push(i); str += c; });
-    off.push(chs.length);
-    for (const seg of segmenter.segment(str)) {
-      if (!seg.isWordLike) continue;
-      const a = off[seg.index], b = off[seg.index + seg.segment.length], part = chs.slice(a, b);
-      if (part.every(c => !isCJK(c))) { push(a, b); continue; }
-      if (part.every(isCJK)) { if (ready && b - a > 1 && !hasWord(part.join(''))) fmm(chs, a, b, push); else push(a, b); continue; }
-      let i = a;
-      while (i < b) { const cj = isCJK(chs[i]); let j = i; while (j < b && isCJK(chs[j]) === cj) j++; if (cj && ready) fmm(chs, i, j, push); else push(i, j); i = j; }
-    }
-  } else {
-    let i = 0;
-    while (i < chs.length) {
-      if (isCJK(chs[i])) { let j = i; while (j < chs.length && isCJK(chs[j])) j++; if (ready) fmm(chs, i, j, push); else for (let k = i; k < j; k++) push(k, k + 1); i = j; }
+  const cjkRun = (a, b) => { if (ready) dictSplit(chs, a, b, push); else for (let k = a; k < b; k++) push(k, k + 1); };
+  if (!segmenter) {
+    for (let i = 0; i < chs.length;) {
+      if (isCJK(chs[i])) { let j = i; while (j < chs.length && isCJK(chs[j])) j++; cjkRun(i, j); i = j; }
       else if (/[A-Za-z0-9]/.test(chs[i])) { let j = i; while (j < chs.length && /[A-Za-z0-9]/.test(chs[j])) j++; push(i, j); i = j; }
       else i++;
     }
+    return out;
   }
+  let str = ''; const off = [];
+  chs.forEach((c, i) => { for (let k = 0; k < c.length; k++) off.push(i); str += c; });
+  off.push(chs.length);
+  let runA = -1, runB = -1;                       // the current run of single Chinese characters
+  const flush = () => { if (runA >= 0) cjkRun(runA, runB); runA = runB = -1; };
+  for (const seg of segmenter.segment(str)) {
+    if (!seg.isWordLike) { flush(); continue; }
+    const a = off[seg.index], b = off[seg.index + seg.segment.length], part = chs.slice(a, b);
+    if (b - a === 1 && isCJK(part[0])) { if (runA < 0) runA = a; runB = b; continue; }
+    flush();
+    if (part.every(c => !isCJK(c))) push(a, b);
+    else if (part.every(isCJK)) { if (ready && !hasWord(part.join(''))) dictSplit(chs, a, b, push); else push(a, b); }
+    else for (let i = a; i < b;) { const cj = isCJK(chs[i]); let j = i; while (j < b && isCJK(chs[j]) === cj) j++; if (cj) cjkRun(i, j); else push(i, j); i = j; }
+  }
+  flush();
   return out;
 }
 // Book titles in 《》 are one word; elsewhere your own words and names win over the dictionary.
