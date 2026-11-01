@@ -1982,7 +1982,7 @@ function updateProgress() {
   $('#fill').style.width = pct + '%'; $('#track').setAttribute('aria-valuenow', String(pct));
   $('#pct').textContent = S.spread.done ? 'Pages finished' : `${pct}% read`;
   if (S.spread.done) { fin.innerHTML = `${ICON.camera}<span class="lbl">Next</span>`; fin.title = 'Photograph the next pages'; fin.classList.remove('nudge'); }
-  else { fin.innerHTML = `${ICON.check}<span class="lbl">Page</span>`; fin.title = 'Finish these pages'; }
+  else { fin.innerHTML = `${ICON.check}<span class="lbl">Finish page</span>`; fin.title = 'Finish these pages'; fin.classList.toggle('nudge', pct >= 80); }
 }
 function finishPages() {
   if (!S.spread) return;
