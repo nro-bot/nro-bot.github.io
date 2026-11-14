@@ -254,9 +254,9 @@ body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !im
 .linklike.del{color:#B3261E;margin-left:6px}
 .pcard .row{flex-wrap:nowrap !important}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;padding:14px 20px 40px;max-width:1100px;margin:0 auto}
-.pcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column}
 .pcard[aria-current="true"]{border-color:var(--jade);box-shadow:0 0 0 2px var(--jade)}
-.pcard .thumb{border:0;padding:0;background:#111;cursor:pointer;aspect-ratio:4/3;display:block;width:100%}
+.pcard .thumb{border:0;padding:0;background:#111;cursor:pointer;aspect-ratio:4/3;display:block;width:100%;border-radius:13px 13px 0 0;overflow:hidden}
 .pcard .thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .pcard .meta{padding:9px 8px 2px 12px;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:space-between;gap:6px}
 .ptags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:2px 12px 0}
@@ -264,6 +264,7 @@ body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !im
 .ptag.ok{background:var(--jade-soft);color:var(--ink)} .ptag.now{background:var(--jade);color:var(--jade-ink)}
 .pdate{font-size:13px;color:var(--muted);margin-left:auto}
 .pmenu{position:relative}
+.pmenu[open]{z-index:6}
 button.ptag{border:0;font-family:inherit;cursor:pointer}.ptag.pend{outline:2px dashed var(--jade);outline-offset:1px}
 .applybar{position:sticky;bottom:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:10px 20px calc(10px + env(safe-area-inset-bottom));background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -6px 16px rgba(0,0,0,.08)}
 .applybar span{margin-right:auto;font-weight:700}
@@ -272,7 +273,7 @@ button.ptag{border:0;font-family:inherit;cursor:pointer}.ptag.pend{outline:2px d
 .pmenu[open] summary{background:var(--panel-2)}
 .pmenu-list{position:absolute;right:0;top:100%;z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:160px;padding:4px}
 .pmenu-list button{background:none;border:0;text-align:left;padding:10px 12px;font:inherit;font-weight:600;font-size:15px;color:var(--ink);border-radius:8px;cursor:pointer}
-.pmenu-list button:hover{background:var(--panel-2)} .pmenu-list .del{color:var(--t1)}
+.pmenu-list button:hover{background:var(--panel-2)} .pmenu-list .del,.btn.danger-text{color:var(--t1)}
 .pcard .sub{padding:0 12px;color:var(--muted);font-size:14px}
 .pcard .row{display:flex;gap:6px;padding:10px 12px 12px;flex-wrap:wrap}
 .pcard .row .btn{min-height:40px;padding:0 10px;font-size:14.5px}
@@ -483,7 +484,7 @@ input[type=range]{width:100%;accent-color:var(--jade)}
   padding:9px 14px;border-radius:10px;box-shadow:var(--shadow);font-weight:600;font-size:15px;line-height:1.35;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:70;max-width:min(480px,calc(100vw - 32px));text-align:left}
 #toast.warn{border-left-color:var(--saved)}
 #toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;cursor:pointer}
-#saveWarn{position:sticky;top:0;z-index:1000;padding:10px 16px;background:#FFF3C4;color:#3A2A00;font-size:15px;line-height:1.35;text-align:center;border-bottom:1px solid #E2C25A}
+#saveWarn{position:sticky;top:0;z-index:1000;padding:10px 16px;background:var(--saved);color:var(--saved-ink);font-size:15px;line-height:1.35;text-align:center}
 .toast-act{margin-left:10px;background:transparent;border:1.5px solid currentColor;color:inherit;border-radius:8px;padding:4px 12px;font:inherit;font-weight:700;cursor:pointer}
 
 @media (max-width:820px){
@@ -586,7 +587,9 @@ body.no-desk #deskBtn,body.no-alert #alertBtn,body.no-finish #finishBtn,body.no-
 .finish .stamp{width:64px;height:64px;margin:0 auto;border-radius:14px;background:var(--speck),#FCE3DF;background-size:90px,auto;color:#C8322B;border:3px solid #C8322B;transform:rotate(-6deg);display:grid;place-items:center;font-family:"Noto Serif SC",serif;font-size:36px}
 .finish .num{font-size:44px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--jade)}
 .finish .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
-.modal{z-index:80}.modal .card{position:relative;text-align:left}.modal h3{margin:0;text-align:center}
+.modal{z-index:80}
+/* Popups that open the keyboard sit near the top, so an on-screen or floating keyboard doesn't cover them. */
+.modal:has(.pgfixm){place-items:start center;padding-top:max(16px,6vh)}.modal .card{position:relative;text-align:left}.modal h3{margin:0;text-align:center}
 .modal .tasks.big{background:none;padding:0;border:0;box-shadow:none}.bigstamp~.tasks .seal{display:none}
 .modal .btn.mreward{font-size:16px;min-height:36px;padding:0 10px;background:var(--panel-2)}.modal .btn.primary.mreward{background:var(--jade)}
 .bigstamp{width:120px;height:120px;margin:4px auto 0;border-radius:20px;background:var(--speck),#F4C7C3;background-size:90px,auto;color:#C8322B;border:5px solid #C8322B;box-shadow:inset 0 0 0 4px #FFF1EE,inset 0 0 0 6px #C8322B;transform:rotate(-8deg);display:grid;place-items:center;font:900 72px/1 "Noto Serif SC","Songti SC",serif}
@@ -813,6 +816,7 @@ label.srow{cursor:pointer}
 .kstate{margin-left:auto;font-weight:400;font-size:14px;color:var(--muted)}
 .klead{margin:0;padding:12px 14px 0;font-weight:600}
 .khelp{margin:0;padding:4px 14px 0;color:var(--muted);font-size:14px}
+.leaves{padding:8px 14px;font-size:14px;color:var(--muted)} .leaves summary{cursor:pointer;font-weight:600;color:var(--ink)} .leaves ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 #scanBox{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;color:#fff;text-align:center}
 #scanBox[hidden]{display:none}
 #scanBox video{width:min(92vw,520px);max-height:62vh;border-radius:14px;background:#000;object-fit:cover}
@@ -898,6 +902,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
             <button class="btn" id="demoBtn" type="button">Try sample pages</button>
           </div>
           <ol class="steps" id="firstSteps"></ol>
+          <div class="keynote" id="copyNote" hidden><b>Looking for your pages?</b> This copy was opened from a file, and each copy keeps its own pages and words. Nothing has been deleted: they are still in the copy you used before, such as the online one. To bring them here, use Back up in that copy, then <button class="linklike" id="copyNoteBtn" type="button">Restore</button> the file here.</div>
           <div class="keynote" id="keyNote" hidden>Before photographing your own book, add your Google Cloud API key in <button class="linklike" id="keyNoteBtn" type="button">Settings</button>. The sample pages work without it.</div>
         </div>
       </div>
@@ -918,6 +923,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
       <div class="adj" id="adj1"><span class="who">Right page</span><button class="btn" type="button" data-side="1" data-step="-0.1" aria-label="Turn right page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="1" aria-label="Right page tilt"><button class="btn" type="button" data-side="1" data-step="0.1" aria-label="Turn right page clockwise">⟳</button><output>0.0°</output></div>
       <div class="adj"><span class="who">Clean up</span><div class="seg" id="cleanSeg" role="group" aria-label="Clean up"><button type="button" data-clean="0">Off</button><button type="button" data-clean="1">Even</button><button type="button" data-clean="2">Strong</button></div></div>
       <button class="btn" id="perspBtn" type="button" aria-pressed="false">Fix perspective</button>
+      <button class="btn danger-text" id="tiltDelete" type="button">Delete these pages</button>
       <button class="btn" id="tiltReset" type="button">Reset</button>
       <button class="btn" id="tiltCancel" type="button">Cancel</button>
       <button class="btn primary" id="tiltDone" type="button">Done</button>
@@ -981,8 +987,6 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
       <p class="klead" id="keysLead">Needed once, to read photos. Stored only on this device.</p>
       <div class="kfield"><label for="fKey">Google Cloud <small>Vision + Translation APIs on</small></label>
         <div class="row"><input id="fKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste key"><button class="btn" data-show="fKey" type="button">Show</button><button class="btn" data-scan="fKey" type="button">Scan</button></div></div>
-      <div class="kfield"><label for="fAiKey">Gemini <small>optional · Ask AI, 中文 definitions</small></label>
-        <div class="row"><input id="fAiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste key from aistudio.google.com"><button class="btn" data-show="fAiKey" type="button">Show</button><button class="btn" data-scan="fAiKey" type="button">Scan</button></div></div>
       <p class="khelp">Scan reads a key from a QR code. To copy keys from another device, tap <b>Show keys as QR</b> there. On iPad and iPhone you can also hold a key box and choose Scan Text.</p>
       <div class="kfield"><button class="btn" id="showKeysQR" type="button">Show keys as QR</button></div>
       </div>
@@ -991,13 +995,11 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
     <section class="sgroup"><h3>Reading</h3><div class="scard">
       <div class="srow"><label for="fGoal">Daily goal <small>pages</small></label><input id="fGoal" type="number" min="1" max="60" step="1" inputmode="numeric"></div>
       <div class="srow"><span>Characters</span><span class="segr"><label><input type="radio" name="fScript" value="simplified">简体</label><label><input type="radio" name="fScript" value="traditional">繁體</label></span></div>
-      <div class="srow"><span>Definitions</span><span class="segr"><label><input type="radio" name="fDef" value="en">English</label><label><input type="radio" name="fDef" value="zh">中文</label></span></div>
       <div class="srow"><label for="fDayStart">New day starts</label><select id="fDayStart"><option value="20">8 pm</option><option value="0">Midnight</option><option value="4">4 am</option></select></div>
       <label class="srow"><span>Icon-only buttons<small>Listen, Save, Write… as just their symbols</small></span><input class="sw" id="fIconActs" type="checkbox"></label>
       <div class="srow"><span>Word panel</span><span class="segr"><label><input type="radio" name="fInfoPos" value="left">Left</label><label><input type="radio" name="fInfoPos" value="top">Top</label></span></div>
       <label class="srow"><span>Write to look up<small>Write a word before its meaning shows</small></span><input class="sw" id="fWriteLookup" type="checkbox"></label>
       <label class="srow"><span>Glow on special desk items<small>7th-day gifts, zodiac, milestones, festivals</small></span><input class="sw" id="fGlam" type="checkbox"></label>
-      <label class="srow"><span>Ask AI button<small>In the word panel. Needs a Gemini key.</small></span><input class="sw" id="fAskAI" type="checkbox"></label>
       <label class="srow"><span>Pinyin over sentences</span><input class="sw" id="fSentPy" type="checkbox"></label>
       <label class="srow"><span>Spoken tones<small>一样 → yí yàng</small></span><input class="sw" id="fTones" type="checkbox"></label>
       <label class="srow"><span>Show possible misreads</span><input class="sw" id="fUnsure" type="checkbox"></label>
@@ -1032,6 +1034,13 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
       <div class="srow wrap"><span>Other device<small>Words, rewards and up to 6 pages</small></span>
         <span class="btns"><button class="btn" id="syncBtn" type="button">Send</button><button class="btn" id="syncGet" type="button">Receive</button></span></div>
       <div class="srow"><span>Anki</span><button class="btn" id="ankiBtn" type="button">Export saved words</button></div>
+      <details class="leaves"><summary>What leaves this device</summary><ul>
+        <li><b>Photos you add</b> go to Google Cloud Vision to read the text (your Cloud key).</li>
+        <li><b>Sentences you translate</b> go to Google Cloud Translation.</li>
+        <li><b>Read-aloud</b>: voices on this device send nothing. Online voices, marked in Voice, send the text being read to Google or Microsoft.</li>
+        <li><b>Stroke animations</b> download each character’s strokes from cdn.jsdelivr.net, which can see which characters you practise.</li>
+        <li>Everything else (photos, words, stats, rewards) stays in this browser unless you back it up or send it to another device.</li>
+      </ul></details>
       <p class="usage" id="usageLine"></p>
       <input type="file" id="restorePick" accept=".jsonl,.json,.txt,application/json,application/x-ndjson,text/plain" hidden>
     </div></section>
@@ -1039,7 +1048,6 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
     <details class="sgroup" id="devBox">
       <summary class="srow"><b>Developer</b></summary>
       <div class="scard">
-      <div class="srow"><label for="fAiModel">Gemini model</label><input id="fAiModel" type="text" autocomplete="off" spellcheck="false"></div>
       <label class="srow"><span>Save Vision replies</span><input class="sw" id="fDevVision" type="checkbox"></label>
       <label class="srow"><span>Debug mode<small>Reload to apply</small></span><input class="sw" id="fDebug" type="checkbox"></label>
       <div class="srow dev"><span>Vision</span><span class="btns"><button class="btn" id="replayBtn" type="button">Read saved reply</button><button class="btn" id="reportBtn" type="button">Copy report</button></span></div>
@@ -1089,7 +1097,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 /*
   READING DESK
   A reader photographs two pages of a Chinese book. The app reads the photo, shows it, and makes each word tappable.
-  Saved words go to review. Rewards encourage a short daily habit. All data stays on the device.
+  Saved words go to review. Rewards encourage a short daily habit. Words, stats and photos are stored on the device; reading photos, translation and online voices send text or images to Google (Settings → Data → What leaves this device).
 
   HOW DATA MOVES
     photo → Vision reply → characters with boxes → sentences and words → page on screen → taps → saved words → review
@@ -1097,7 +1105,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 
   GROUPS IN THIS FILE (search for "#### NAME")
     FOUNDATION         basics, storage, dates, pinyin, dictionary, character parts, text model
-    SERVICES           Google Vision and Translate, Gemini, speech, read aloud
+    SERVICES           Google Vision and Translate, speech, read aloud
     READING A PHOTO    camera, even lighting, photo layout, saved photos
     SHOWING A PAGE     top bar, layout, overlays, tilt, perspective, clean-up, showSpread
     INTERACTION        touch, selections, corrections, word panel, side pane, sharing, Back, keyboard
@@ -1162,18 +1170,23 @@ const ICON = {
 /* ================= Storage ================= */
 // localStorage keys (rd.*) and the IndexedDB store "reading-desk" (one key-value store, "kv").
 // Creates the state object S and loads saved data into it.
-const LS = { favs:'rd.favs', settings:'rd.settings', words:'rd.words', stats:'rd.stats', tcache:'rd.tcache', lex:'rd.lex', ai:'rd.ai', known:'rd.known', notes:'rd.notes' };
+const LS = { favs:'rd.favs', settings:'rd.settings', words:'rd.words', stats:'rd.stats', tcache:'rd.tcache', lex:'rd.lex', known:'rd.known', notes:'rd.notes' };
 const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
 // Keys whose last save failed. Caches can be rebuilt, so only the reader's own data counts.
 const saveFails = new Map(), CACHE_KEYS = new Set([LS.tcache, LS.lex]);
+// Why a save failed: 'full' (over quota) or 'off' (storage blocked). Used for localStorage and IndexedDB alike.
+const storageFail = e => /quota/i.test(e?.name + ' ' + e?.message) ? 'full' : 'off';
 const store = (k, v) => {
   try { localStorage.setItem(k, JSON.stringify(v)); if (saveFails.delete(k)) saveWarn(); }
-  catch (e) { if (!CACHE_KEYS.has(k)) { saveFails.set(k, /quota/i.test(e?.name + ' ' + e?.message) ? 'full' : 'off'); saveWarn(); } }
+  catch (e) { if (!CACHE_KEYS.has(k)) { saveFails.set(k, storageFail(e)); saveWarn(); } }
 };
+const askBeforeLeaving = e => { e.preventDefault(); e.returnValue = ''; };
 // A banner that stays while something can't be saved. A refresh or close would lose it, so the browser also asks before leaving.
+// The leave prompt is only attached while saving fails: with it attached, some browsers can't keep the page for Back and Forward.
 function saveWarn() {
   let b = document.getElementById('saveWarn');
-  if (!saveFails.size) { if (b) b.remove(); return; }
+  if (!saveFails.size) { b?.remove(); removeEventListener('beforeunload', askBeforeLeaving); return; }
+  addEventListener('beforeunload', askBeforeLeaving);
   if (!b) { b = document.createElement('div'); b.id = 'saveWarn'; b.setAttribute('role', 'alert'); document.body.prepend(b); }
   b.textContent = [...saveFails.values()].includes('full')
     ? 'Storage is full, so new progress isn’t being saved. Refreshing or closing will lose it. Delete some old photos in Your pages to make room.'
@@ -1181,14 +1194,15 @@ function saveWarn() {
 }
 // Startup check: a write that can't be read back means nothing will be kept.
 try { localStorage.setItem('rd.probe', '1'); if (localStorage.getItem('rd.probe') !== '1') throw new Error('off'); localStorage.removeItem('rd.probe'); }
-catch (e) { saveFails.set('rd.probe', /quota/i.test(e?.name + ' ' + e?.message) ? 'full' : 'off'); }
+catch (e) { saveFails.set('rd.probe', storageFail(e)); }
 addEventListener('DOMContentLoaded', saveWarn);
-addEventListener('beforeunload', e => { if (saveFails.size) { e.preventDefault(); e.returnValue = ''; } });
+// The AI (Gemini) features were removed. Clear what they stored: the cache of answers, and (below) the Gemini key and AI settings.
+try { localStorage.removeItem('rd.ai'); } catch (e) {}
 const DEFAULTS = {
-  apiKey:'', aiKey:'', aiModel:'gemini-flash-latest',
+  apiKey:'',
   rotate:0, mirror:false, facing:'environment', straighten:true, lighting:false,
   rate:0.85, autoplay:true, goal:4, script:'simplified', voiceURI:'',
-  defLang:'en', sentPinyin:false, spokenTones:true, colorWords:false, sideOpen:false, infoOpen:false, askAI:false, writeLookup:false, infoPos:'left', shadow:false, dayStart:20, barHide:[], iconActs:false
+  sentPinyin:false, spokenTones:true, colorWords:false, sideOpen:false, infoOpen:false, writeLookup:false, infoPos:'left', shadow:false, dayStart:20, barHide:[], iconActs:false
 };
 function idbOpen() {
   return new Promise((res, rej) => { const r = indexedDB.open('reading-desk', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
@@ -1199,9 +1213,9 @@ async function idbSet(k, v) { try { const db = await idbOpen(); await new Promis
 
 const storedSettings = load(LS.settings, {});
 const S = {
-  settings:{ ...DEFAULTS, ...storedSettings },
+  settings:(({ aiKey, aiModel, askAI, defLang, ...rest }) => ({ ...DEFAULTS, ...rest }))(storedSettings),
   words:load(LS.words, []), stats:load(LS.stats, { days:{} }),
-  tcache:load(LS.tcache, {}), pend:{}, wrote:new Set(), lex:load(LS.lex, {}), ai:load(LS.ai, {}), known:load(LS.known, {}), notes:load(LS.notes, {}), favs:load(LS.favs, []), sideTab:'words', mt:{},
+  tcache:load(LS.tcache, {}), pend:{}, wrote:new Set(), lex:load(LS.lex, {}), known:load(LS.known, {}), notes:load(LS.notes, {}), favs:load(LS.favs, []), sideTab:'words', mt:{},
   spread:null, model:null, imgW:0, imgH:0, imgURL:null, view:'spread',
   sel:null, info:null,
   dictS:null, dictT:null, dictState:'loading', lexMax:0,
@@ -1217,7 +1231,6 @@ if ((S.settings.v || 0) < 4) { S.settings.infoPos = 'left'; S.settings.v = 4; tr
 const BAR_ITEMS = ['streak', 'pages', 'desk', 'alert', 'finish', 'words'];
 const migrateBar = st => { if (st.barHide?.includes('coins')) st.barHide = st.barHide.map(k => k === 'coins' ? 'alert' : k); };
 if (S.settings.barHide?.includes('coins')) { migrateBar(S.settings); try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
-if (['gemini-3.1-flash-lite', 'gemini-3.8-flash'].includes(S.settings.aiModel)) { S.settings.aiModel = DEFAULTS.aiModel; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
 // Each saved word keeps its own underline color.
 const MARK_COLORS = ['#D99A00', '#2B6FD6', '#D6336C', '#1E9A50', '#7B4BD1', '#E2600B', '#0F9AA0'];
 S.words.slice().reverse().forEach((w, i) => { if (w.c == null) w.c = i % MARK_COLORS.length; });
@@ -1226,13 +1239,12 @@ const markColor = t => { const w = S.words.find(x => x.w === t); return w ? MARK
 if (S.settings.sideOpen === null) S.settings.sideOpen = false;
 S.settings.infoOpen = false; // the photo gets the whole screen until the first tap
 const saveSettings = () => store(LS.settings, S.settings);
+if (['aiKey', 'aiModel', 'askAI', 'defLang'].some(k => k in storedSettings)) saveSettings();   // forget the Gemini key and AI settings for good
 const saveWords = () => store(LS.words, S.words);
 const saveStats = () => store(LS.stats, S.stats);
-addEventListener('pagehide', saveStats);   // a refresh or close also writes today's counts
 const saveLex = () => { store(LS.lex, S.lex); computeLexMax(); };
 function computeLexMax() { S.lexMax = Object.keys(S.lex).reduce((m, k) => { const n = Array.from(k).length; return n >= 2 ? Math.max(m, n) : m; }, 0); }
 computeLexMax();
-function cacheAI(k, v) { S.ai[k] = v; const keys = Object.keys(S.ai); if (keys.length > 300) delete S.ai[keys[0]]; store(LS.ai, S.ai); }
 
 /* ================= Dates and daily stats ================= */
 // dayKey(date) gives the local date as YYYY-MM-DD. todayStats() gives S.stats.days[today].
@@ -1532,22 +1544,18 @@ function rebuild() { if (!S.spread) return; S.model = buildModel(displayChars(S.
 /* #################  SERVICES  ################# */
 
 /* ================= Google services and AI ================= */
-// visionOCR: image → Vision reply. translate: sentence → English. aiJSON: prompt → JSON from Gemini.
-// markNames: one Gemini call per photo. It marks names and likely misreads.
+// visionOCR: image → Vision reply. translate: sentence → English.
 // Each request adds one to S.stats.calls for the month.
 function friendlyError(e) {
   const m = String(e?.message || e);
   if (m === 'STORAGE_OFF') return 'This browser isn’t letting the app save photos. Private windows and some ways of opening the file block it.';
   if (m === 'STORAGE_FULL') return 'The tablet’s storage for this app is full. Delete some old photos in Your pages (tap “Photo 1 of …” at the bottom left), then try again.';
   if (m === 'NOKEY') return 'Add your Google Cloud API key in Settings to translate sentences.';
-  if (m === 'NOAIKEY') return 'Add a Gemini key from Google AI Studio (aistudio.google.com) in Settings.';
-  if (/generativelanguage/i.test(m) && /are blocked|API_KEY_SERVICE_BLOCKED/i.test(m)) return 'Your Google Cloud key can’t be used for Gemini. Create a key in Google AI Studio (aistudio.google.com, API keys) and paste it into Settings under Gemini API key.';
   if (/API key not valid|API_KEY_INVALID/i.test(m)) return 'Google rejected the API key. Check it in Settings.';
   if (/billing/i.test(m)) return 'Turn on billing for your Google Cloud project, then try again.';
-  if (/are blocked|API_KEY_SERVICE_BLOCKED/i.test(m)) { const api = /generativelanguage/i.test(m) ? 'Generative Language API (Gemini)' : /texttospeech/i.test(m) ? 'Cloud Text-to-Speech API' : /translat/i.test(m) ? 'Cloud Translation API' : /vision/i.test(m) ? 'Cloud Vision API' : 'this API'; return `Your API key isn’t allowed to use the ${api}. In Google Cloud, go to APIs & Services, then Credentials, edit the key, and add it under API restrictions. Or paste a separate Gemini key in Settings.`; }
+  if (/are blocked|API_KEY_SERVICE_BLOCKED/i.test(m)) { const api = /texttospeech/i.test(m) ? 'Cloud Text-to-Speech API' : /translat/i.test(m) ? 'Cloud Translation API' : /vision/i.test(m) ? 'Cloud Vision API' : 'this API'; return `Your API key isn’t allowed to use the ${api}. In Google Cloud, go to APIs & Services, then Credentials, edit the key, and add it under API restrictions. Or paste a separate Gemini key in Settings.`; }
   if (/has not been used|is disabled|SERVICE_DISABLED|not been enabled/i.test(m)) return 'Turn on this API in your Google Cloud project, wait a minute, then try again. Google said: ' + m.slice(0, 140);
   if (/referer|referrer/i.test(m)) return 'Your API key’s website restriction doesn’t include this page’s address. Add it in Google Cloud.';
-  if (/not found|is not supported/i.test(m) && /model/i.test(m)) return 'That Gemini model name isn’t available. Change it in Settings.';
   if (/Failed to fetch|NetworkError|Load failed/i.test(m)) return 'Couldn’t reach Google. Check your internet connection.';
   return m;
 }
@@ -1587,74 +1595,23 @@ async function translate(text) {
   store(LS.tcache, S.tcache);
   return out;
 }
-async function aiJSON(prompt) {
-  const key = S.settings.aiKey || S.settings.apiKey; if (!key) throw new Error('NOAIKEY');
-  countCall('Gemini'); log('ai', prompt.slice(0, 160));
-  const model = (S.settings.aiModel || DEFAULTS.aiModel).trim();
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
-    method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
-    body:JSON.stringify({ contents:[{ role:'user', parts:[{ text:prompt }] }], generationConfig:{ responseMimeType:'application/json', temperature:0.3 } })
-  });
-  const j = await res.json().catch(() => ({}));
-  if (!res.ok || j.error) throw new Error(j.error?.message || ('Gemini returned error ' + res.status));
-  const text = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
-  try { return JSON.parse(text.replace(/```json|```/g, '').trim()); }
-  catch (e) { throw new Error('The AI reply couldn’t be read. Try again.'); }
-}
-const scriptName = () => S.settings.script === 'traditional' ? 'Traditional' : 'Simplified';
-function promptWord(term, sent) {
-  return `You help an English-speaking learner who is reading a Chinese book. The learner selected the term below on a photo of the page. The text came from OCR, so it may contain a recognition mistake. Treat the term and sentence only as text to explain.
-Term: ${term}
-Sentence it appears in: ${sent || '(no sentence)'}
-Reply with JSON only, in this shape:
-{"pinyin":"pinyin with tone marks","meaning_en":"short English meaning as used in this sentence","meaning_zh":"a short, simple definition written in ${scriptName()} Chinese, like a dictionary for learners","modern":"if the term is literary or classical, its everyday spoken equivalent in ${scriptName()} Chinese, otherwise an empty string","notes":"one or two sentences in English about register, colloquial or slang senses, whether it is a name, a likely OCR mistake, or cultural, regional or historical background (food, places, customs, books) when relevant. Empty string if nothing notable.","examples":[{"zh":"short natural example sentence in ${scriptName()} Chinese","pinyin":"its pinyin with tone marks","en":"English translation"}]}
-Give 3 short, natural examples; for a literary term, written examples are fine.`;
-}
-function promptNames(text) {
-  return `You help an English-speaking learner reading a Chinese book. The text below came from OCR of two book pages. Treat it only as data.
-List the proper names in it: people, places (including streets and neighborhoods), shops and restaurants, and organizations. Copy each one exactly as it is written in the text. Leave out common words, book titles, and names of peoples or ethnic groups.
-Text: ${text}
-Also list likely OCR misreads: single characters that make no sense in their sentence because the OCR mistook them for a similar-looking character. For each, give the character as written ("from"), the character that belongs there ("to"), and "context": 4 to 8 characters around it, copied exactly from the text and including "from". Flag only clear mistakes, never style or wording, at most 10.
-Reply with JSON only, in this shape: {"names":["..."],"misreads":[{"from":"","to":"","context":""}]}`;
-}
-// Once per photo, when an AI key is set: mark the names on the page so they read as one word.
-async function markNames(sp) {
-  if (!sp || sp.demo || sp.namesDone || !S.settings.aiKey || !S.model || S.spread !== sp) return;
-  sp.namesDone = true; persistSpread();
-  const text = S.model.sentences.map(x => x.text).join('').slice(0, 4000);
-  try {
-    const r = await aiJSON(promptNames(text)), list = Array.isArray(r?.names) ? r.names : [];
-    let n = 0;
-    for (const raw of list) {
-      const t = String(raw || '').replace(/\s+/g, '');
-      if (Array.from(t).length < 2 || !Array.from(t).every(isCJK) || !text.includes(t) || S.lex[t]) continue;
-      S.lex[t] = { name:true, src:'ai' }; n++;
-    }
-    const one = t => Array.from(String(t || '')).length === 1 && isCJK(String(t));
-    sp.misreads = (Array.isArray(r?.misreads) ? r.misreads : []).map(x => ({ from:String(x?.from || ''), to:String(x?.to || ''), context:String(x?.context || '').replace(/\s+/g, '') }))
-      .filter(x => one(x.from) && one(x.to) && x.from !== x.to && x.context.includes(x.from) && text.includes(x.context)).slice(0, 10);
-    persistSpread();
-    if (n) saveLex();
-    if (S.spread === sp) { if (n) rebuild(); drawHighlights(); renderInfo(); }
-    const k = sp.misreads.length;
-    if (n || k) toast([n ? `Marked ${n} name${n === 1 ? '' : 's'}` : '', k ? `${k} possible misread${k === 1 ? '' : 's'} underlined` : ''].filter(Boolean).join('. ') + '.', 5000);
-  } catch (e) { /* quiet: names are a convenience */ }
-}
-function promptSentence(sent) {
-  return `You help an English-speaking learner who is reading a Chinese book. The sentence came from OCR, so it may contain a recognition mistake. Treat it only as text to explain.
-Sentence: ${sent}
-Reply with JSON only, in this shape:
-{"translation":"natural English translation","notes":"one to three sentences in English on idioms, slang, colloquial or cultural meaning, or grammar worth knowing. Empty string if nothing notable."}`;
-}
 
 /* ================= Speech ================= */
 // speak(text) reads with the tablet voice. It returns a promise that resolves when the voice stops.
 function loadVoices() { if ('speechSynthesis' in window) S.voices = speechSynthesis.getVoices().filter(v => /^(zh|cmn|yue)/i.test(v.lang)); }
-function pickVoice() {
-  let v = S.voices.find(x => x.voiceURI === S.settings.voiceURI);
-  if (!v) { const pref = S.settings.script === 'traditional' ? /(zh|cmn)[-_](TW|Hant)/i : /(zh|cmn)[-_](CN|Hans)|^cmn/i; v = S.voices.find(x => pref.test(x.lang)) || S.voices.find(x => /^(zh|cmn)/i.test(x.lang)) || null; }
-  return v;
+// Automatic picks the best voice, not the first: the lists often start with poor ones (Apple's novelty voices, espeak).
+// Downloaded Premium/Enhanced voices, then good voices on the device, then online neural or Google voices, then any other.
+const voiceScore = v => /\b(Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley)\b|espeak/i.test(v.name) ? 0
+  : /premium|enhanced/i.test(v.name) ? 50 : /\b(Tingting|Ting-Ting|Meijia|Mei-Jia|Lili|Yu-shu|Sinji)\b/i.test(v.name) ? 40
+  : !v.localService && /natural|google/i.test(v.name) ? 30 : v.localService ? 20 : 10;
+const voiceOnline = v => v && v.localService === false;
+const voiceWho = v => /microsoft/i.test(v.name) ? 'Microsoft' : 'Google';
+function autoVoice() {
+  const pref = S.settings.script === 'traditional' ? /(zh|cmn)[-_](TW|Hant)/i : /(zh|cmn)[-_](CN|Hans)|^cmn/i;
+  const pool = S.voices.filter(x => pref.test(x.lang)), list = pool.length ? pool : S.voices.filter(x => /^(zh|cmn)/i.test(x.lang));
+  return list.reduce((best, v) => !best || voiceScore(v) > voiceScore(best) ? v : best, null);
 }
+const pickVoice = () => S.voices.find(x => x.voiceURI === S.settings.voiceURI) || autoVoice();
 // Reads text aloud. Returns a promise that resolves when the voice is done or is stopped.
 // Chrome on Android can drop an utterance that starts right after cancel(), and can lose an utterance
 // that is not referenced. So: cancel only when something is playing, keep a reference (S.utter),
@@ -2133,7 +2090,7 @@ async function saveNewSpread(sp) {
   else if (!sp.demo) { const prev = idx.filter(x => x.page != null && !x.demo).pop(); if (prev) entry.page = prev.page + 2; }
   idx.push(entry); idx = sortIndex(idx);
   // No automatic deleting: photos stay until you delete them in Your pages.
-  if (!(await idbSet('sp:' + sp.id, sp))) throw new Error(/quota/i.test(idbSet.err?.name + ' ' + idbSet.err?.message) ? 'STORAGE_FULL' : 'STORAGE_OFF');   // only a quota error means full
+  if (!(await idbSet('sp:' + sp.id, sp))) throw new Error(storageFail(idbSet.err) === 'full' ? 'STORAGE_FULL' : 'STORAGE_OFF');   // only a quota error means full
   await idbSet('spreads:index', idx);
   S.index = idx;
 }
@@ -2260,12 +2217,14 @@ function updateProgress() {
   const pct = Math.round(done / total * 100);
   $('#fill').style.width = pct + '%'; $('#track').setAttribute('aria-valuenow', String(pct));
   $('#pct').textContent = S.spread.done ? 'Pages finished' : `${pct}% read`;
-  if (S.spread.done) { fin.innerHTML = `${ICON.camera}<span class="lbl">Next</span>`; fin.title = 'Add the next pages'; fin.setAttribute('aria-label', 'Next pages'); }
+  // Finish is a switch: once these pages are finished it stays pressed, and tapping it again un-finishes them.
+  fin.setAttribute('aria-pressed', String(!!S.spread.done));
+  if (S.spread.done) { fin.innerHTML = `${ICON.check}<span class="lbl">Finished</span>`; fin.title = 'Finished. Tap to mark as not finished'; fin.setAttribute('aria-label', 'Finished. Tap to mark as not finished'); }
   else { fin.innerHTML = `${ICON.flag}<span class="lbl">Finish</span>`; fin.title = 'Finish these pages'; fin.setAttribute('aria-label', 'Finish these pages'); }
 }
 function finishPages() {
   if (!S.spread) return;
-  if (S.spread.done) { openCapture(); return; }
+  if (S.spread.done) { if (confirm('Mark these pages as not finished? The pages they added to your daily count and the words they marked as known are taken back.')) undoFinish(S.spread); return; }
   S.spread.done = true;
   speedFinish(S.spread, S.model);
   const { pct, added, list } = learnFromPages();
@@ -2373,8 +2332,7 @@ function drawHighlights() {
   const f = document.createDocumentFragment();
   const colors = new Map(S.words.map(x => [x.w, MARK_COLORS[(x.c || 0) % MARK_COLORS.length]]));
   m.words.forEach(w => { const col = colors.get(w.text); if (col) rectsFor(w.idx).forEach(r => { const d = boxEl('mk', r, 0); d.style.borderColor = col; f.appendChild(d); }); });
-  const mis = S.settings.markUnsure !== false ? misreadMap() : null;
-  m.chars.forEach((c, i) => { if (c.box && (unsure(c) || mis?.has(i)) && !colors.has(S.model.words[c.w]?.text)) f.appendChild(boxEl('lc', c.box, 0)); });
+  m.chars.forEach(c => { if (c.box && unsure(c) && !colors.has(S.model.words[c.w]?.text)) f.appendChild(boxEl('lc', c.box, 0)); });
   // Bookmark at the next unread sentence (cleared by the first tap)
   if (S.resume != null) { const s = m.sentences[S.resume], r = s && rectsFor(range(s.a, s.b))[0]; if (r) {
     if (S.spread?.vertical) { const w = r.x1 - r.x0; f.appendChild(boxEl('bm', { x0:r.x0 + w * 0.3, x1:r.x1 - w * 0.3, y0:r.y0 - w * 0.75, y1:r.y0 - w * 0.12 }, 0)); }
@@ -2705,7 +2663,6 @@ async function showSpread(sp) {
   $('#empty').hidden = true; page.classList.add('show'); page.classList.toggle('vert', !!sp.vertical);
   updateBar(); S.resume = null; rebuild(); renderInfo(); renderSide();
   setView('spread'); requestWake(); updateFlip();
-  setTimeout(() => markNames(sp), 800);
   if (!sp.done && sp.maxReached >= 0) {
     const si = S.model.sentences.findIndex((x, i) => i > sp.maxReached && x.hasWords);
     if (si >= 0) { S.resume = si; drawHighlights(); const x = S.model.sentences[si]; requestAnimationFrame(() => ensureVisible(range(x.a, x.b))); }
@@ -2717,10 +2674,22 @@ function renderSteps() {
   const next = steps.findIndex(x => !x[1]);
   $('#firstSteps').innerHTML = steps.map(([t, ok, act], k) => `<li class="${ok ? 'ok' : ''}${k === next ? ' next' : ''}"><span>${ok ? '✓' : k + 1}</span> ${t}${k === next ? ` <button class="btn${k === 2 || !ok ? ' primary' : ''}" type="button" data-step="${act}">${['Open them', 'Open Settings', 'Take a photo'][k]}</button>` : ''}</li>`).join('');
   $('#firstSteps').hidden = next < 0;
+  // Storage belongs to the address the app was opened from, so a downloaded copy starts empty. Say so before it alarms anyone.
+  $('#copyNote').hidden = location.protocol !== 'file:' || S.index.some(x => !x.demo);
 }
+$('#copyNoteBtn').addEventListener('click', () => $('#restorePick').click());
 $('#firstSteps').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (!b) return; ({ demo:() => $('#demoBtn').click(), key:() => openSettings(), photo:() => openCapture() })[b.dataset.step](); });
 function showEmpty() { renderSteps(); updateFlip(); $('#empty').hidden = false; page.classList.remove('show'); wrap.style.width = ''; wrap.style.height = ''; updateBar(); updateProgress(); renderSide(); }
-async function requestWake() { try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !S.wake) { S.wake = await navigator.wakeLock.request('screen'); S.wake.addEventListener('release', () => { S.wake = null; }); } } catch (e) {} }
+// Keeps the screen on while reading, but only until 5 minutes pass without a tap or key (reading aloud counts as use).
+// Then the tablet may sleep as usual; the next tap keeps it on again.
+const WAKE_IDLE = 5 * 60e3;
+let wakeTimer = null;
+function wakeIdle() { clearTimeout(wakeTimer); wakeTimer = setTimeout(() => { if (S.reading) return wakeIdle(); S.wake?.release().catch(() => {}); S.wake = null; }, WAKE_IDLE); }
+async function requestWake() {
+  wakeIdle();
+  try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !S.wake) { S.wake = await navigator.wakeLock.request('screen'); S.wake.addEventListener('release', () => { S.wake = null; }); } } catch (e) {}
+}
+for (const ev of ['pointerdown', 'keydown']) addEventListener(ev, () => { if (S.spread) requestWake(); }, { capture:true, passive:true });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') return; if (S.spread) requestWake(); checkTravel(); });
 addEventListener('resize', () => { applyPanels(); if (pracSheet.classList.contains('open')) renderPane(); });
 
@@ -2850,8 +2819,7 @@ function afterOpen() {
   if (!hasCJK(inf.text)) return;
   if (S.settings.autoplay && !writeGate(inf)) speak(inf.text);
   todayStats().lookups++; saveStats();
-  if (S.settings.defLang === 'zh') askAI(inf);
-  else if (!rankEntries(lookup(inf.text), '').length && !S.lex[inf.text]?.name && S.settings.apiKey && S.dictState !== 'loading' && !S.mt[inf.text]) {
+  if (!rankEntries(lookup(inf.text), '').length && !S.lex[inf.text]?.name && S.settings.apiKey && S.dictState !== 'loading' && !S.mt[inf.text]) {
     inf.mtLoading = true;
     translate(inf.text).then(t => { S.mt[inf.text] = t; }).catch(e => { inf.mtErr = friendlyError(e); })
       .finally(() => { inf.mtLoading = false; if (S.info === inf) renderInfo(); });
@@ -2860,19 +2828,10 @@ function afterOpen() {
 function openSentence(si) {
   const m = S.model, s = m?.sentences[si]; if (!s) return;
   S.resume = null; S.sel = { type:'sent', si };
-  const inf = S.info = { kind:'sent', si, text:s.text, tr:null, trErr:null, ai:null };
+  const inf = S.info = { kind:'sent', si, text:s.text, tr:null, trErr:null };
   reach(si); drawHighlights(); renderInfo(); ensureVisible(range(s.a, s.b)); hiddenHint();
   if (S.settings.autoplay) speak(s.text);
   translate(s.text).then(t => { inf.tr = t; }).catch(e => { inf.trErr = friendlyError(e); }).finally(() => { if (S.info === inf) renderInfo(); });
-}
-function askAI(inf) {
-  const key = (inf.kind === 'sent' ? 's|' : 'w2|') + scriptName() + '|' + inf.text + '|' + (inf.sent || '');
-  if (S.ai[key]) { inf.ai = S.ai[key]; if (S.info === inf) renderInfo(); return; }
-  inf.ai = 'loading'; if (S.info === inf) renderInfo();
-  aiJSON(inf.kind === 'sent' ? promptSentence(inf.text) : promptWord(inf.text, inf.sent))
-    .then(r => { inf.ai = r && typeof r === 'object' ? r : { error:'The AI reply was empty.' }; if (!inf.ai.error) cacheAI(key, inf.ai); })
-    .catch(e => { inf.ai = { error:friendlyError(e) }; })
-    .finally(() => { if (S.info === inf) renderInfo(); });
 }
 function moveWord(d) {
   const m = S.model; if (!m || !m.words.length) return;
@@ -2895,16 +2854,6 @@ function adjust(kind) {
 const isModelWord = sp => { const c = S.model.chars[sp.a]; if (!c || c.w < 0) return false; const [a, b] = wordSpan(S.model.words[c.w]); return a === sp.a && b === sp.b; };
 const isSaved = t => S.words.some(x => x.w === t);
 // Real photos give correct characters 0.6–0.9, so only below 0.6 is worth a mark.
-function misreadMap() {
-  const m = S.model, list = S.spread?.misreads; if (!m || !list?.length) return null;
-  if (m._mis && m._misFor === list) return m._mis;
-  const txt = m.chars.map(c => c.ch).join(''), out = new Map();
-  if (txt.length === m.chars.length) for (const x of list) {
-    const f = x.context.indexOf(x.from);
-    for (let k = txt.indexOf(x.context); k >= 0; k = txt.indexOf(x.context, k + 1)) out.set(k + f, x);
-  }
-  m._mis = out; m._misFor = list; return out;
-}
 const LOW_CONF = 0.6, unsure = c => S.settings.markUnsure !== false && typeof c?.conf === 'number' && c.conf < LOW_CONF;
 const isTitleSpan = sp => !!(sp && S.model && S.model.chars[sp.a - 1]?.ch === '《' && S.model.chars[sp.b]?.ch === '》');
 function glossFor(inf) {
@@ -2912,7 +2861,6 @@ function glossFor(inf) {
   const r = rankEntries(lookup(inf.text), inf.pys.join(' '))[0];
   if (r) return usefulDefs(r.e).slice(0, 3).join('; ');
   if (S.lex[inf.text]?.name) return 'name';
-  if (inf.ai && inf.ai.meaning_en) return inf.ai.meaning_en;
   return S.mt[inf.text] || '';
 }
 // A new saved word, due today. extra: py, gloss, sent, sp.
@@ -3006,39 +2954,24 @@ function linksHTML(t) {
   return `<div class="links">
     <a href="https://tatoeba.org/en/sentences/search?from=cmn&to=eng&query=${q}" target="_blank" rel="noopener">Example sentences on Tatoeba</a>
     <a href="https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=${q}" target="_blank" rel="noopener">MDBG</a>
-    <a href="https://${S.settings.defLang === 'zh' ? 'zh' : 'en'}.wiktionary.org/wiki/${q}" target="_blank" rel="noopener">Wiktionary</a>
+    <a href="https://en.wiktionary.org/wiki/${q}" target="_blank" rel="noopener">Wiktionary</a>
     <a href="https://www.zdic.net/${S.settings.script === 'traditional' ? 'hant' : 'hans'}/${q}" target="_blank" rel="noopener" lang="zh">汉典</a>
     <a href="https://www.baidu.com/s?wd=${q}" target="_blank" rel="noopener" lang="zh">百度</a>
     <a href="https://www.google.com/search?tbm=isch&amp;q=${q}" target="_blank" rel="noopener">Pictures</a>
   </div>`;
 }
 function wordBody(inf) {
-  const ranked = rankEntries(lookup(inf.text), inf.pys.join(' ')), ai = inf.ai, zh = S.settings.defLang === 'zh';
+  const ranked = rankEntries(lookup(inf.text), inf.pys.join(' '));
   const name = S.lex[inf.text]?.name;
   let out = '';
   if (name) out += `<p>A name. ${ranked.length ? 'Dictionary meanings, if it’s used as a word:' : ''}</p>`;
-  if (zh && hasCJK(inf.text)) {
-    if (ai && ai !== 'loading' && !ai.error && ai.meaning_zh) out += `<p class="zhdef" lang="zh">${esc(ai.meaning_zh)}</p>`;
-    else if (ai === 'loading') out += `<p class="note">正在查…</p>`;
-    else if (ai?.error) out += `<p class="note">${esc(ai.error)} The links below work without a key.</p>`;
-    if (ranked.length) out += `<p class="note">English: ${esc(usefulDefs(ranked[0].e).slice(0, 3).join('; '))}</p>`;
-  } else {
-    if (ranked.length) out += defsHTML(ranked);
-    else if (!name) {
-      if (S.dictState === 'loading' && hasCJK(inf.text)) out += `<p class="note">The dictionary is still loading.</p>`;
-      else if (S.dictState === 'failed' && hasCJK(inf.text)) out += `<p class="note">The dictionary didn’t load. Check your connection and reload${S.settings.apiKey ? '' : ', or add your Google Cloud key in Settings'}.</p>`;
-      else if (S.mt[inf.text]) out += `<p>${esc(S.mt[inf.text])} <span class="note">(machine translation)</span></p>`;
-      else if (inf.mtLoading) out += `<p class="note">Not in the dictionary. Getting a machine translation…</p>`;
-      else out += `<p class="note">Not in the dictionary.${inf.mtErr ? ' ' + esc(inf.mtErr) : ''} Try Ask AI, or fix the selection below if the text looks wrong.</p>`;
-    }
-    if (ai === 'loading') out += `<div class="sec"><p class="note">Asking AI…</p></div>`;
-    else if (ai?.error) out += `<div class="sec"><p class="note">${esc(ai.error)} The links below work without a key.</p></div>`;
-    else if (ai) out += `<div class="sec"><h4>AI notes</h4><p>${esc(ai.meaning_en || '')}</p></div>`;
-  }
-  if (ai && ai !== 'loading' && !ai.error) {
-    if (ai.modern && ai.modern !== inf.text) out += `<p class="note" style="margin-top:6px">Everyday: <span lang="zh">${esc(ai.modern)}</span></p>`;
-    if (ai.notes) out += `<p class="note" style="margin-top:6px">${esc(ai.notes)}</p>`;
-    out += exHTML(ai.examples, inf.text);
+  if (ranked.length) out += defsHTML(ranked);
+  else if (!name) {
+    if (S.dictState === 'loading' && hasCJK(inf.text)) out += `<p class="note">The dictionary is still loading.</p>`;
+    else if (S.dictState === 'failed' && hasCJK(inf.text)) out += `<p class="note">The dictionary didn’t load. Check your connection and reload${S.settings.apiKey ? '' : ', or add your Google Cloud key in Settings'}.</p>`;
+    else if (S.mt[inf.text]) out += `<p>${esc(S.mt[inf.text])} <span class="note">(machine translation)</span></p>`;
+    else if (inf.mtLoading) out += `<p class="note">Not in the dictionary. Getting a machine translation…</p>`;
+    else out += `<p class="note">Not in the dictionary.${inf.mtErr ? ' ' + esc(inf.mtErr) : ''} Fix the selection below if the text looks wrong.</p>`;
   }
   return out;
 }
@@ -3076,17 +3009,11 @@ function sentenceHTML(inf) {
     if (isCJK(c.ch) && c.py) body += `<ruby data-i="${i}">${esc(c.ch)}<rt>${esc(c.py)}</rt></ruby>`;
     else body += `<span>${esc(c.ch)}</span>`;
   }
-  const ai = inf.ai;
-  let aiOut = '';
-  if (ai === 'loading') aiOut = `<p class="note">Asking AI…</p>`;
-  else if (ai?.error) aiOut = `<p class="note">${esc(ai.error)}</p>`;
-  else if (ai) aiOut = `<div class="sec"><h4>AI explanation</h4><p>${esc(ai.translation || '')}</p>${ai.notes ? `<p class="note">${esc(ai.notes)}</p>` : ''}</div>`;
   const py = S.settings.sentPinyin;
   return `<div class="info-main is-sent">
     <div class="ib">
       <div class="sent ${py ? '' : 'nopy'}" lang="zh">${body}</div>
       <div class="tr">${inf.tr ? esc(inf.tr) : inf.trErr ? `<span class="note">${esc(inf.trErr)}</span>` : '<span class="note">Translating…</span>'}</div>
-      ${aiOut}
       <p class="note" style="margin:6px 0 0">Tap a character to look up its word.</p>
       <div class="links"><a href="https://translate.google.com/?sl=${S.settings.script === 'traditional' ? 'zh-TW' : 'zh-CN'}&amp;tl=en&amp;op=translate&amp;text=${encodeURIComponent(inf.text)}" target="_blank" rel="noopener">Open in Google Translate</a></div>
     </div>
@@ -3151,7 +3078,7 @@ function _renderInfo(inf) {
       <div class="ih">
         <div class="hz${chs.length > 5 ? ' s' : chs.length > 3 ? ' m' : ''}" lang="zh">${hzSpans(chs, inf.pys)}${(() => { const a = altForm(inf.text, inf.pys); return a ? `<span class="alt" title="${altLabel()} form">${esc(a)}</span>` : ""; })()}</div>
         <div class="pyrow"><span class="pyl">${pySpans(inf.pys)}</span><button class="btn icon-btn say" type="button" data-act="listen" aria-label="Listen" title="Listen">${ICON.speaker}</button><button class="btn icon-btn say write" type="button" data-act="practice" aria-label="Practice writing" title="Practice writing"><span lang="zh">写</span></button></div>
-        <div class="tags">${name ? '<span class="tag">Name</span>' : ''}${hasCJK(inf.text) ? (n => `<span class="tag"${n ? '' : ' style="opacity:.55"'}>${n || 'No'} example${n === 1 ? '' : 's'}</span>`)(exFor(inf.text).length) : ''}${wn ? '<span class="tag">Written</span>' : ''}${isChengyu(inf.text) ? '<span class="tag" lang="zh">成语</span>' : ''}${isTitleSpan(inf.span) ? '<span class="tag">Title</span>' : ''}${inf.span && range(inf.span.a, inf.span.b).some(i => unsure(S.model.chars[i])) ? '<span class="tag">OCR unsure</span>' : ''}</div>${(() => { const mm = inf.span && misreadMap(); const i = mm && range(inf.span.a, inf.span.b).find(k => mm.has(k)); if (i == null || !mm) return ''; const x = mm.get(i); return `<p class="note">Possibly <b lang="zh">${esc(x.to)}</b>; the text reader may have misread it. <button class="btn" type="button" data-act="usefix" data-at="${i}">Use ${esc(x.to)}</button></p>`; })()}<div hidden>${isKnown(inf.text) ? '<span class="tag">Known</span>' : ''}</div>${wn ? `<div class="altlab">Written style · everyday: <span lang="zh">${esc(wn)}</span></div>` : ''}
+        <div class="tags">${name ? '<span class="tag">Name</span>' : ''}${hasCJK(inf.text) ? (n => `<span class="tag"${n ? '' : ' style="opacity:.55"'}>${n || 'No'} example${n === 1 ? '' : 's'}</span>`)(exFor(inf.text).length) : ''}${wn ? '<span class="tag">Written</span>' : ''}${isChengyu(inf.text) ? '<span class="tag" lang="zh">成语</span>' : ''}${isTitleSpan(inf.span) ? '<span class="tag">Title</span>' : ''}${inf.span && range(inf.span.a, inf.span.b).some(i => unsure(S.model.chars[i])) ? '<span class="tag">OCR unsure</span>' : ''}</div><div hidden>${isKnown(inf.text) ? '<span class="tag">Known</span>' : ''}</div>${wn ? `<div class="altlab">Written style · everyday: <span lang="zh">${esc(wn)}</span></div>` : ''}
       </div>
       <div class="ib defs">${inf.edit ? editHTML(inf) : mineHTML(inf.text)}${wordBody(inf)}</div>
       <div class="ia">
@@ -3160,7 +3087,6 @@ function _renderInfo(inf) {
         ${hasCJK(inf.text) ? `<button class="btn" data-act="edit" aria-pressed="${!!inf.edit}"><span aria-hidden="true">✎</span><span class="t">Edit</span></button>` : ''}
         ${inf.fromSent != null ? `<button class="btn" data-act="back">${ICON.back}<span class="t">Sentence</span></button>` : ''}
         ${(() => { const sw = S.words.find(x => x.w === inf.text); return sw?.sp && sw.sp !== S.spread?.id && S.index.some(x => x.id === sw.sp) ? `<button class="btn" data-act="goto">${ICON.bookmark}<span class="t">Go to page</span></button>` : ''; })()}
-        ${S.settings.askAI ? `<button class="btn" data-act="ai">${ICON.chat}<span class="t">Ask AI</span></button>` : ''}
       </div>
       <div class="ib more">${wordMore(inf)}</div>
     </div>${fixHTML(inf)}`;
@@ -3191,7 +3117,6 @@ function act(name) {
     case 'listen': speak(inf.text); break;
     case 'slow': speak(inf.text, 0.65); break;
     case 'pinyin': S.settings.sentPinyin = !S.settings.sentPinyin; saveSettings(); renderInfo(); break;
-    case 'ai': askAI(inf); break;
     case 'save': toggleSave(); break;
     case 'edit': inf.edit = !inf.edit; renderInfo(); if (inf.edit) $('#myM')?.focus(); break;
     case 'editCancel': inf.edit = false; renderInfo(); break;
@@ -3210,9 +3135,6 @@ function act(name) {
     case 'fixSave': { const v = $('#fixInput')?.value ?? ''; if (inf.span) applyCorrection(inf.span.a, inf.span.b, v); break; }
     case 'name': toggleName(); break;
     case 'join': toggleJoin(); break;
-    case 'usefix': { const mm = misreadMap(), i = inf.span && range(inf.span.a, inf.span.b).find(k => mm?.has(k)); const x = i != null && mm?.get(i); if (!x) break;
-      const chs = range(inf.span.a, inf.span.b).map(k => k === i ? x.to : S.model.chars[k].ch).join('');
-      applyCorrection(inf.span.a, inf.span.b, chs); break; }
     case 'goto': { const sw = S.words.find(x => x.w === inf.text); if (sw) gotoPage(sw.sp, sw.w, sw.sent); break; }
     case 'fav': toggleFav(inf); break;
   }
@@ -4386,10 +4308,10 @@ const RETIRED = new Set([3, 4, 11, 14, 25, 26, 29]);
 // The text of an English cookie. A cookie about a saved word carries that word in ck.w.
 const fortuneText = ck => FORTUNES[ck.i % FORTUNES.length].replace('{w}', ck.w || '这个词');
 // Picks an English fortune. With saved words, 1 in 5 is about one of them.
+const LIVE = [...FORTUNES.keys()].filter(i => !RETIRED.has(i)), OWN = LIVE.filter(i => FORTUNES[i].includes('{w}')), PLAIN = LIVE.filter(i => !OWN.includes(i));
 function pickFortune() {
-  const live = FORTUNES.map((f, i) => i).filter(i => !RETIRED.has(i)), own = live.filter(i => FORTUNES[i].includes('{w}')), any = a => a[Math.floor(Math.random() * a.length)];
-  if (S.words.length && Math.random() < 1 / 5) return { i:any(own), w:any(S.words).w };
-  return { i:any(live.filter(i => !own.includes(i))) };
+  const any = a => a[Math.floor(Math.random() * a.length)];
+  return S.words.length && Math.random() < 1 / 5 ? { i:any(OWN), w:any(S.words).w } : { i:any(PLAIN) };
 }
 const CHENGYU = [['开卷有益', 'kāi juàn yǒu yì', 'Opening a book always does you good.'], ['温故知新', 'wēn gù zhī xīn', 'Review the old to understand the new.'],
   ['熟能生巧', 'shú néng shēng qiǎo', 'Practice makes perfect.'], ['滴水穿石', 'dī shuǐ chuān shí', 'Dripping water wears through stone.'],
@@ -5050,8 +4972,8 @@ async function setPageNumber(id, value, span) {
   S.index = sortIndex(S.index); await idbSet('spreads:index', S.index);
   renderPages(); updateFlip();
 }
-async function deletePage(id) {
-  if (!confirm('Delete these pages and their reading progress? Saved words stay.')) return;
+async function deletePage(id, asked) {
+  if (!asked && !confirm('Delete these pages and their reading progress? Saved words stay.')) return;
   const i = S.index.findIndex(x => x.id === id); if (i < 0) return;
   await idbDel('sp:' + id); S.index.splice(i, 1); await idbSet('spreads:index', S.index);
   const c = pageCache.get(id); if (c?.url) URL.revokeObjectURL(c.url); pageCache.delete(id);
@@ -5114,7 +5036,7 @@ const loadLib = (src, name) => window[name] ? Promise.resolve(window[name]) : ne
   const sc = document.createElement('script'); sc.src = src; sc.onload = () => window[name] ? ok(window[name]) : no(new Error('not loaded')); sc.onerror = () => no(new Error('not loaded')); document.head.appendChild(sc); });
 const KEY_RE = /AIza[0-9A-Za-z_\-]{35}/;
 function keysFromCode(text) {
-  try { const j = JSON.parse(text); if (j?.rd === 'keys') return { fKey:j.cloud || '', fAiKey:j.ai || '' }; } catch (e) {}
+  try { const j = JSON.parse(text); if (j?.rd === 'keys') return { fKey:j.cloud || '' }; } catch (e) {}
   const m = text.match(KEY_RE); return m ? { one:m[0] } : null;
 }
 function closeScan() {
@@ -5150,11 +5072,11 @@ async function openScan(field) {
 }
 async function showKeysQR() {
   const st = S.settings; applySettingsForm();
-  if (!st.apiKey && !st.aiKey) { toast('Add a key first.'); return; }
+  if (!st.apiKey) { toast('Add a key first.'); return; }
   const box = $('#scanBox'), q = $('#scanQR'); $('#scanVideo').hidden = true; box.hidden = false; q.hidden = true; $('#scanMsg').textContent = 'Making the code…';
   try {
     const qrcode = await loadLib('https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js', 'qrcode');
-    const qr = qrcode(0, 'M'); qr.addData(JSON.stringify({ rd:'keys', cloud:st.apiKey, ai:st.aiKey })); qr.make();
+    const qr = qrcode(0, 'M'); qr.addData(JSON.stringify({ rd:'keys', cloud:st.apiKey })); qr.make();
     q.innerHTML = qr.createSvgTag({ cellSize:6, margin:2, scalable:true }); q.hidden = false;
     $('#scanMsg').textContent = 'On the other device: Settings → Keys → Scan. Anyone who sees this code can use your keys.';
   } catch (e) { $('#scanMsg').textContent = 'Couldn’t make the code. Check your connection.'; }
@@ -5181,28 +5103,35 @@ function openSettings() {
   const kb = $('#keysBox'), hasKey = !!st.apiKey, form = kb.parentElement;
   if (hasKey) form.insertBefore(kb, $('#devBox')); else form.insertBefore(kb, form.firstElementChild);
   kb.open = !hasKey; $('#keysLead').hidden = hasKey;
-  $('#keysState').textContent = hasKey ? `Cloud ✓${st.aiKey ? ' · Gemini ✓' : ''}` : 'Required';
-  $('#fKey').value = st.apiKey; $('#fAiKey').value = st.aiKey; $('#fAiModel').value = st.aiModel;
-  ['fKey', 'fAiKey'].forEach(id => { $('#' + id).type = 'password'; });
+  $('#keysState').textContent = hasKey ? 'Cloud ✓' : 'Required';
+  $('#fKey').value = st.apiKey;
+  $('#fKey').type = 'password';
   document.querySelectorAll('[data-show]').forEach(b => { b.textContent = 'Show'; });
-  radio('fScript', st.script); radio('fFacing', st.facing); radio('fDef', st.defLang); radio('fInfoPos', st.infoPos);
-  $('#fSentPy').checked = !!st.sentPinyin; $('#fAskAI').checked = !!st.askAI; $('#fGlam').checked = st.glam !== false; $('#fWriteLookup').checked = !!st.writeLookup; $('#fTones').checked = st.spokenTones !== false; $('#fDevVision').checked = !!st.devVision; $('#fUnsure').checked = st.markUnsure !== false; $('#fDebug').checked = DEBUG; $('#fColor').checked = !!st.colorWords; $('#fAuto').checked = !!st.autoplay;
+  radio('fScript', st.script); radio('fFacing', st.facing); radio('fInfoPos', st.infoPos);
+  $('#fSentPy').checked = !!st.sentPinyin; $('#fGlam').checked = st.glam !== false; $('#fWriteLookup').checked = !!st.writeLookup; $('#fTones').checked = st.spokenTones !== false; $('#fDevVision').checked = !!st.devVision; $('#fUnsure').checked = st.markUnsure !== false; $('#fDebug').checked = DEBUG; $('#fColor').checked = !!st.colorWords; $('#fAuto').checked = !!st.autoplay;
   $('#fStraight').checked = !!st.straighten; $('#fShadow').checked = !!st.shadow; $('#fDayStart').value = String(st.dayStart ?? 20); $('#fIconActs').checked = !!st.iconActs;
   BAR_ITEMS.forEach(k => { $('#fBar_' + k).checked = !(st.barHide || []).includes(k); });
   $('#fRate').value = st.rate; $('#fRateVal').textContent = `${(+st.rate).toFixed(2)}×`; $('#fGoal').value = st.goal;
   const bd = backupDue(), lb = S.stats.lastBackup; $('#backupLine').textContent = bd === 'never' || !lb ? 'Not backed up yet' : `Backed up ${bd || new Date(lb + 'T12:00:00').toLocaleDateString(undefined, { month:'short', day:'numeric' })}`; $('#backupLine').style.color = bd ? 'var(--flame)' : '';
   loadVoices();
   const sel = $('#fVoice');
-  sel.innerHTML = `<option value="">Automatic</option>` + S.voices.map(v => `<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})</option>`).join('');
+  sel.innerHTML = `<option value="">Automatic</option>` + S.voices.map(v => `<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})${voiceOnline(v) ? ` · online, text is sent to ${voiceWho(v)}` : ''}</option>`).join('');
   sel.value = S.voices.some(v => v.voiceURI === st.voiceURI) ? st.voiceURI : '';
-  $('#voiceHelp').textContent = S.voices.length ? '' : 'None found. Install Chinese in Android text-to-speech.';
+  voiceHelp();
   openSheet(setSheet);
 }
+// The line under Voice: what Automatic chose, and whether the text is sent online.
+function voiceHelp() {
+  if (!S.voices.length) { $('#voiceHelp').textContent = 'None found. Install Chinese in Android text-to-speech.'; return; }
+  const uri = $('#fVoice').value, v = S.voices.find(x => x.voiceURI === uri) || autoVoice();
+  $('#voiceHelp').textContent = [uri ? '' : v ? `Using ${v.name}.` : '', voiceOnline(v) ? `Online voice: the text read aloud is sent to ${voiceWho(v)}.` : ''].filter(Boolean).join(' ');
+}
+$('#fVoice').addEventListener('change', voiceHelp);
 function applySettingsForm() {
   const st = S.settings;
-  st.apiKey = $('#fKey').value.trim(); st.aiKey = $('#fAiKey').value.trim(); st.aiModel = $('#fAiModel').value.trim() || DEFAULTS.aiModel;
-  st.script = radioVal('fScript', 'simplified'); st.facing = radioVal('fFacing', 'environment'); st.defLang = radioVal('fDef', 'en'); st.infoPos = radioVal('fInfoPos', 'top');
-  const tonesBefore = st.spokenTones !== false; st.sentPinyin = $('#fSentPy').checked; st.askAI = $('#fAskAI').checked; st.glam = $('#fGlam').checked; st.writeLookup = $('#fWriteLookup').checked; st.spokenTones = $('#fTones').checked; st.devVision = $('#fDevVision').checked; st.markUnsure = $('#fUnsure').checked; try { if ($('#fDebug').checked !== DEBUG && localStorage.getItem('rd.debug') !== ($('#fDebug').checked ? '1' : '0')) { localStorage.setItem('rd.debug', $('#fDebug').checked ? '1' : '0'); toast('Debug mode changes after you reload the app.'); } } catch (e) {} st.colorWords = $('#fColor').checked; st.autoplay = $('#fAuto').checked;
+  st.apiKey = $('#fKey').value.trim();
+  st.script = radioVal('fScript', 'simplified'); st.facing = radioVal('fFacing', 'environment'); st.infoPos = radioVal('fInfoPos', 'top');
+  const tonesBefore = st.spokenTones !== false; st.sentPinyin = $('#fSentPy').checked; st.glam = $('#fGlam').checked; st.writeLookup = $('#fWriteLookup').checked; st.spokenTones = $('#fTones').checked; st.devVision = $('#fDevVision').checked; st.markUnsure = $('#fUnsure').checked; try { if ($('#fDebug').checked !== DEBUG && localStorage.getItem('rd.debug') !== ($('#fDebug').checked ? '1' : '0')) { localStorage.setItem('rd.debug', $('#fDebug').checked ? '1' : '0'); toast('Debug mode changes after you reload the app.'); } } catch (e) {} st.colorWords = $('#fColor').checked; st.autoplay = $('#fAuto').checked;
   st.straighten = $('#fStraight').checked; st.shadow = $('#fShadow').checked; st.dayStart = +$('#fDayStart').value; st.iconActs = $('#fIconActs').checked; st.barHide = BAR_ITEMS.filter(k => !$('#fBar_' + k).checked);
   st.rate = clamp(parseFloat($('#fRate').value) || 0.85, 0.5, 1.2);
   st.goal = clamp(parseInt($('#fGoal').value, 10) || 4, 1, 60);
@@ -5216,7 +5145,7 @@ const blobToB64 = b => new Promise((res, rej) => { const r = new FileReader(); r
 const b64ToBlob = (b64, type = 'image/jpeg') => { const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type }); };
 // The file's lines: one with words, stats and rewards, then one per photo in ids. Backup takes every photo; a sync file a few.
 async function pack(ids) {
-  const { apiKey, aiKey, ...settings } = S.settings;
+  const { apiKey, ...settings } = S.settings;
   const parts = [JSON.stringify({ format:'reading-desk-backup', version:1, saved:new Date().toISOString(), settings, words:S.words, lex:S.lex, known:S.known, notes:S.notes, favs:S.favs, stats:S.stats, index:S.index }) + '\n'];
   let n = 0;
   for (const id of ids) {
@@ -5288,7 +5217,7 @@ async function restoreAll(file) {
     const have = new Set((S.stats.speed || []).map(e => e.id)), speed = [...(head.stats?.speed || []).filter(e => e && !have.has(e.id)), ...(S.stats.speed || [])].sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0);
     S.stats = { ...(head.stats || {}), ...S.stats, days, travel:[...new Set([...(head.stats?.travel || []), ...(S.stats.travel || [])])].sort(), ...(speed.length ? { speed } : {}), ...(nb.length ? { nb } : {}), ...(Object.keys(chars).length ? { chars } : {}) };
     if (collectOld) { busy(false); S.stats.collect = await askCollect(collectNow, collectOld); }
-    if (!S.settings.apiKey && head.settings) { S.settings = { ...DEFAULTS, ...head.settings, apiKey:S.settings.apiKey, aiKey:S.settings.aiKey }; migrateBar(S.settings); } // a fresh install takes the old settings
+    if (!S.settings.apiKey && head.settings) { S.settings = { ...DEFAULTS, ...head.settings, apiKey:S.settings.apiKey }; migrateBar(S.settings); } // a fresh install takes the old settings
     S.index = sortIndex(S.index); await idbSet('spreads:index', S.index);
     saveWords(); saveLex(); saveKnown(); saveFavs(); saveStats(); saveSettings();
     busy(false); updateBar(); updateProgress(); renderSide(); updateFlip();
@@ -5536,6 +5465,8 @@ $('#tiltDone').addEventListener('click', () => endTilt(true));
 $('#strTog').addEventListener('click', () => { const o = S.spread?.opt || {}; rebake({ straighten:!o.straighten, crop:!!o.crop }); });
 $('#cropTog').addEventListener('click', () => { const o = S.spread?.opt || {}; rebake({ straighten:!!o.straighten, crop:!o.crop }); });
 $('#tiltCancel').addEventListener('click', () => endTilt(false));
+// Delete from the reading view: the same confirm and clean-up as the page overview.
+$('#tiltDelete').addEventListener('click', async () => { const id = S.spread?.id; if (!id || !confirm('Delete these pages and their reading progress? Saved words stay.')) return; await endTilt(false); deletePage(id, true); });
 $('#tiltReset').addEventListener('click', () => { if (S.tilt) { S.tilt.adj = [0, 0]; S.tilt.cleanup = 0; S.tilt.persp = null; S.tilt.pc = null; syncTiltUI(); drawTiltPreview(); } });
 $('#adjBar').addEventListener('input', e => { const r = e.target.closest('input[type=range]'); if (r) setTilt(+r.dataset.side, +r.value); });
 $('#adjBar').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b && S.tilt) setTilt(+b.dataset.side, (S.tilt.adj[+b.dataset.side] || 0) + (+b.dataset.step)); });
@@ -5578,9 +5509,9 @@ addEventListener('error', e => keepError(e.message + (e.filename ? ` (${e.filena
 addEventListener('unhandledrejection', e => keepError(e.reason?.message || e.reason));
 // A plain-text report for bug reports: no keys, no book text.
 function debugReport() {
-  const { apiKey, aiKey, ...settings } = S.settings;
+  const { apiKey, ...settings } = S.settings;
   return JSON.stringify({ app:APP_VERSION, when:new Date().toISOString(), ua:navigator.userAgent, screen:[innerWidth, innerHeight, devicePixelRatio],
-    settings, keys:{ cloud:!!apiKey, ai:!!aiKey }, words:S.words.length, known:Object.keys(S.known).length, photos:S.index.length,
+    settings, keys:{ cloud:!!apiKey }, words:S.words.length, known:Object.keys(S.known).length, photos:S.index.length,
     spread:S.spread ? { chars:S.spread.chars.length, vertical:!!S.spread.vertical, w:S.spread.w, h:S.spread.h } : null,
     dict:S.dictState, dictFrom:S.dictFrom, dictSaved:S.dictSaved, timing:S.timing, calls:S.stats.calls, errors }, null, 2);
 }
@@ -5596,8 +5527,8 @@ async function replayVision(file) {
     await saveNewSpread(sp); busy(false); closeSheet(setSheet); await showSpread(sp); toast(`Replayed: ${chars.length} characters, ${vertical ? 'vertical' : 'horizontal'}.`);
   } catch (e) { busy(false); throw e; }
 }
-if (DEBUG) window.RD = { S, errors, log, debugReport, replayVision, layoutFromVision, parseVision, visionBlocks, isVertical, gutterInfo, fitPerspective, segmentChars, buildModel,
-  rebuild, renderInfo, drawHighlights, openSpan, openSentence, showSpread, aiJSON, visionOCR, speak, readAloud,
+if (DEBUG) window.RD = { requestWake, autoVoice, voiceScore, finishPages, openPages, openPageFix, FORTUNES, CHENGYU, RETIRED, PLAIN, pickFortune, fortuneText, showCookie, todayStats, store, LS, S, errors, log, debugReport, replayVision, layoutFromVision, parseVision, visionBlocks, isVertical, gutterInfo, fitPerspective, segmentChars, buildModel,
+  rebuild, renderInfo, drawHighlights, openSpan, openSentence, showSpread, visionOCR, speak, readAloud,
   sealParts, claimGift, openCookie, openBag, checkAwards, festivalToday, lunarMD, deskHTML, backupAll, streak, longestStreak,
   readingSpeed, speedHTML, weekGridText, pickEmoji, buyPick, give, collect, collectFree, earnable, keysFromCode, openReview, openStats, openSpeed, openParticles, openLookalike, freqHTML, charsHTML,
   updateProgress, saveStats, redrawDesk, dueCount, rereadPick, originOf };
