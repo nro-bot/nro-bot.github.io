@@ -61,6 +61,7 @@ button,input,select{font:inherit;color:inherit}
 .streak.on{color:var(--flame)}
 .desk-btn .dlab{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px}
 .desk-btn{font-size:22px;border-color:transparent;width:auto !important;min-width:44px;padding:0 6px !important;gap:2px}
+#deskBtn{background:var(--panel-2);border-radius:10px 10px 3px 3px;border-bottom:3px solid #b08a5a;padding:0 8px !important}
 @media (max-width:900px){.desk-btn span:nth-child(n+4){display:none}}
 @media (max-width:600px){.desk-btn span:nth-child(n+2){display:none}}
 .progress{flex:1 1 180px;min-width:130px;display:flex;flex-direction:column;gap:5px}
@@ -482,6 +483,7 @@ input[type=range]{width:100%;accent-color:var(--jade)}
   padding:9px 14px;border-radius:10px;box-shadow:var(--shadow);font-weight:600;font-size:15px;line-height:1.35;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:70;max-width:min(480px,calc(100vw - 32px));text-align:left}
 #toast.warn{border-left-color:var(--saved)}
 #toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;cursor:pointer}
+#saveWarn{position:sticky;top:0;z-index:1000;padding:10px 16px;background:#FFF3C4;color:#3A2A00;font-size:15px;line-height:1.35;text-align:center;border-bottom:1px solid #E2C25A}
 .toast-act{margin-left:10px;background:transparent;border:1.5px solid currentColor;color:inherit;border-radius:8px;padding:4px 12px;font:inherit;font-weight:700;cursor:pointer}
 
 @media (max-width:820px){
@@ -535,6 +537,9 @@ body.no-desk #deskBtn,body.no-alert #alertBtn,body.no-finish #finishBtn,body.no-
 .stagebar .btn .lbl{display:none}
 .stagebar #aloudBtn .lbl{display:inline}
 .counter{border-color:transparent;box-shadow:0 2px 12px rgba(0,0,0,.14)}
+.pname{border:0;background:none;padding:6px 0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline dotted;text-underline-offset:4px}#pgFixL{font-size:20px;font-weight:700;min-width:44px}.pgspan{margin:14px auto 0;width:max-content}
+.counter .pgedit{text-decoration:underline dotted;text-underline-offset:4px;padding:12px 2px}
+.pgfix{display:flex;gap:8px;align-items:center;justify-content:center}.pgfix input{width:96px;min-height:44px;font-size:20px;text-align:center;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)}.pgfix .btn{min-width:44px}
 
 /* ===== Collect: seal ring, desk ===== */
 .desk{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
@@ -829,11 +834,10 @@ label.srow{cursor:pointer}
 .week .note{margin:6px 0 0}
 .week .wd i{position:relative}
 .week .wd i.rd{background:var(--jade);border-color:var(--jade);color:var(--jade-ink)}
-/* Goal met: the green and its page count show through a red stamp outline, with a small red 读 at the corner. */
-.week .wd i.goal::after{content:"";position:absolute;inset:-5px;border:2px solid #C8322B;border-radius:7px;transform:rotate(-7deg);pointer-events:none}
-.week .wd i.goal::before{content:"读";position:absolute;top:-10px;right:-10px;width:17px;height:17px;display:grid;place-items:center;border:1.5px solid #C8322B;border-radius:4px;background:var(--speck),#FFF1EE;background-size:60px,auto;color:#C8322B;font:900 11px/1 "Noto Serif SC",serif;transform:rotate(9deg);z-index:2}
-.week.big .wd i.goal::after{inset:-6px;border-width:2.5px;border-radius:10px}
-.week.big .wd i.goal::before{width:22px;height:22px;font-size:14px;top:-12px;right:-12px}
+/* Goal met: a red 读 stamp is pressed over the green square, a little worn and askew. The page count stays underneath. */
+.week .wd i.goal{color:var(--jade);background:color-mix(in srgb,var(--jade) 42%,var(--panel));border-color:transparent}
+.week .wd i.goal::before{content:"读";position:absolute;inset:-1px;display:grid;place-items:center;border:2px solid #C8322B;border-radius:3px;color:#C8322B;font:900 15px/1 "Noto Serif SC","Songti SC",serif;transform:rotate(-7deg);pointer-events:none;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -9 0 0 0 6.7'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -9 0 0 0 6.7'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+.week.big .wd i.goal::before{inset:-1px;border-width:2.5px;border-radius:4px;font-size:27px}
 .week .wd i.trav{background:repeating-linear-gradient(45deg,var(--panel-2) 0 3px,var(--line) 3px 6px)}
 .calwrap{display:flex;gap:6px}
 .cal-days{display:grid;grid-template-rows:repeat(7,18px);gap:4px;font-size:11px;color:var(--muted);line-height:18px}
@@ -862,6 +866,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 <header class="bar">
   <button class="brand" id="brandBtn" type="button" aria-label="Show the start panel and daily review"><span class="seal tall" aria-hidden="true"><i>书</i><i>桌</i></span><span class="brand-name">Reading Desk</span></button>
   <button class="streak" id="streak" type="button"></button>
+  <button class="btn ghost icon-btn desk-btn" id="studyBtn" type="button" title="Study" aria-label="Study"></button>
   <button class="btn ghost icon-btn desk-btn" id="deskBtn" type="button" title="Your desk" aria-label="Your desk"></button>
   <button class="btn ghost icon-btn desk-btn" id="alertBtn" type="button" hidden></button>
   <div class="progress" aria-live="polite">
@@ -967,7 +972,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 
 <div id="scanBox" role="dialog" aria-modal="true" aria-label="Scan a key" hidden><video id="scanVideo" playsinline muted></video><div class="qr" id="scanQR" hidden></div><p id="scanMsg"></p><button class="btn" id="scanClose" type="button">Close</button></div>
 <section class="sheet" id="setSheet" aria-label="Settings">
-  <div class="sheet-bar ftabbar"><button class="brand" id="setHome" type="button" aria-label="Return to reading" title="Return to reading"><span class="seal tall" aria-hidden="true"><i>书</i><i>桌</i></span></button><div class="ftabs" role="tablist" aria-label="Your reading"><button type="button" role="tab" data-stab="study">Study</button><button type="button" role="tab" data-stab="progress">Progress</button><button type="button" role="tab" data-stab="desk">Desk</button><button type="button" role="tab" data-stab="settings" aria-selected="true">Settings</button></div></div>
+  <div class="sheet-bar ftabbar"><button class="brand" id="setHome" type="button" aria-label="Return to reading" title="Return to reading"><span class="seal tall" aria-hidden="true"><i>书</i><i>桌</i></span></button><div class="ftabs" role="tablist" aria-label="Your reading"><button type="button" role="tab" data-stab="progress">Progress</button><button type="button" role="tab" data-stab="study">Study</button><button type="button" role="tab" data-stab="desk">Desk</button><button type="button" role="tab" data-stab="settings" aria-selected="true">Settings</button></div></div>
   <div class="scroll"><div class="form settings">
 
     <details class="sgroup keys" id="keysBox">
@@ -1043,6 +1048,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
       <div class="srow dev"><span>Review</span><span class="btns"><button class="btn" id="allDueBtn" type="button">All words due</button></span></div>
       <div class="srow dev"><span>Cookie</span><span class="btns"><button class="btn" id="cookieBtn" type="button">Any</button><button class="btn" id="cookieCyBtn" type="button">Chengyu</button><button class="btn" id="cookieGoldBtn" type="button">Golden</button></span></div>
       <div class="srow dev"><span>Desk</span><span class="btns"><button class="btn" id="coinsBtn" type="button">+888 🪙</button><button class="btn" id="zeroCoinsBtn" type="button">Clear 🪙</button><button class="btn" id="giftDay7Btn" type="button">Gift day 7</button><button class="btn" id="clearDeskBtn" type="button">Clear items</button></span></div>
+      <div class="srow dev"><span>Pages</span><span class="btns"><button class="btn" id="testPagesBtn" type="button">+5 test pages</button></span></div>
       <div class="srow dev"><span>Screens</span><span class="btns"><button class="btn" id="welcomeBtn" type="button">Welcome back</button></span></div>
       <div class="srow dev"><span>Start over</span><span class="btns"><button class="btn danger" id="wipeBtn" type="button">All but photos</button></span></div>
       <input type="file" id="replayPick" accept=".json,application/json" hidden>
@@ -1053,12 +1059,12 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 </section>
 
 <section class="sheet" id="statSheet" aria-label="Your reading">
-  <div class="sheet-bar ftabbar"><button class="brand" id="statHome" type="button" aria-label="Return to reading" title="Return to reading"><span class="seal tall" id="statSeal" aria-hidden="true"><i>书</i><i>桌</i></span></button><div class="ftabs" role="tablist" aria-label="Your reading"><button type="button" role="tab" data-stab="study">Study</button><button type="button" role="tab" data-stab="progress">Progress</button><button type="button" role="tab" data-stab="desk">Desk</button><button type="button" role="tab" data-stab="settings">Settings</button></div></div>
+  <div class="sheet-bar ftabbar"><button class="brand" id="statHome" type="button" aria-label="Return to reading" title="Return to reading"><span class="seal tall" id="statSeal" aria-hidden="true"><i>书</i><i>桌</i></span></button><div class="ftabs" role="tablist" aria-label="Your reading"><button type="button" role="tab" data-stab="progress">Progress</button><button type="button" role="tab" data-stab="study">Study</button><button type="button" role="tab" data-stab="desk">Desk</button><button type="button" role="tab" data-stab="settings">Settings</button></div></div>
   <div class="scroll"><div class="stats" id="stats"></div></div>
 </section>
 <section class="sheet" id="pagesSheet" aria-label="Your pages">
   <div class="sheet-bar"><button class="brand" id="pagesClose" type="button" aria-label="Return to reading" title="Return to reading"><span class="seal tall" aria-hidden="true"><i>书</i><i>桌</i></span></button><h2 id="pagesTitle">Your pages</h2></div>
-  <div class="scroll"><div class="pages-help"><p class="note">Tap a photo to open it. Photos follow the book’s page numbers; type a number to move a photo.</p><p class="note" id="storageLine"></p><button class="btn" id="dropOrig" type="button" hidden></button></div><div class="pgrid" id="pgrid"></div></div>
+  <div class="scroll"><div class="pages-help"><p class="note" id="storageLine"></p><button class="btn" id="dropOrig" type="button" hidden></button><button class="btn" id="pagesCur" type="button">Skip to current page</button></div><div class="pgrid" id="pgrid"></div></div>
   <div class="applybar" id="pagesApply" hidden><span id="pendN"></span><button class="btn" id="pendCancel" type="button">Cancel</button><button class="btn primary" id="pendApply" type="button">Apply changes</button></div>
 </section>
 <section class="sheet" id="revSheet" aria-label="Daily review">
@@ -1158,7 +1164,26 @@ const ICON = {
 // Creates the state object S and loads saved data into it.
 const LS = { favs:'rd.favs', settings:'rd.settings', words:'rd.words', stats:'rd.stats', tcache:'rd.tcache', lex:'rd.lex', ai:'rd.ai', known:'rd.known', notes:'rd.notes' };
 const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
-const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+// Keys whose last save failed. Caches can be rebuilt, so only the reader's own data counts.
+const saveFails = new Map(), CACHE_KEYS = new Set([LS.tcache, LS.lex]);
+const store = (k, v) => {
+  try { localStorage.setItem(k, JSON.stringify(v)); if (saveFails.delete(k)) saveWarn(); }
+  catch (e) { if (!CACHE_KEYS.has(k)) { saveFails.set(k, /quota/i.test(e?.name + ' ' + e?.message) ? 'full' : 'off'); saveWarn(); } }
+};
+// A banner that stays while something can't be saved. A refresh or close would lose it, so the browser also asks before leaving.
+function saveWarn() {
+  let b = document.getElementById('saveWarn');
+  if (!saveFails.size) { if (b) b.remove(); return; }
+  if (!b) { b = document.createElement('div'); b.id = 'saveWarn'; b.setAttribute('role', 'alert'); document.body.prepend(b); }
+  b.textContent = [...saveFails.values()].includes('full')
+    ? 'Storage is full, so new progress isn’t being saved. Refreshing or closing will lose it. Delete some old photos in Your pages to make room.'
+    : 'This browser isn’t saving your progress (private windows and some ways of opening the file block it). Words and stats will be lost when you refresh or close.';
+}
+// Startup check: a write that can't be read back means nothing will be kept.
+try { localStorage.setItem('rd.probe', '1'); if (localStorage.getItem('rd.probe') !== '1') throw new Error('off'); localStorage.removeItem('rd.probe'); }
+catch (e) { saveFails.set('rd.probe', /quota/i.test(e?.name + ' ' + e?.message) ? 'full' : 'off'); }
+addEventListener('DOMContentLoaded', saveWarn);
+addEventListener('beforeunload', e => { if (saveFails.size) { e.preventDefault(); e.returnValue = ''; } });
 const DEFAULTS = {
   apiKey:'', aiKey:'', aiModel:'gemini-flash-latest',
   rotate:0, mirror:false, facing:'environment', straighten:true, lighting:false,
@@ -1170,7 +1195,7 @@ function idbOpen() {
 }
 async function idbGet(k) { try { const db = await idbOpen(); return await new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); } catch (e) { return null; } }
 async function idbDel(k) { try { const db = await idbOpen(); await new Promise((res, rej) => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').delete(k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); } catch (e) {} }
-async function idbSet(k, v) { try { const db = await idbOpen(); await new Promise((res, rej) => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); }); return true; } catch (e) { return false; } }
+async function idbSet(k, v) { try { const db = await idbOpen(); await new Promise((res, rej) => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); }); return true; } catch (e) { idbSet.err = e; return false; } }
 
 const storedSettings = load(LS.settings, {});
 const S = {
@@ -1203,6 +1228,7 @@ S.settings.infoOpen = false; // the photo gets the whole screen until the first 
 const saveSettings = () => store(LS.settings, S.settings);
 const saveWords = () => store(LS.words, S.words);
 const saveStats = () => store(LS.stats, S.stats);
+addEventListener('pagehide', saveStats);   // a refresh or close also writes today's counts
 const saveLex = () => { store(LS.lex, S.lex); computeLexMax(); };
 function computeLexMax() { S.lexMax = Object.keys(S.lex).reduce((m, k) => { const n = Array.from(k).length; return n >= 2 ? Math.max(m, n) : m; }, 0); }
 computeLexMax();
@@ -1511,6 +1537,7 @@ function rebuild() { if (!S.spread) return; S.model = buildModel(displayChars(S.
 // Each request adds one to S.stats.calls for the month.
 function friendlyError(e) {
   const m = String(e?.message || e);
+  if (m === 'STORAGE_OFF') return 'This browser isn’t letting the app save photos. Private windows and some ways of opening the file block it.';
   if (m === 'STORAGE_FULL') return 'The tablet’s storage for this app is full. Delete some old photos in Your pages (tap “Photo 1 of …” at the bottom left), then try again.';
   if (m === 'NOKEY') return 'Add your Google Cloud API key in Settings to translate sentences.';
   if (m === 'NOAIKEY') return 'Add a Gemini key from Google AI Studio (aistudio.google.com) in Settings.';
@@ -2106,7 +2133,7 @@ async function saveNewSpread(sp) {
   else if (!sp.demo) { const prev = idx.filter(x => x.page != null && !x.demo).pop(); if (prev) entry.page = prev.page + 2; }
   idx.push(entry); idx = sortIndex(idx);
   // No automatic deleting: photos stay until you delete them in Your pages.
-  if (!(await idbSet('sp:' + sp.id, sp))) throw new Error('STORAGE_FULL');
+  if (!(await idbSet('sp:' + sp.id, sp))) throw new Error(/quota/i.test(idbSet.err?.name + ' ' + idbSet.err?.message) ? 'STORAGE_FULL' : 'STORAGE_OFF');   // only a quota error means full
   await idbSet('spreads:index', idx);
   S.index = idx;
 }
@@ -2137,7 +2164,7 @@ function updateFlip() {
   nb.setAttribute('aria-label', last ? 'Add the next pages' : 'Next pages');
   nb.title = last ? 'Add the next pages' : 'Next pages';
   const kp = has ? knownPct(S.model) : null;
-  $('#counter').hidden = !has; $('#counter').textContent = `${i + 1} / ${n}${kp != null ? ` · ${kp}% known` : ''}`; $('#counter').setAttribute('aria-label', `Photo ${i + 1} of ${n}. Your pages.`);
+  $('#counter').hidden = !has; { const e = S.index[i]; $('#counter').innerHTML = has && e && !e.demo ? `<span class="pgedit" data-pg="1">${e.page == null ? 'p. ?' : e.last > e.page ? `p. ${e.page}–${e.last}` : `p. ${e.page}`}</span> · ${i + 1} / ${n}${kp != null ? ` · ${kp}% known` : ''}` : `${i + 1} / ${n}${kp != null ? ` · ${kp}% known` : ''}`; } $('#counter').setAttribute('aria-label', `Photo ${i + 1} of ${n}. Your pages.`);
   $('#counter').setAttribute('aria-label', `Photo ${i + 1} of ${n}. Reorder or delete pages.`);
   $('#stageBar').hidden = !has;
   $('#magBtn').innerHTML = `${ICON.loupe}<span class="lbl">Magnifier</span>`; $('#magBtn').title = 'Magnifier'; $('#magBtn').setAttribute('aria-pressed', String(S.mag));
@@ -2183,6 +2210,7 @@ function updateBar() {
   for (const k of BAR_ITEMS) document.body.classList.toggle('no-' + k, (S.settings.barHide || []).includes(k));
   const n = S.words.length, dueN = dueCount();
   $('#practiceBtn').textContent = dueN ? `Review ${dueN}` : 'Practice';
+  $('#studyBtn').innerHTML = `✍️${dueN ? `<b class="dlab" style="display:inline">${dueN}</b>` : ''}`;
   $('#wordsBtn').innerHTML = `${ICON.bookmark}<span class="lbl">Words</span> <span class="badge">${n}</span>`;
   $('#wordsBtn').setAttribute('aria-pressed', String(!!S.settings.sideOpen));
   $('#wordsBtn').setAttribute('aria-label', `Saved words: ${n}. Show or hide the list.`);
@@ -4229,13 +4257,13 @@ function openMission(stamp) {
   showModal(`${done ? `<div class="bigstamp${stamp ? ' press' : ''}" aria-hidden="true">读</div><h3>Mission complete</h3>` : ''}${missionHTML(true)}`, 'mission');
 }
 // How many times this fortune has come up, counting this one. A repeat is marked as lucky.
-const cookieNth = ck => collect().cookies.filter(x => x.kind === ck.kind && x.i === ck.i && x.d <= ck.d).length || 1;
+const cookieNth = ck => collect().cookies.filter(x => x.kind === ck.kind && x.i === ck.i && x.w === ck.w && x.d <= ck.d).length || 1;
 // A fortune slip. Opens today's cookie first if it is waiting.
 function showCookie(ck) {
   const t = todayStats();
   if (!ck) { ck = t.cookie || (t.sealed && openCookie()); if (!ck) return; updateProgress(); if (!S.info) renderInfo(); if ($('#desk') && !$('#desk').hidden) redrawDesk(); }
   const [zh, py, en] = ck.kind === 'cy' ? CHENGYU[ck.i % CHENGYU.length] : [];
-  showModal(`<div class="slip${ck.gold ? ' gold' : ''}">${ck.kind === 'cy' ? `<p class="cy" lang="zh">${zh}</p><p class="note">${py}</p><p>${esc(en)}</p>` : `<p>“${esc(FORTUNES[ck.i % FORTUNES.length])}”</p>`}</div>
+  showModal(`<div class="slip${ck.gold ? ' gold' : ''}">${ck.kind === 'cy' ? `<p class="cy" lang="zh">${zh}</p><p class="note">${py}</p><p>${esc(en)}</p>` : `<p>“${esc(fortuneText(ck))}”</p>`}</div>
     ${ck.gold ? '<p class="note">Golden · +5 🪙</p>' : ''}${cookieNth(ck) > 1 ? `<p class="note">🍀 Lucky repeat ×${cookieNth(ck)}</p>` : ''}${ck.kind === 'cy' ? `<button class="btn" type="button" data-modal="say" data-say="${esc(zh)}">${ICON.speaker}Listen</button>` : ''}`, 'fortune');
 }
 $('#modal').addEventListener('click', e => {
@@ -4250,7 +4278,7 @@ $('#modal').addEventListener('click', e => {
 /* ================= Rewards: fortune cookies and shop ================= */
 // A complete seal gives one cookie: English, a chengyu (1 in 7), or golden (1 in 20, +5 coins).
 // The shop sells desk items. The lucky bag gives an item the reader does not have yet.
-// The first 40 keep their places: opened cookies are stored by position in this list.
+// Opened cookies are stored by position in this list, so every fortune keeps its place: add at the end, retire in RETIRED.
 const FORTUNES = ['A word you meet today will meet you again.', 'Small pages turn into big books.', 'Your next favorite word is two pages away.',
   'Patience is the quiet teacher you already have.', 'Curiosity opens doors that effort alone cannot.', 'Today’s confusion is tomorrow’s understanding.',
   'A slow reader still reaches the last page.', 'You will understand a sentence that once looked like a wall.', 'Good things come to those who look things up.',
@@ -4280,7 +4308,89 @@ const FORTUNES = ['A word you meet today will meet you again.', 'Small pages tur
   'The story wants to be finished. Help it.', 'Two pages today beat twenty pages someday.', 'A subtitle will go by and you won’t need it.',
   'The word on the tip of your tongue is coming back with friends.', 'Write it by hand once. Your hand remembers longer.', 'Lucky numbers: 6, 8, 9, 66, 88, 168.',
   'Do not fear the four-character phrase. It fears you.', 'An unexpected red envelope of understanding is on its way.',
-  'You are the reader your younger self hoped for.'];
+  'You are the reader your younger self hoped for.',
+  // Oddly specific predictions.
+  'You will recognize a character on the side of a truck. It will mean “logistics.”', 'You will read a stranger’s tattoo. It says “soup.”',
+  'Within the week you will correct a subtitle, quietly, to no one.', 'A relative will forward you a very long message. You will get halfway. This is a record.',
+  'You will spot a typo in Chinese. Tell no one. Savor it.', 'Someone will say a chengyu at dinner and, this time, the nod will be real.',
+  'Before the month ends you will eavesdrop successfully.', 'A karaoke screen is in your future. You will keep up for one whole line.',
+  'On Thursday, a word from this book will appear on a snack wrapper.', 'Soon you will read the group chat instead of asking what happened.',
+  // Mock proverbs.
+  'He who looks up the same word five times has a loyal friend.', 'The dictionary is patient. The plot is not.',
+  'A wise reader knows many characters. A wiser one knows when to guess.', 'Even the dragon started with 一.',
+  'The ox is slow, but the ox finished the chapter.', 'She who saves forty words on one page is reading a dictionary.',
+  // Honest cookies.
+  'You will forget a word tomorrow. It’s fine. It knows the way back.', 'No prophecy today. You did the reading; that was the whole trick.',
+  'The cookie has seen your lookup count and says nothing.', 'Your fortune was written in cursive Chinese. Even the cookie can’t read it.',
+  'Outlook good. Handwriting, less so.', 'Help! I am being held inside a reading app. Send pages.', 'Another cookie tomorrow. Terms: one mission.',
+  'This cookie is real. The calories are imaginary.', 'Lucky numbers: 8, 88, 888. Unlucky number: you know the one.',
+  // Family and food.
+  'Grandma’s recipe says 适量. You now know it means “you’ll figure it out.”', 'A waiter will hand you the Chinese menu without asking. Act casual.',
+  'The day nobody compliments your Chinese is the day it got good.', 'Someone’s mother will offer you more food. You will refuse correctly, three times, and eat it anyway.',
+  'The red envelope is small, but you can finally read what’s printed on it.', 'Traditional or simplified, the dumpling tastes the same.',
+  // Language jokes.
+  '了 does not mean what you think. It does not mean what anyone thinks.', 'mā, má, mǎ, mà. One of these is your mother. Choose carefully.',
+  'There is a measure word for that. There is always a measure word for that.', '的, 地, 得: today you will pick the right one, by accident.',
+  'A character you know is hiding inside a character you don’t.', 'Two third tones in a row: you were doing it right before anyone explained it.',
+  '马马虎虎 has nothing to do with horses or tigers, and nothing to do with today’s reading.', 'Four tones, one neutral, zero excuses.',
+  // Small dares.
+  'Tomorrow: say one new word out loud to someone who didn’t ask.', 'Text someone a word from today. No context.',
+  'Tonight, name three things in the room in Chinese. The ceiling counts.', 'Trace today’s best character on your palm. Invisible ink counts.',
+  // About one of the reader's saved words: {w} is filled in when the cookie opens.
+  '{w} will turn up again within the week. Act like old friends.', 'Lucky word: {w}.', 'Use {w} in a sentence today. A muttered one counts.',
+  'Somewhere, right now, someone is saying {w}.', 'You saved {w}. It has not forgotten.', 'Learn Chinese: {w}. (You already did.)',
+  // Zen, with one real thing in it.
+  'The tea went cold. The chapter was worth it.', 'A bookmark is a promise to come back.', 'The page does not mind how long you take.',
+  'Rain outside, one lamp, one more page.', 'The river does not study the sea. It just goes.', 'Bamboo grows roots for years, then a metre in a week.',
+  'Nobody counts the strokes once the character is written.', 'A lantern lights only the next step. That is enough to walk by.',
+  'The moon in the book is the same moon.', 'Sweep one stair. Then the next.',
+  'What is the sound of one character, read?', 'Before you learned it, the word was already there.', 'The reader who hurries arrives at the same last page.',
+  'You cannot step into the same sentence twice.', 'Empty the cup. Then look up the word.',
+  'Today was enough.', 'One page. Good.', 'You came back. That is the whole method.', 'Nothing to fix today.',
+  // Chengyu, bent into fortunes.
+  'Dripping water wears through stone. The stone would like a word. (滴水穿石)', 'The frog in the well has started reading about the sky. (井底之蛙)',
+  'The old man lost his horse. You lost your place. Both turn out fine. (塞翁失马)', 'Stop waiting by the stump. The rabbit is on page 12. (守株待兔)',
+  'Today you drew the snake and left the legs off. Well done. (画蛇添足)', 'The slow bird set off early and is, frankly, smug about it. (笨鸟先飞)',
+  'The cow has heard the lute before, and is starting to enjoy it. (对牛弹琴)', 'The sheep is gone, the pen is mended, and the next sheep is very impressed. (亡羊补牢)',
+  'You had the whole bamboo in mind. The page only asked for a leaf. (胸有成竹)', 'Halfway is a fine place to rest. It is a poor place to live. (半途而废)',
+  'A thousand li began with one step. The step is still proud of itself. (千里之行，始于足下)', 'One action, two gains: a page read, a cookie opened. (一举两得)',
+  'There is a tiger crouching in your word list, and possibly a dragon. (卧虎藏龙)', 'You forgot to eat. The book is flattered. Go eat. (废寝忘食)',
+  // More oddly specific.
+  'You will understand an announcement on a train, one stop too late.', 'A shampoo bottle is about to become reading material.',
+  'A delivery driver will call. You will say 好 six times and it will work.', 'An elevator will skip the fourth floor, and you will know why.',
+  'You will notice a 福 hung upside down and know it’s on purpose.', 'You will pause a drama to read a text message on someone’s phone. Worth it.',
+  'Someone’s WeChat name will finally make sense. It’s a pun.', 'A scroll on a restaurant wall: you’ll read two characters out of four. The other two are atmosphere.',
+  'You will read the phone of the person in front of you on the subway. It’s about lunch.', 'The fine print on a soy sauce bottle will make you feel powerful.',
+  // More language.
+  '意思 has many 意思. 有意思.', 'East plus west (东西) equals “stuff.” Nobody will explain this to you.', '马上 means the horse is already saddled. The horse is not saddled.',
+  'A turkey is a fire chicken (火鸡). A kangaroo is a pocket rat (袋鼠). This language is on your side.', 'When in doubt, 个. The measure-word police are busy.',
+  'Two is 二, except when it’s 两, which is nearly always.', 'The pinyin q is not a q. The x is not an x. You have made peace with this.',
+  '一 changes its tone depending on the company it keeps. Relatable.', 'Add 吗 and it’s a question. Add 吧 and it’s a suggestion. Add 啊 and it’s your aunt.',
+  'You will lift the pen and forget the character. So does everyone; there’s a chengyu for it. (提笔忘字)', '行 can be read two ways. 行不行? 行.',
+  'The biáng in biángbiáng noodles has 58 strokes. You are excused.', 'Someone is eating vinegar (吃醋) over your reading streak.',
+  // More food and family.
+  '吃了吗 is not really about food. It is entirely about food.', 'Cut fruit will appear at your door without a word. That was the word.',
+  'You will be asked if you’ve eaten, if you’re cold, and when you’re getting married. You can now answer two.', 'Someone will say 随便 about dinner. They do not mean it.',
+  'The fight over the bill is coming. Practise 我来 and move fast.', 'An uncle will explain where a character comes from. It will be wrong and wonderful.',
+  'You will be told to wear more clothes (多穿点). Comply.', 'Drink hot water (多喝热水). The cookie agrees with your mother.',
+  'You will be offered the last dumpling. Refuse once. Only once.', 'The lazy Susan turns toward the one who knows the name of the dish.',
+  'Do not cut longevity noodles. Do not skim long sentences.', 'Grandpa’s newspaper is no longer safe from you.', '慢慢吃. Also 慢慢读.',
+  // Other funny.
+  'Fortune cookies are not from China. Neither is this advice. Read on.', 'Lucky direction: left to right. Occasionally top to bottom.',
+  'Lucky colour: red. It is always red.', 'Reply hazy. Look it up again.', 'Mercury is in retrograde. The characters are unaffected.',
+  'The cookie had something wise to say, but you just read a whole page of that.', 'The cookie is contractually obliged to say you’re doing great. You are, though.',
+  'Do not open the next cookie until tomorrow. You can’t anyway.', 'That’s it. That’s the fortune.'];
+// Fortunes that no longer come out of new cookies. They stay in the list so opened cookies still read the same.
+// These pair two ideas that don't connect (memory vs doubts, a door that opens from writing).
+const RETIRED = new Set([3, 4, 11, 14, 25, 26, 29]);
+// The text of an English cookie. A cookie about a saved word carries that word in ck.w.
+const fortuneText = ck => FORTUNES[ck.i % FORTUNES.length].replace('{w}', ck.w || '这个词');
+// Picks an English fortune. With saved words, 1 in 5 is about one of them.
+function pickFortune() {
+  const live = FORTUNES.map((f, i) => i).filter(i => !RETIRED.has(i)), own = live.filter(i => FORTUNES[i].includes('{w}')), any = a => a[Math.floor(Math.random() * a.length)];
+  if (S.words.length && Math.random() < 1 / 5) return { i:any(own), w:any(S.words).w };
+  return { i:any(live.filter(i => !own.includes(i))) };
+}
 const CHENGYU = [['开卷有益', 'kāi juàn yǒu yì', 'Opening a book always does you good.'], ['温故知新', 'wēn gù zhī xīn', 'Review the old to understand the new.'],
   ['熟能生巧', 'shú néng shēng qiǎo', 'Practice makes perfect.'], ['滴水穿石', 'dī shuǐ chuān shí', 'Dripping water wears through stone.'],
   ['持之以恒', 'chí zhī yǐ héng', 'Keep at it, steadily.'], ['循序渐进', 'xún xù jiàn jìn', 'Make progress step by step.'],
@@ -4296,12 +4406,17 @@ const CHENGYU = [['开卷有益', 'kāi juàn yǒu yì', 'Opening a book always 
   ['三心二意', 'sān xīn èr yì', 'Of two minds, half-hearted.'], ['百闻不如一见', 'bǎi wén bù rú yī jiàn', 'Seeing once beats hearing a hundred times.'],
   ['卧虎藏龙', 'wò hǔ cáng lóng', 'Crouching tiger, hidden dragon: hidden talent.'], ['一日千里', 'yī rì qiān lǐ', 'A thousand li in a day: rapid progress.'],
   ['精益求精', 'jīng yì qiú jīng', 'Keep improving what is already good.'], ['心想事成', 'xīn xiǎng shì chéng', 'May your wishes come true.'],
-  ['万事如意', 'wàn shì rú yì', 'May everything go as you wish.'], ['千里之行，始于足下', 'qiān lǐ zhī xíng, shǐ yú zú xià', 'A journey of a thousand li begins with one step.']];
+  ['万事如意', 'wàn shì rú yì', 'May everything go as you wish.'], ['千里之行，始于足下', 'qiān lǐ zhī xíng, shǐ yú zú xià', 'A journey of a thousand li begins with one step.'],
+  ['日积月累', 'rì jī yuè lěi', 'Days pile up, months add up.'], ['聚沙成塔', 'jù shā chéng tǎ', 'Gather sand and it becomes a pagoda.'],
+  ['豁然开朗', 'huò rán kāi lǎng', 'Suddenly it all opens up clear.'], ['一目十行', 'yī mù shí háng', 'Ten lines at a glance.'],
+  ['囫囵吞枣', 'hú lún tūn zǎo', 'Swallowing the date whole: reading without chewing.'], ['读万卷书，行万里路', 'dú wàn juàn shū, xíng wàn lǐ lù', 'Read ten thousand books, walk ten thousand li.'],
+  ['书中自有黄金屋', 'shū zhōng zì yǒu huáng jīn wū', 'In books there are houses of gold.'], ['磨杵成针', 'mó chǔ chéng zhēn', 'Grind the iron pestle down to a needle.'],
+  ['乐在其中', 'lè zài qí zhōng', 'The joy is in the doing.'], ['水到渠成', 'shuǐ dào qú chéng', 'When the water comes, the channel forms.']];
 // Golden 1 in 20 (+5 coins); otherwise a chengyu 1 in 7; otherwise an English fortune.
 function openCookie() {
   const t = todayStats(), c = collect(); if (!t.sealed || t.cookie) return null;
   const f = S.devCookie, r = Math.random(), gold = f ? f === 'gold' : r < 1 / 20, cy = f === 'cy' || (!f && (gold ? Math.random() < 0.5 : r < 1 / 20 + 1 / 7)); S.devCookie = null;
-  const ck = { d:dayKey(), kind:cy ? 'cy' : 'en', gold, i:Math.floor(Math.random() * (cy ? CHENGYU.length : FORTUNES.length)) };
+  const ck = { d:dayKey(), kind:cy ? 'cy' : 'en', gold, ...(cy ? { i:Math.floor(Math.random() * CHENGYU.length) } : pickFortune()) };
   if (gold) c.coins += 5;
   (c.cookies || (c.cookies = [])).push(ck); t.cookie = ck; saveStats(); return ck;
 }
@@ -4309,7 +4424,7 @@ function openCookie() {
 function cookieHTML(ck) {
   if (!todayStats().sealed) return `<div class="srow"><span class="te dim">🥠</span><span class="tx">Fortune cookie<small>Complete today’s mission</small></span></div>`;
   if (!ck) return `<div class="srow"><span class="te">🥠</span><span class="tx">Fortune cookie<small>Mission complete</small></span><button class="btn primary" type="button" id="openCookie">Open</button></div>`;
-  const body = ck.kind === 'cy' ? (([zh, py, en]) => `<span class="cy" lang="zh">${zh}</span><small>${py} · ${esc(en)}</small>`)(CHENGYU[ck.i % CHENGYU.length]) : `<span class="fx">“${esc(FORTUNES[ck.i % FORTUNES.length])}”</span>`;
+  const body = ck.kind === 'cy' ? (([zh, py, en]) => `<span class="cy" lang="zh">${zh}</span><small>${py} · ${esc(en)}</small>`)(CHENGYU[ck.i % CHENGYU.length]) : `<span class="fx">“${esc(fortuneText(ck))}”</span>`;
   return `<div class="srow cookie-row${ck.gold ? ' gold' : ''}"><span class="te">🥠</span><span class="tx">${body}${ck.gold ? '<small>Golden · +5 🪙</small>' : ''}</span>${ck.kind === 'cy' ? `<button class="btn icon-btn" type="button" id="sayCookie" aria-label="Listen">${ICON.speaker}</button>` : ''}</div>`;
 }
 // Price follows size: small things 60, things for the desk 120, furniture 240.
@@ -4555,7 +4670,7 @@ function deskHTML() {
   const slots = (k, cur) => setItems(k).map((e, j) => `<span class="slot${j === 6 ? ' center' : ''}${cur ? (j < c.track.slot ? ' got' : j === c.track.slot ? ' next' : ' future') : ' future'}">${e}</span>`).join('');
   let k = c.track.set; const later = [1, 2, 3].map(() => { k = nextSet(k); return `<div><span class="note">${esc(SETS[k][0])} <span lang="zh">${SETS[k][1]}</span></span><div class="set">${slots(k, false)}</div></div>`; }).join('');
   const owned = Object.keys(c.owned), past = (c.cookies || []).slice().reverse();   // newest first, today's included once opened
-  const cookieLine = ck => `<li class="${ck.gold ? 'gold' : ''}" data-ck="${c.cookies.indexOf(ck)}">${ck.kind === 'cy' ? (([zh2, py, en]) => `<span lang="zh">${zh2}</span> <span class="note">${py} · ${esc(en)}</span>`)(CHENGYU[ck.i % CHENGYU.length]) : `“${esc(FORTUNES[ck.i % FORTUNES.length])}”`}${cookieNth(ck) > 1 ? ` <span class="note">🍀×${cookieNth(ck)}</span>` : ''}</li>`;
+  const cookieLine = ck => `<li class="${ck.gold ? 'gold' : ''}" data-ck="${c.cookies.indexOf(ck)}">${ck.kind === 'cy' ? (([zh2, py, en]) => `<span lang="zh">${zh2}</span> <span class="note">${py} · ${esc(en)}</span>`)(CHENGYU[ck.i % CHENGYU.length]) : `“${esc(fortuneText(ck))}”`}${cookieNth(ck) > 1 ? ` <span class="note">🍀×${cookieNth(ck)}</span>` : ''}</li>`;
   return `<div class="desk">
     <div class="dhead"><span class="coins">🪙 ${c.coins}</span><span class="note">${owned.length} item${owned.length === 1 ? '' : 's'}${owned.length ? ' · drag to arrange' : ''}</span>${owned.some(specialKind) ? `<button class="glamtog" type="button" data-glam="1" aria-pressed="${S.settings.glam !== false}" title="Glow on special items" aria-label="Glow on special items">✨</button>` : ''}</div>
     ${boardHTML()}
@@ -4905,18 +5020,18 @@ function renderPages() {
   const n = S.index.length, k = Object.keys(S.pend).length;
   $('#pagesApply').hidden = !k; $('#pendN').textContent = `${k} change${k === 1 ? '' : 's'}`;
   $('#pagesTitle').textContent = 'Your pages';   // the count and storage are in the line under the title
+  $('#pagesCur').hidden = !S.spread || n < 2;
   if (!n) { $('#pgrid').innerHTML = '<p class="note">No pages yet.</p>'; return; }
   $('#pgrid').innerHTML = S.index.map((e, i) => {
     const c = pageCache.get(e.id) || {}, date = new Date(e.at || Date.now()).toLocaleDateString(undefined, { month:'short', day:'numeric' });
     const open = S.spread?.id === e.id;
     return `<div class="pcard" aria-current="${open}">
       <button class="thumb" type="button" data-open="${e.id}" aria-label="Open photo ${i + 1}">${c.url ? `<img src="${c.url}" alt="" loading="lazy">` : ''}</button>
-      <div class="meta"><span>${pageName(e, i)}</span>
+      <div class="meta"><button type="button" class="pname" data-pgfix="${e.id}" title="Change page number">${pageName(e, i)}</button>
         <details class="pmenu"><summary aria-label="More for this photo">⋯</summary><div class="pmenu-list">
           ${c.orig ? `<button type="button" data-orig="${e.id}">Original photo</button>` : ''}
           <button type="button" class="del" data-del="${e.id}">Delete pages</button></div></details></div>
       <div class="ptags">${(() => { const d = S.pend[e.id] ?? c.done; return `<button type="button" class="ptag${d ? ' ok' : ''}${e.id in S.pend ? ' pend' : ''}" data-done="${e.id}" aria-pressed="${d}" title="Tap to change">${d ? 'Finished' : 'Not finished'}</button>`; })()}${open ? '<span class="ptag now">Open now</span>' : ''}${e.demo ? '<span class="ptag">Sample</span>' : ''}<span class="pdate">${esc(date)}</span></div>
-      <div class="row"><label class="pgl">First page <input class="pgnum" type="number" inputmode="numeric" min="1" max="9999" placeholder="e.g. 12" data-id="${e.id}" value="${e.page ?? ''}"></label></div>
     </div>`;
   }).join('');
 }
@@ -4927,10 +5042,11 @@ async function openOriginal(id) {
 }
 const closeOriginal = () => { $('#origView').hidden = true; };
 $('#origClose').addEventListener('click', closeOriginal);
-async function setPageNumber(id, value) {
+async function setPageNumber(id, value, span) {
   const e = S.index.find(x => x.id === id); if (!e) return;
-  const v = parseInt(value, 10), span = e.last > e.page ? e.last - e.page : 0;   // a two-page photo moves both numbers
-  if (v > 0) { e.page = v; if (span) e.last = v + span; } else { delete e.page; delete e.last; }
+  span ??= e.last > e.page ? e.last - e.page : 0;
+  const v = parseInt(value, 10);   // a two-page photo moves both numbers
+  if (v > 0) { e.page = v; if (span) e.last = v + span; else delete e.last; } else { delete e.page; delete e.last; }
   S.index = sortIndex(S.index); await idbSet('spreads:index', S.index);
   renderPages(); updateFlip();
 }
@@ -4948,6 +5064,7 @@ async function deletePage(id) {
 }
 $('#pgrid').addEventListener('change', e => { const inp = e.target.closest('.pgnum'); if (inp) setPageNumber(inp.dataset.id, inp.value); });
 $('#pgrid').addEventListener('click', async e => {
+  const pf = e.target.closest('[data-pgfix]'); if (pf) { openPageFix(pf.dataset.pgfix); return; }
   const og = e.target.closest('[data-orig]'); if (og) { openOriginal(og.dataset.orig); return; }
   const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]');
   if (o) { const sp = await idbGet('sp:' + o.dataset.open); closePages(); if (sp) await showSpread(sp); }
@@ -4956,6 +5073,7 @@ $('#pgrid').addEventListener('click', async e => {
   else if (e.target.closest('[data-unfinish]')) { const id = e.target.closest('[data-unfinish]').dataset.unfinish; const sp = S.spread?.id === id ? S.spread : await idbGet('sp:' + id); if (sp) undoFinish(sp); }
 });
 $('#pagesClose').addEventListener('click', closePages);
+$('#pagesCur').addEventListener('click', () => $('#pgrid .pcard[aria-current="true"]')?.scrollIntoView({ behavior:'smooth', block:'center' }));
 // Finished / Not finished from the overview, applied together. Finishing here only marks the pages done:
 // its words become known as with Finish, but no pages count for today. Undo takes the words back.
 $('#pendCancel').addEventListener('click', () => { S.pend = {}; renderPages(); });
@@ -4969,7 +5087,18 @@ $('#pendApply').addEventListener('click', async () => {
   }
   S.pend = {}; updateProgress(); updateFlip(); renderPages(); toast('Changes applied');
 });
-$('#counter').addEventListener('click', openPages);
+// The page part of the counter fixes the book page number in place; the rest opens the overview.
+function openPageFix(id) {
+  const e = id ? S.index.find(x => x.id === id) : S.index[curPos()]; if (!e) return;
+  let span = e.last > e.page ? e.last - e.page : 0;   // a two-page photo: the second number follows the first
+  showModal(`<h3>Page number</h3><form class="pgfix" id="pgFix"><button class="btn" type="button" data-pgstep="-1" aria-label="One less">−</button><input id="pgFixN" type="number" inputmode="numeric" min="1" max="9999" value="${e.page ?? ''}" aria-label="First page in this photo"><span id="pgFixL"></span><button class="btn" type="button" data-pgstep="1" aria-label="One more">+</button><button class="btn primary" type="submit">Done</button></form><div class="seg pgspan" role="group" aria-label="Pages in this photo"><button type="button" data-pgspan="0" aria-pressed="${!span}">1 page</button><button type="button" data-pgspan="1" aria-pressed="${!!span}">2 pages</button></div>`, 'pgfixm');
+  const inp = $('#pgFixN'), last = () => { const l = $('#pgFixL'); if (l) l.textContent = span && parseInt(inp.value, 10) > 0 ? `– ${parseInt(inp.value, 10) + span}` : ''; };
+  $('#modal .pgspan').addEventListener('click', ev => { const b = ev.target.closest('[data-pgspan]'); if (!b) return; span = +b.dataset.pgspan; for (const x of $('#modal .pgspan').children) x.setAttribute('aria-pressed', String(x === b)); last(); });
+  inp.focus(); inp.select(); last(); inp.addEventListener('input', last);
+  $('#pgFix').addEventListener('click', ev => { const s = ev.target.closest('[data-pgstep]'); if (s) { inp.value = Math.max(1, (parseInt(inp.value, 10) || 0) + +s.dataset.pgstep); last(); } });
+  $('#pgFix').addEventListener('submit', async ev => { ev.preventDefault(); const id = e.id, v = inp.value; closeModal(); await setPageNumber(id, v, span); });
+}
+$('#counter').addEventListener('click', ev => ev.target.closest('[data-pg]') ? openPageFix() : openPages());
 
 $('#pracClose').addEventListener('click', () => { try { S.writer?.cancelQuiz(); } catch (e) {} closeSheet(pracSheet); });
 $('#nextWordBtn').addEventListener('click', practiceNext);
@@ -5216,6 +5345,17 @@ $('#replayBtn').addEventListener('click', () => $('#replayPick').click());
 // Makes today's cookie ready to open (marks the mission done), then shows it on the Desk.
 // Developer: a cookie ready to open (any, chengyu or golden), then the Desk.
 const devCookie = kind => { const t = todayStats(); t.sealed = true; delete t.cookie; S.devCookie = kind; saveStats(); updateProgress(); closeSheet(setSheet); openStats('desk'); };
+// Developer: five copies of the sample pages with their own page numbers, to try the overview without photos.
+$('#testPagesBtn').addEventListener('click', async () => {
+  busy('Making test pages…');
+  try {
+    const base = await buildDemo(), ids = [], start = Math.max(0, ...S.index.map(e => e.last ?? e.page ?? 0)) + 1;
+    for (let k = 0; k < 5; k++) { const sp = { ...base, chars:structuredClone(base.chars), demo:false, id:undefined, at:Date.now() + k }; await saveNewSpread(sp); ids.push(sp.id); }
+    const idx = (await idbGet('spreads:index')) || [];
+    ids.forEach((id, k) => { const e = idx.find(x => x.id === id); if (e) { e.page = start + k * 2; e.last = e.page + 1; } });
+    S.index = sortIndex(idx); await idbSet('spreads:index', S.index); updateFlip(); busy(false); closeSheet(setSheet); openPages();
+  } catch (e) { busy(false); toast(friendlyError(e), 6000); }
+});
 $('#cookieBtn').addEventListener('click', () => devCookie(null));
 $('#cookieCyBtn').addEventListener('click', () => devCookie('cy'));
 $('#cookieGoldBtn').addEventListener('click', () => devCookie('gold'));
@@ -5348,7 +5488,8 @@ async function buildDemo() {
 }
 async function startDemo() {
   busy('Setting up the sample pages…');
-  try { const sp = await buildDemo(); await saveNewSpread(sp); await showSpread(sp); busy(false); toast('Tap a word. Double-tap to save. Press and hold for the sentence.', 5000); }
+  try { const sp = await buildDemo(); try { await saveNewSpread(sp); } catch (e) { sp.id ||= 'demo'; }   // the sample still opens when it can’t be saved
+    await showSpread(sp); busy(false); toast('Tap a word. Double-tap to save. Press and hold for the sentence.', 5000); }
   catch (e) { busy(false); toast('The sample pages didn’t load: ' + e.message, 6000); }
 }
 
@@ -5417,6 +5558,7 @@ $('#alertBtn').addEventListener('click', () => {
   openStats('desk');
 });
 $('#deskBtn').addEventListener('click', () => openStats('desk'));
+$('#studyBtn').addEventListener('click', () => openStats('study'));
 // Progress, Desk and Settings are folder tabs of one screen (Settings is its own sheet underneath).
 function goTab(tab) {
   const open = el => el.classList.contains('open');
