@@ -250,13 +250,6 @@ body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !im
 .viewseg{border:0}.viewseg button{min-height:44px;padding:0 6px;display:inline-flex;align-items:center}.viewseg .i{width:20px;height:20px}
 .counter{position:absolute;left:12px;bottom:12px;z-index:4;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:0 14px;min-height:44px;font-size:14.5px;font-weight:700;color:var(--ink);box-shadow:var(--shadow);cursor:pointer}
 .pages-help{max-width:1100px;margin:16px auto 0;padding:0 20px}
-/* Books: the picker in Your pages and in Add pages, the title form and the Move to list. */
-.bookbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}.bookbar:empty{display:none}
-.booksel{min-height:44px;max-width:min(320px,70vw);padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;font-weight:700;font-size:17px}
-#capSheet .sheet-bar h2{white-space:nowrap;margin-right:0}#capSheet .sheet-bar .spacer{flex:1}#capSheet .sheet-bar .booksel{min-width:0;flex:0 1 auto}
-.bookform{display:flex;gap:8px;margin-top:12px}.bookform input{flex:1;min-width:0;min-height:44px;font-size:18px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)}
-.bookpick{display:flex;flex-direction:column;gap:8px;margin-top:12px}.bookpick .btn{justify-content:flex-start}
-.emptybook{color:var(--muted)}
 .pages-help p{margin:0}
 .linklike.del{color:#B3261E;margin-left:6px}
 .pcard .row{flex-wrap:nowrap !important}
@@ -899,7 +892,6 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
         <div class="welcome">
           <h1>翻开书，开始读</h1>
           <p class="sub">Open your book and start reading.</p>
-          <p class="emptybook" id="emptyBook" hidden><span id="emptyBookT"></span> <button class="linklike" id="emptyBookBtn" type="button">Your books</button></p>
           <p>Photograph one or two pages at a time. Tap any word for pinyin, meaning and sound. Double-tap to save it. Press and hold to translate the whole sentence.</p>
           <div class="row">
             <button class="btn primary" id="emptyCapture" type="button"></button>
@@ -926,7 +918,6 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
       <div class="adj" id="adj1"><span class="who">Right page</span><button class="btn" type="button" data-side="1" data-step="-0.1" aria-label="Turn right page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="1" aria-label="Right page tilt"><button class="btn" type="button" data-side="1" data-step="0.1" aria-label="Turn right page clockwise">⟳</button><output>0.0°</output></div>
       <div class="adj"><span class="who">Clean up</span><div class="seg" id="cleanSeg" role="group" aria-label="Clean up"><button type="button" data-clean="0">Off</button><button type="button" data-clean="1">Even</button><button type="button" data-clean="2">Strong</button></div></div>
       <button class="btn" id="perspBtn" type="button" aria-pressed="false">Fix perspective</button>
-      <button class="btn" id="tiltReset" type="button">Reset</button>
       <button class="btn" id="tiltCancel" type="button">Cancel</button>
       <button class="btn primary" id="tiltDone" type="button">Done</button>
     </div>
@@ -943,7 +934,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 </div>
 
 <section class="sheet" id="capSheet" aria-label="Add pages">
-  <div class="sheet-bar"><h2>Add pages to</h2><select id="capBook" class="booksel" aria-label="Book these pages go into"></select><span class="spacer"></span><button class="btn" id="capClose" type="button">Cancel</button></div>
+  <div class="sheet-bar"><h2>Add pages</h2><button class="btn" id="capClose" type="button">Cancel</button></div>
   <div class="cam">
     <video id="video" playsinline muted autoplay></video>
     <canvas id="reviewCanvas" hidden></canvas>
@@ -1072,7 +1063,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 </section>
 <section class="sheet" id="pagesSheet" aria-label="Your pages">
   <div class="sheet-bar"><button class="brand" id="pagesClose" type="button" aria-label="Return to reading" title="Return to reading"><span class="seal tall" aria-hidden="true"><i>书</i><i>桌</i></span></button><h2 id="pagesTitle">Your pages</h2></div>
-  <div class="scroll"><div class="pages-help"><div class="bookbar" id="bookBar"></div><p class="note" id="storageLine"></p><button class="btn" id="dropOrig" type="button" hidden></button><button class="btn" id="pagesCur" type="button">Skip to current page</button></div><div class="pgrid" id="pgrid"></div></div>
+  <div class="scroll"><div class="pages-help"><p class="note" id="storageLine"></p><button class="btn" id="dropOrig" type="button" hidden></button><button class="btn" id="pagesCur" type="button">Skip to current page</button></div><div class="pgrid" id="pgrid"></div></div>
   <div class="applybar" id="pagesApply" hidden><span id="pendN"></span><button class="btn" id="pendCancel" type="button">Cancel</button><button class="btn primary" id="pendApply" type="button">Apply changes</button></div>
 </section>
 <section class="sheet" id="revSheet" aria-label="Daily review">
@@ -1121,7 +1112,6 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
       S.known     known words            S.stats   daily stats, streak data, rewards (S.stats.collect),
                                                    reading speed (S.stats.rt running, S.stats.speed finished)
       S.index     photo order            S.spread  the open photo      S.model  its sentences and words
-      S.books     [{ id, title }]        S.book    the open photo's book (each S.index entry has .book)
       S.sel       the selection          S.info    what the word panel shows
     Save functions (saveWords, saveStats, ...) write S to storage. Change S, then save, then redraw.
 
@@ -1198,7 +1188,7 @@ const S = {
   voices:[], warnedVoice:false,
   stream:null, raw:null, revRot:0, revMir:false,
   writer:null, practiceWord:null, practiceChar:0, wake:null,
-  index:[], books:[], book:load('rd.book', null), addTo:null, mag:false, shownURL:null, revStraight:true
+  index:[], mag:false, shownURL:null, revStraight:true
 };
 if (!S.stats.days) S.stats.days = {};
 if ((storedSettings.v || 0) < 3) { S.settings.colorWords = false; S.settings.v = 3; try { localStorage.setItem(LS.settings, JSON.stringify(S.settings)); } catch (e) {} }
@@ -1756,14 +1746,7 @@ async function startCamera() {
     try { await S.stream.getVideoTracks()[0].applyConstraints({ advanced:[{ focusMode:'continuous' }] }); } catch (e) {}
   } catch (e) { camMsg('The camera didn’t open (' + (e.name || e.message) + '). Allow camera access for this site in Chrome, or use “Choose a photo”.'); }
 }
-// The book picker in the Add pages bar. "New book…" asks for a title and picks the new book.
-function fillCapBook() { S.addTo = addTarget(); $('#capBook').innerHTML = bookOptions(S.addTo, false); }
-$('#capBook').addEventListener('change', async e => {
-  if (e.target.value === '+new') { const t = await askBookTitle('New book'); if (t !== undefined) S.addTo = addBook(t).id; }
-  else S.addTo = e.target.value;
-  fillCapBook();
-});
-async function openCapture() { fillCapBook(); openSheet(capSheet); setCapMode('live'); $('#guide span').textContent = S.settings.onePage ? 'Fit the page inside the frame' : 'Line up the spine with the center line'; await startCamera(); }
+async function openCapture() { openSheet(capSheet); setCapMode('live'); $('#guide span').textContent = S.settings.onePage ? 'Fit the page inside the frame' : 'Line up the spine with the center line'; await startCamera(); }
 function closeCapture() { stopCamera(); S.raw = null; closeSheet(capSheet); }
 async function shoot() {
   if (!S.stream) return;
@@ -1966,18 +1949,15 @@ function parseVision(blocks, sideOf, mapOf, vertical) {
   }
   return chars;
 }
-// Crop margin, in character heights, around the text. Between two pages the gap is one margin (half on each page).
-// Past the photo or the gutter, the margin is filled with paper color instead of being cut off.
-const CROP_MARGIN = 10;
 function textBounds(chars, W, H) {
   const bs = chars.map(c => c.box).filter(Boolean);
-  if (bs.length < 15) return { x:0, y:0, w:W, h:H, left:0, right:W, ch:20, m:0 };
+  if (bs.length < 15) return { x:0, y:0, w:W, h:H, left:0, right:W, ch:20 };
   const hs = bs.map(b => b.y1 - b.y0).sort((a, b) => a - b), ch = hs[hs.length >> 1] || 20;
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
   for (const b of bs) { x0 = Math.min(x0, b.x0); y0 = Math.min(y0, b.y0); x1 = Math.max(x1, b.x1); y1 = Math.max(y1, b.y1); }
-  const left = x0, right = x1, m = ch * CROP_MARGIN;
-  x0 = Math.floor(x0 - m); y0 = Math.floor(y0 - m); x1 = Math.ceil(x1 + m); y1 = Math.ceil(y1 + m);
-  return { x:x0, y:y0, w:x1 - x0, h:y1 - y0, left, right, ch, m };
+  const left = x0, right = x1, m = Math.max(ch * 4, Math.max(W, H) * 0.04);
+  x0 = Math.max(0, Math.floor(x0 - m)); y0 = Math.max(0, Math.floor(y0 - m)); x1 = Math.min(W, Math.ceil(x1 + m)); y1 = Math.min(H, Math.ceil(y1 + m));
+  return { x:x0, y:y0, w:x1 - x0, h:y1 - y0, left, right, ch };
 }
 function paperColor(src) {
   const c = document.createElement('canvas'); c.width = c.height = 24;
@@ -1985,16 +1965,13 @@ function paperColor(src) {
   x.drawImage(src, src.width * 0.3, src.height * 0.3, src.width * 0.4, src.height * 0.4, 0, 0, 24, 24);
   const d = x.getImageData(0, 0, 24, 24).data, px = [];
   for (let i = 0; i < d.length; i += 4) px.push([0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2], d[i], d[i + 1], d[i + 2]]);
-  px.sort((a, b) => a[0] - b[0]); const v = Math.round(clamp(px[Math.floor(px.length * 0.85)][0], 220, 255));   // a neutral white, as bright as the paper
-  return `rgb(${v},${v},${v})`;
+  px.sort((a, b) => a[0] - b[0]); const q = px[Math.floor(px.length * 0.85)];
+  return `rgb(${q[1]},${q[2]},${q[3]})`;
 }
-// clip [x0, x1]: only that band of the turned photo is drawn (one page up to the gutter); the rest stays paper.
-function renderRotCrop(src, R, crop, fill, clip) {
+function renderRotCrop(src, R, crop, fill) {
   const c = document.createElement('canvas'); c.width = crop.w; c.height = crop.h;
   const x = c.getContext('2d'); x.fillStyle = fill || paperColor(src); x.fillRect(0, 0, crop.w, crop.h);
-  x.translate(-crop.x, -crop.y);
-  if (clip) { x.beginPath(); x.rect(clip[0], crop.y, clip[1] - clip[0], crop.h); x.clip(); }
-  x.translate(R.W / 2, R.H / 2); x.rotate(R.phi);
+  x.translate(-crop.x, -crop.y); x.translate(R.W / 2, R.H / 2); x.rotate(R.phi);
   x.drawImage(src, -src.width / 2, -src.height / 2);
   return c;
 }
@@ -2002,23 +1979,33 @@ function renderRotCrop(src, R, crop, fill, clip) {
 // cropped up to the gutter, and the two pages are laid side by side again.
 function composePages(src, chars, Rs, split, crop = true) {
   const H = src.height, sides = [0, 1].filter(s => chars.some(c => c.side === s && c.box));
-  const parts = sides.map(s => {
-    const R = Rs[s], tb = textBounds(chars.filter(c => c.side === s), R.W, R.H), cr = crop ? tb : { ...tb, x:0, y:0, w:R.W, h:R.H };   // not cropped: the whole half, up to the gutter
-    let clip = null;
-    if (sides.length === 2) {   // each page ends at the gutter; its margin past the gutter is paper, so no text from the other page shows
-      const sx = Math.round(R.map(split, H / 2)[0]), m = crop ? tb.m / 2 : cr.ch * 0.6;   // half a margin each, so the gap between the texts is one margin
-      if (s === 0) { const x1 = crop ? Math.ceil(cr.right + m) : Math.max(Math.min(cr.x + cr.w, sx), Math.ceil(cr.right + m)); cr.w = Math.max(10, x1 - cr.x); clip = [cr.x, Math.max(sx, cr.right)]; }
-      else { const x0 = crop ? Math.floor(cr.left - m) : Math.min(Math.max(cr.x, sx), Math.floor(cr.left - m)); cr.w = cr.x + cr.w - x0; cr.x = x0; clip = [Math.min(sx, cr.left), cr.x + cr.w]; }
+  const tbs = sides.map(s => textBounds(chars.filter(c => c.side === s), Rs[s].W, Rs[s].H));
+  // A short page (a chapter opening or ending) is not cropped to its text: it keeps the whole page.
+  const short = i => tbs.length === 2 && tbs[i].h < tbs[1 - i].h * 0.6;
+  const parts = sides.map((s, i) => {
+    const R = Rs[s], tb = tbs[i], cr = crop && !short(i) ? tb : { ...tb, x:0, y:0, w:R.W, h:R.H };   // not cropped: the whole half, up to the gutter
+    if (sides.length === 2) {
+      const sx = Math.round(R.map(split, H / 2)[0]);
+      if (s === 0) { const x1 = Math.max(Math.min(cr.x + cr.w, sx), Math.ceil(cr.right + cr.ch * 0.6)); cr.w = Math.max(10, x1 - cr.x); }
+      else { const x0 = Math.min(Math.max(cr.x, sx), Math.floor(cr.left - cr.ch * 0.6)); cr.w = cr.x + cr.w - x0; cr.x = x0; }
     }
-    return { s, R, cr, clip };
+    return { s, R, cr };
   });
-  const gap = parts.length === 2 && !crop ? Math.round(src.width * 0.02) : 0;   // cropped pages already carry a margin on the gutter side
+  // Crop both pages to the same top and bottom, so they keep the height they had in the photo.
+  // Cropped one by one, a page whose text starts lower (a chapter opening) was lifted up against the other.
+  // A short page's height is not counted: the full page height would bring in the table under the book.
+  if (crop && parts.length === 2) {
+    const tall = parts.filter((o, i) => !short(i));
+    const y0 = Math.min(...tall.map(o => o.cr.y)), y1 = Math.max(...tall.map(o => o.cr.y + o.cr.h));
+    for (const o of parts) { o.cr.y = y0; o.cr.h = y1 - y0; }
+  }
+  const gap = parts.length === 2 ? Math.round(src.width * 0.02) : 0;
   const out = document.createElement('canvas');
   out.width = parts.reduce((a, o) => a + o.cr.w, 0) + gap; out.height = Math.max(...parts.map(o => o.cr.h));
   const fill = paperColor(src), ctx = out.getContext('2d'); ctx.fillStyle = fill; ctx.fillRect(0, 0, out.width, out.height);
   let x = 0;
   for (const o of parts) {
-    ctx.drawImage(renderRotCrop(src, o.R, o.cr, fill, o.clip), x, 0);
+    ctx.drawImage(renderRotCrop(src, o.R, o.cr, fill), x, 0);
     for (const c of chars) if (c.side === o.s && c.box) { c.box.x0 += x - o.cr.x; c.box.x1 += x - o.cr.x; c.box.y0 -= o.cr.y; c.box.y1 -= o.cr.y; }
     x += o.cr.w + gap;
   }
@@ -2084,12 +2071,11 @@ async function readPhoto(src, rot, mirror, straighten, onePage) {
   try { fta = await visionOCR(await blobB64(blob0)); }
   finally { if (S.settings.devVision && S.lastVision) saveVisionReply(c, rot, mirror, straighten); }
   if (!fta) throw new Error('No text found. Check focus and lighting, then try again.');
-  const keep = structuredClone(fta);   // kept with the photo, so the page can be laid out again
-  // The photo is stored as taken: the characters stay in its coordinates, and Straighten and Crop are applied when it is drawn.
-  const { chars, vertical } = layoutFromVision(c, fta, false, onePage, false);
+  const keep = structuredClone(fta);   // kept with the photo, so Adjust photo can redo Straighten and Crop
+  const { chars, out, vertical } = layoutFromVision(c, fta, straighten, onePage);
   if (!chars.some(x => isCJK(x.ch))) throw new Error('No Chinese text found. Check focus and lighting, then try again.');
-  return { v:2, blob:blob0, fta:keep, chars, w:c.width, h:c.height, auto:autoTilt(keep, c.width, onePage, vertical), straighten:!!straighten, crop:!!(straighten || onePage || vertical), adj:[0, 0],
-    maxReached:-1, done:false, demo:false, at:Date.now(), ...(vertical ? { vertical:true } : {}), ...(onePage ? { onePage:true, split:c.width } : {}) };
+  const blob = out === c ? blob0 : await canvasBlob(out, 'image/jpeg', 0.9);
+  return { blob, ...(out !== c ? { orig:blob0 } : { raw:true }), fta:keep, opt:{ straighten:!!straighten, crop:!!(straighten || onePage || vertical) }, chars, w:out.width, h:out.height, maxReached:-1, done:false, demo:false, at:Date.now(), ...(vertical ? { vertical:true } : {}), ...(onePage ? { onePage:true, split:out.width } : {}) };
 }
 // Several photos picked at once: no review step; the saved rotation is used and Straighten stays on,
 // since it is what turns a sideways photo upright.
@@ -2132,9 +2118,9 @@ async function saveNewSpread(sp) {
   let idx = (await idbGet('spreads:index')) || [];
   if (sp.demo) for (const old of idx.filter(x => x.demo)) await idbDel('sp:' + old.id);
   idx = idx.filter(x => x.id !== sp.id && !(sp.demo && x.demo));
-  const entry = { id:sp.id, at:sp.at, demo:!!sp.demo, book:sp.demo ? demoBook().id : addTarget() }, found = bookPages(sp);
+  const entry = { id:sp.id, at:sp.at, demo:!!sp.demo }, found = bookPages(sp);
   if (found) { entry.page = found[0]; if (found[1] > found[0]) entry.last = found[1]; }   // a two-page photo keeps both numbers
-  else if (!sp.demo) { const prev = idx.filter(x => x.page != null && !x.demo && x.book === entry.book).pop(); if (prev) entry.page = prev.page + 2; }
+  else if (!sp.demo) { const prev = idx.filter(x => x.page != null && !x.demo).pop(); if (prev) entry.page = prev.page + 2; }
   idx.push(entry); idx = sortIndex(idx);
   // No automatic deleting: photos stay until you delete them in Your pages.
   if (!(await idbSet('sp:' + sp.id, sp))) throw new Error(/quota/i.test(idbSet.err?.name + ' ' + idbSet.err?.message) ? 'STORAGE_FULL' : 'STORAGE_OFF');   // only a quota error means full
@@ -2150,78 +2136,25 @@ function sortIndex(idx) {
     return (a.at || 0) - (b.at || 0) || i - j;
   }).map(x => x[0]);
 }
-
-/* ================= Books ================= */
-// Every photo belongs to one book: S.index entries carry book, S.books = [{ id, title }] (IndexedDB "books").
-// The current book (S.book) is the open photo's book. Flipping, the counter and Your pages show only its photos.
-// New photos go into S.addTo, chosen at the top of Add pages (the current book unless you pick another).
-const DEMO_BOOK = 'demo';
-const inBook = () => S.index.filter(x => x.book === S.book);
-const realBooks = () => S.books.filter(b => b.id !== DEMO_BOOK);
-const bookTitle = id => S.books.find(b => b.id === id)?.title || 'Book';
-const saveBooks = () => idbSet('books', S.books);
-function addBook(title) {
-  const b = { id:'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), title:(title || '').trim() || `Book ${realBooks().length + 1}` };
-  S.books.push(b); saveBooks(); return b;
-}
-function demoBook() { let b = S.books.find(x => x.id === DEMO_BOOK); if (!b) { b = { id:DEMO_BOOK, title:'Sample pages' }; S.books.push(b); saveBooks(); } return b; }
-// The book new photos go into: the one picked in Add pages, else the current book, else the first, else a new "My book".
-function addTarget() {
-  const ok = id => id && id !== DEMO_BOOK && S.books.some(b => b.id === id);
-  return ok(S.addTo) ? S.addTo : ok(S.book) ? S.book : (realBooks()[0] || addBook('My book')).id;
-}
-function setBook(id) { S.book = id || null; store('rd.book', S.book); }
-// Photos from before books, or from a backup without them, go into the first book ("My book"); sample pages into their own.
-async function ensureBooks() {
-  let changed = false;
-  for (const e of S.index) {
-    if (e.book && S.books.some(b => b.id === e.book)) continue;
-    if (e.demo) e.book = demoBook().id;
-    else if (e.book) { S.books.push({ id:e.book, title:`Book ${realBooks().length + 1}` }); saveBooks(); }
-    else e.book = (realBooks()[0] || addBook('My book')).id;
-    changed = true;
-  }
-  if (changed) await idbSet('spreads:index', S.index);
-}
-// Asks for a book title. Resolves to the text, or undefined when closed.
-function askBookTitle(head, value = '') {
-  return new Promise(res => {
-    showModal(`<h3>${esc(head)}</h3><form class="bookform" id="bookForm"><input id="bookName" type="text" lang="zh" maxlength="80" value="${esc(value)}" placeholder="Book title" aria-label="Book title" autocomplete="off"><button class="btn primary" type="submit">${value ? 'Rename' : 'Create'}</button></form>`);
-    S.modalDone = res;
-    const inp = $('#bookName'); inp.focus(); inp.select();
-    $('#bookForm').addEventListener('submit', ev => { ev.preventDefault(); closeModal(inp.value); });
-  });
-}
-const bookOptions = (sel, withDemo) => (withDemo ? S.books : realBooks()).map(b => `<option value="${b.id}"${b.id === sel ? ' selected' : ''}>${esc(b.title)}</option>`).join('') + '<option value="+new">New book…</option>';
-// Opens a book on its first unfinished photo (or its last), or the empty screen when it has none.
-async function openBook(id) {
-  setBook(id);
-  const list = inBook(), e = list.find(x => !pageCache.get(x.id)?.done) || list[list.length - 1];
-  const sp = e ? await idbGet('sp:' + e.id) : null;
-  if (sp) await showSpread(sp);
-  else { if (S.tilt) await endTilt(false); S.spread = null; S.model = null; S.info = null; S.sel = null; showEmpty(); renderInfo(); }
-  updateFlip();
-}
-
-const curPos = () => S.spread ? inBook().findIndex(x => x.id === S.spread.id) : -1;
+const curPos = () => S.spread ? S.index.findIndex(x => x.id === S.spread.id) : -1;
 async function flip(d) {
   if (!S.spread) return;
   if (S.tilt) await endTilt(false);
-  const list = inBook(), j = curPos() + d;
-  if (d > 0 && j >= list.length) { openCapture(); return; }
-  if (j < 0) { toast('These are the first pages of this book.'); return; }
-  const sp = await idbGet('sp:' + list[j].id);
+  const j = curPos() + d;
+  if (d > 0 && j >= S.index.length) { openCapture(); return; }
+  if (j < 0) { toast('These are the first pages you photographed.'); return; }
+  const sp = await idbGet('sp:' + S.index[j].id);
   if (sp) await showSpread(sp);
 }
 function updateFlip() {
-  const list = inBook(), has = !!S.spread, i = curPos(), n = list.length, last = i >= n - 1;
+  const has = !!S.spread, i = curPos(), n = S.index.length, last = i >= n - 1;
   $('#prevBtn').hidden = !has || i <= 0;
   const nb = $('#nextBtn'); nb.hidden = !has;
   nb.innerHTML = last ? ICON.camera.replace('class="i" ', '') : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   nb.setAttribute('aria-label', last ? 'Add the next pages' : 'Next pages');
   nb.title = last ? 'Add the next pages' : 'Next pages';
   const kp = has ? knownPct(S.model) : null;
-  $('#counter').hidden = !has; { const e = list[i]; $('#counter').innerHTML = has && e && !e.demo ? `<span class="pgedit" data-pg="1">${e.page == null ? 'p. ?' : e.last > e.page ? `p. ${e.page}–${e.last}` : `p. ${e.page}`}</span> · ${i + 1} / ${n}${kp != null ? ` · ${kp}% known` : ''}` : `${i + 1} / ${n}${kp != null ? ` · ${kp}% known` : ''}`; } $('#counter').setAttribute('aria-label', `Photo ${i + 1} of ${n}. Your pages.`);
+  $('#counter').hidden = !has; { const e = S.index[i]; $('#counter').innerHTML = has && e && !e.demo ? `<span class="pgedit" data-pg="1">${e.page == null ? 'p. ?' : e.last > e.page ? `p. ${e.page}–${e.last}` : `p. ${e.page}`}</span> · ${i + 1} / ${n}${kp != null ? ` · ${kp}% known` : ''}` : `${i + 1} / ${n}${kp != null ? ` · ${kp}% known` : ''}`; } $('#counter').setAttribute('aria-label', `Photo ${i + 1} of ${n}. Your pages.`);
   $('#counter').setAttribute('aria-label', `Photo ${i + 1} of ${n}. Reorder or delete pages.`);
   $('#stageBar').hidden = !has;
   $('#magBtn').innerHTML = `${ICON.loupe}<span class="lbl">Magnifier</span>`; $('#magBtn').title = 'Magnifier'; $('#magBtn').setAttribute('aria-pressed', String(S.mag));
@@ -2346,7 +2279,7 @@ function finishPages() {
     const b = e.target.closest('[data-fc]'); if (!b && e.target !== fc) return;
     fc.hidden = true; setTimeout(stampIfFree, 300);
     if (b?.dataset.fc === 'undo') undoFinish(sp);
-    else if (b?.dataset.fc === 'next') { const bl = inBook(), k = bl.findIndex(x => x.id === sp.id), nx = bl[k + 1]; if (nx) { const n2 = await idbGet('sp:' + nx.id); if (n2) return showSpread(n2); } openCapture(); }
+    else if (b?.dataset.fc === 'next') { const k = S.index.findIndex(x => x.id === sp.id), nx = S.index[k + 1]; if (nx) { const n2 = await idbGet('sp:' + nx.id); if (n2) return showSpread(n2); } openCapture(); }
   };
 }
 
@@ -2464,6 +2397,7 @@ function sideSplit(sp) {
   return sp.split;
 }
 const charSide = (c, sp) => c.side ?? (c.box && (c.box.x0 + c.box.x1) / 2 >= sideSplit(sp) ? 1 : 0);
+const hasTilt = sp => !!(sp?.adj && (sp.adj[0] || sp.adj[1]));
 function tiltBox(box, side, sp, deg, inverse) {
   if (!box || !deg) return box;
   const split = sideSplit(sp), cx = side ? (split + sp.w) / 2 : split / 2, cy = sp.h / 2;
@@ -2476,6 +2410,25 @@ function tiltBox(box, side, sp, deg, inverse) {
   // keep the box the same size (rotating a box's corners makes it grow)
   const w = box.x1 - box.x0, h = box.y1 - box.y0, mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
   return { x0:mx - w / 2, y0:my - h / 2, x1:mx + w / 2, y1:my + h / 2 };
+}
+// Character boxes follow the photo: perspective first, then tilt.
+function displayChars(sp) {
+  const P = perspFor(sp.persp, sp), tilt = hasTilt(sp);
+  if (!P && !tilt) return sp.chars;
+  return sp.chars.map(c => {
+    if (!c.box) return c;
+    const sd = charSide(c, sp); let box = c.box;
+    if (P?.[sd]) box = mapBox(P[sd].H, box);
+    if (tilt) box = tiltBox(box, sd, sp, sp.adj[sd]);
+    return { ...c, box };
+  });
+}
+// The way back, for corrected characters: undo tilt, then perspective.
+function toStored(box, sd, sp) {
+  if (!box) return box;
+  box = tiltBox(box, sd, sp, sp.adj?.[sd] || 0, true);
+  const P = perspFor(sp.persp, sp);
+  return P?.[sd] ? mapBox(P[sd].Hinv, box) : box;
 }
 /* ================= Perspective ================= */
 // fitPerspective fits the side margins and the first and last lines of each page.
@@ -2626,116 +2579,40 @@ function renderTilted(bmp, sp, adj, scale, fill) {
   }
   return c;
 }
-/* ================= The page as shown ================= */
-// The stored photo is the photo as taken and is never changed. The page is drawn from it in three steps, each of
-// which can be switched off again at any time:
-//   1. perspective (sp.persp), per page
-//   2. turn each page: Straighten's angle (sp.auto, found at import; skipped where perspective already levels the page)
-//      plus your own tilt (sp.adj)
-//   3. crop to the text (sp.crop): each page's text plus CROP_MARGIN; two pages are cut at the gutter and placed side by side.
-// Character boxes follow the same steps (displayChars); toStored goes back. Pages from before (no sp.v) were turned
-// and cropped at import: they have no sp.auto and no sp.crop, so only tilt, perspective and clean-up apply to them.
-const tiltOf = sp => [0, 1].map(s => (sp.adj?.[s] || 0) + (sp.straighten && !sp.persp?.[s] ? sp.auto?.[s] || 0 : 0));
-const canLayout = sp => sp?.v === 2;
-// Boxes after steps 1 and 2 (still in the photo's size).
-function turnedChars(sp) {
-  const P = perspFor(sp.persp, sp), tilt = tiltOf(sp);
-  return sp.chars.map(c => {
-    if (!c.box) return c;
-    const sd = charSide(c, sp); let box = c.box;
-    if (P?.[sd]) box = mapBox(P[sd].H, box);
-    if (tilt[sd]) box = tiltBox(box, sd, sp, tilt[sd]);
-    return { ...c, box };
-  });
-}
-// Step 3. parts: one per page (sd 0, 1), or one for all the text (sd -1). r is the part's area in the turned photo,
-// clip the band of the photo it may show (up to the gutter), dx where it goes in the page as shown.
-function cropFrame(sp, chars = turnedChars(sp)) {
-  if (!sp.crop) return null;
-  const split = sideSplit(sp), sides = pagesWithText(sp), two = sides.length === 2 && !sp.onePage && !sp.vertical;
-  const parts = (two ? sides : [-1]).map(sd => {
-    const tb = textBounds(chars.filter(c => c.box && (sd < 0 || charSide(c, sp) === sd)), sp.w, sp.h), r = { x:tb.x, y:tb.y, w:tb.w, h:tb.h };
-    let clip = [r.x, r.x + r.w];
-    if (sd === 0) { r.w = Math.ceil(tb.right + tb.m / 2) - r.x; clip = [r.x, Math.min(r.x + r.w, Math.max(split, tb.right))]; }   // half a margin each side of the gutter
-    if (sd === 1) { const x0 = Math.floor(tb.left - tb.m / 2); r.w += r.x - x0; r.x = x0; clip = [Math.max(r.x, Math.min(split, tb.left)), r.x + r.w]; }
-    return { sd, r, clip };
-  });
-  let dx = 0; for (const p of parts) { p.dx = dx; dx += p.r.w; }
-  return { parts, w:dx, h:Math.max(...parts.map(p => p.r.h)) };
-}
-const partOf = (f, sd) => f.parts.find(p => p.sd < 0 || p.sd === sd);
-const shiftBox = (b, dx, dy) => b && { x0:b.x0 + dx, x1:b.x1 + dx, y0:b.y0 + dy, y1:b.y1 + dy };
-function displayChars(sp) {
-  const chars = turnedChars(sp), f = cropFrame(sp, chars); if (!f) return chars;
-  return chars.map(c => { if (!c.box) return c; const p = partOf(f, charSide(c, sp)); return { ...c, box:shiftBox(c.box, p.dx - p.r.x, -p.r.y) }; });
-}
-// The way back, for corrected characters: undo the crop, the turn, then perspective.
-function toStored(box, sd, sp) {
-  if (!box) return box;
-  const f = cropFrame(sp); if (f) { const p = partOf(f, sd); box = shiftBox(box, p.r.x - p.dx, p.r.y); }
-  box = tiltBox(box, sd, sp, tiltOf(sp)[sd], true);
-  const P = perspFor(sp.persp, sp);
-  return P?.[sd] ? mapBox(P[sd].Hinv, box) : box;
-}
-const shownSize = sp => { const f = cropFrame(sp); return f ? [f.w, f.h] : [sp.w, sp.h]; };
-function sizeTo(sp) { [S.imgW, S.imgH] = shownSize(sp); layout(); }
-// Draws the page as shown from the stored photo (bmp), at a scale. memo keeps the slow perspective step between previews.
-function renderLook(bmp, sp, scale = 1, memo = {}) {
-  const fill = sp.fill || paperColor(bmp), key = JSON.stringify([sp.persp || 0, scale]);
-  if (sp.persp && memo.key !== key) Object.assign(memo, { key, c:renderPersp(bmp, sp, sp.persp, scale) });
-  const turned = renderTilted(sp.persp ? memo.c : bmp, sp, tiltOf(sp), scale, fill), f = cropFrame(sp);
-  let c = turned;
-  if (f) {
-    c = document.createElement('canvas'); c.width = Math.round(f.w * scale); c.height = Math.round(f.h * scale);
-    const x = c.getContext('2d'); x.fillStyle = fill; x.fillRect(0, 0, c.width, c.height); x.scale(scale, scale);
-    for (const p of f.parts) {
-      x.save(); x.translate(p.dx - p.r.x, -p.r.y);
-      x.beginPath(); x.rect(p.clip[0], p.r.y, p.clip[1] - p.clip[0], p.r.h); x.clip();
-      x.drawImage(turned, 0, 0, sp.w, sp.h); x.restore();
-    }
-  }
-  applyCleanup(c, cleanupLevel(sp));
-  return c;
-}
-// Straighten's angle for each page, from the direction of the text lines (degrees, as the tilt sliders use).
-function autoTilt(fta, W, onePage, vertical) {
-  if (vertical) return [0, 0];
-  const blocks = visionBlocks(structuredClone(fta)), deg = bs => { const a = textAngle(bs); return Math.abs(a) < 0.3 * DEG ? 0 : Math.round(-a / DEG * 10) / 10; };
-  const cx = b => { const bb = vbox(b.boundingBox, IDENT); return bb ? (bb.x0 + bb.x1) / 2 : 0; }, g = gutterInfo(blocks.map(cx), W);
-  if (onePage || g.unsure) { const a = deg(blocks); return [a, a]; }
-  const sb = splitBySide(blocks, g.split, IDENT);
-  return [0, 1].map(s => deg(sb.filter(b => (cx(b) < g.split ? 0 : 1) === s)));
-}
-// Pages from before were stored turned and cropped. One that kept the photo as taken and Vision's reply, and has no
-// fixed text, is moved to the new way once, when it opens. Others stay as they are.
-async function upgradeSpread(sp) {
-  if (canLayout(sp) || !sp.fta || sp.fixed || !(sp.orig || sp.raw)) return;
+// Straighten and Crop can be switched after import on pages that kept the photo as taken (orig, or raw: blob is that photo)
+// and the reader's reply (fta). The page is laid out again from those, so either switch can always be flipped back.
+const canRebake = sp => !!(sp?.fta && (sp.orig || sp.raw));
+async function rebake(opt) {
+  const sp = S.spread; if (!canRebake(sp)) return;
+  if (sp.fixed && !confirm('This resets the text you fixed on these pages. Continue?')) return;
+  await endTilt(false);
+  busy('Adjusting the photo…'); await nextFrame();
   try {
     const src = sp.orig || sp.blob, bmp = await createImageBitmap(src);
     const c = document.createElement('canvas'); c.width = bmp.width; c.height = bmp.height; c.getContext('2d').drawImage(bmp, 0, 0);
-    const { chars } = layoutFromVision(c, structuredClone(sp.fta), false, !!sp.onePage, false);
-    Object.assign(sp, { v:2, blob:src, chars, w:c.width, h:c.height, auto:autoTilt(sp.fta, c.width, !!sp.onePage, !!sp.vertical), straighten:!!sp.opt?.straighten, crop:!!sp.opt?.crop, adj:[0, 0] });
-    for (const k of ['orig', 'raw', 'opt', 'persp', 'split']) delete sp[k];
-    if (sp.onePage) sp.split = sp.w;
-    await idbSet('sp:' + sp.id, sp);
-  } catch (e) { log('upgrade', e); }
+    const { chars, out } = layoutFromVision(c, structuredClone(sp.fta), opt.straighten, !!sp.onePage, opt.crop);
+    if (!chars.some(x => isCJK(x.ch))) throw new Error('no text');
+    const blob = out === c ? src : await canvasBlob(out, 'image/jpeg', 0.9);
+    Object.assign(sp, { blob, chars, w:out.width, h:out.height, opt, adj:[0, 0] }); delete sp.persp; delete sp.fixed;
+    if (out === c) { delete sp.orig; sp.raw = true; } else { sp.orig = src; delete sp.raw; }
+    if (sp.onePage) sp.split = out.width;
+    for (const u of litCache.values()) URL.revokeObjectURL(u); litCache.clear();
+    await idbSet('sp:' + sp.id, sp); await showSpread(sp);
+  } catch (e) { log('adjust', e); toast('The photo couldn’t be adjusted.'); }
+  busy(false); startTilt();
 }
-
-/* ================= Adjust photo ================= */
-// Every control changes a draft (S.tilt.look, a copy of the page's settings) and the preview. Done saves the draft,
-// Cancel drops it. The stored photo never changes.
 const pagesWithText = sp => [0, 1].filter(s => sp.chars.some(c => c.box && charSide(c, sp) === s));
-const LOOK = ['adj', 'persp', 'cleanup', 'straighten', 'crop', 'fill'];
 async function startTilt() {
   const sp = S.spread; if (!sp || S.tilt) return;
   stopReading();
   if (S.mag) toggleMag();
   clearSel();
-  const bmp = await createImageBitmap(sp.blob), look = { ...sp, adj:[...(sp.adj || [0, 0])], cleanup:cleanupLevel(sp), fill:sp.fill || paperColor(bmp) };
-  S.tilt = { bmp, look, memo:{}, raf:0 };
+  const bmp = await createImageBitmap(sp.blob);
+  S.tilt = { bmp, fill:sp.fill || paperColor(bmp), adj:[...(sp.adj || [0, 0])], cleanup:cleanupLevel(sp), persp:sp.persp || null, pc:null, raf:0 };
   const pages = pagesWithText(sp), two = pages.length === 2;
   $('#perspBtn').hidden = !!sp.vertical;
-  $('#adjBake').hidden = !canLayout(sp); $('#strTog').hidden = !!sp.vertical;
+  $('#adjBake').hidden = !canRebake(sp);
+  if (canRebake(sp)) { $('#strTog').hidden = !!sp.vertical; $('#strTog').setAttribute('aria-pressed', String(!!sp.opt?.straighten)); $('#cropTog').setAttribute('aria-pressed', String(!!sp.opt?.crop)); }
   $('#adjBar .lab').textContent = sp.vertical ? 'Clean up the photo' : 'Turn each page until its lines of text run along the green lines';
   for (const s of [0, 1]) {
     const row = $('#adj' + s); row.hidden = !pages.includes(s) || !!sp.vertical;
@@ -2747,53 +2624,55 @@ async function startTilt() {
   drawTiltPreview();
 }
 function syncTiltUI() {
-  const L = S.tilt.look;
-  document.querySelectorAll('#cleanSeg button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.clean === L.cleanup)));
-  $('#perspBtn').setAttribute('aria-pressed', String(!!L.persp));
-  $('#strTog').setAttribute('aria-pressed', String(!!L.straighten)); $('#cropTog').setAttribute('aria-pressed', String(!!L.crop));
+  document.querySelectorAll('#cleanSeg button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.clean === S.tilt.cleanup)));
+  $('#perspBtn').setAttribute('aria-pressed', String(!!S.tilt.persp));
   for (const s of [0, 1]) {
-    const row = $('#adj' + s), v = L.adj[s] || 0;
+    const row = $('#adj' + s), v = S.tilt.adj[s] || 0;
     row.querySelector('input').value = v;
     row.querySelector('output').textContent = `${v > 0 ? '+' : ''}${v.toFixed(1)}°`;
   }
 }
-// Changes the draft and redraws: setLook({ crop:false }).
-function setLook(ch) { const t = S.tilt; if (!t) return; Object.assign(t.look, ch); syncTiltUI(); drawTiltPreview(); }
 function drawTiltPreview() {
   const t = S.tilt; if (!t) return;
-  sizeTo(t.look);
   cancelAnimationFrame(t.raf);
   t.raf = requestAnimationFrame(() => {
-    const r = page.getBoundingClientRect(), scale = Math.min(1, r.width * (devicePixelRatio || 1) / S.imgW);
-    const c = renderLook(t.bmp, t.look, scale, t.memo), pc = $('#tiltCanvas');
+    const r = page.getBoundingClientRect(), scale = Math.min(1, r.width * (devicePixelRatio || 1) / S.spread.w);
+    if (t.persp && (!t.pc || t.pcScale !== scale)) { t.pc = renderPersp(t.bmp, S.spread, t.persp, scale); t.pcScale = scale; }
+    const c = renderTilted(t.persp ? t.pc : t.bmp, S.spread, t.adj, scale, t.fill), pc = $('#tiltCanvas');
+    if (t.cleanup) applyCleanup(c, t.cleanup);
     if (!pc) return;
     pc.width = c.width; pc.height = c.height; pc.getContext('2d').drawImage(c, 0, 0);
   });
 }
-function setTilt(side, v) { const L = S.tilt?.look; if (!L) return; const adj = [...L.adj]; adj[side] = Math.round(clamp(v, -10, 10) * 10) / 10; setLook({ adj }); }
+function setTilt(side, v) { if (!S.tilt) return; S.tilt.adj[side] = Math.round(clamp(v, -10, 10) * 10) / 10; syncTiltUI(); drawTiltPreview(); }
 async function endTilt(apply) {
   const t = S.tilt; if (!t) return;
-  S.tilt = null; cancelAnimationFrame(t.raf);
+  S.tilt = null;
   $('#tiltCanvas')?.remove(); page.classList.remove('tilting'); document.body.classList.remove('tilting'); $('#adjBar').hidden = true;
-  const sp = S.spread;
   if (apply) {
-    for (const k of LOOK) { if (t.look[k] == null) delete sp[k]; else sp[k] = t.look[k]; }
+    const sp = S.spread; sp.adj = t.adj; sp.fill = t.fill; sp.cleanup = t.cleanup;
+    if (t.persp) sp.persp = t.persp; else delete sp.persp;
     persistSpread(); rebuild();
+    await setPageImage();
+    toast('Photo adjusted. Your stored photo is unchanged.');
   }
-  sizeTo(sp);
-  if (apply) { await setPageImage(); toast('Photo adjusted. Your stored photo is unchanged.'); }
 }
 
 const litCache = new Map();
 async function setPageImage() {
   const sp = S.spread; if (!sp) return;
   let url = S.imgURL;
-  if (tiltOf(sp).some(Boolean) || sp.crop || cleanupLevel(sp) || perspFor(sp.persp, sp)) {
-    const key = JSON.stringify([sp.id, tiltOf(sp), sp.persp || 0, !!sp.crop, cleanupLevel(sp), sp.fill || '']);
+  const tilt = hasTilt(sp), level = cleanupLevel(sp), persp = !!perspFor(sp.persp, sp);
+  if (tilt || level || persp) {
+    const key = `${sp.id}|${tilt ? sp.adj.join(',') : ''}|${level}|${persp ? JSON.stringify(sp.persp) : ''}`;
     if (!litCache.has(key)) {
-      busy('Adjusting the photo…'); await nextFrame();
+      if (level || persp) { busy('Adjusting the photo…'); await nextFrame(); }
       try {
-        const c = renderLook(await createImageBitmap(sp.blob), sp);
+        const bmp = await createImageBitmap(sp.blob), base = persp ? renderPersp(bmp, sp, sp.persp, 1) : bmp;
+        let c;
+        if (tilt) c = renderTilted(base, sp, sp.adj, 1, sp.fill || paperColor(bmp));
+        else { c = document.createElement('canvas'); c.width = sp.w; c.height = sp.h; c.getContext('2d').drawImage(base, 0, 0, sp.w, sp.h); }
+        applyCleanup(c, level);
         litCache.set(key, URL.createObjectURL(await canvasBlob(c, 'image/jpeg', 0.92)));
         if (litCache.size > 8) { const [k, u] = litCache.entries().next().value; URL.revokeObjectURL(u); litCache.delete(k); }
       } catch (e) { toast('The photo couldn’t be redrawn.'); }
@@ -2807,9 +2686,7 @@ async function setPageImage() {
 async function showSpread(sp) {
   stopReading();
   if (S.tilt) await endTilt(false);
-  await upgradeSpread(sp);
-  S.spread = sp; [S.imgW, S.imgH] = shownSize(sp);
-  { const b = S.index.find(x => x.id === sp.id)?.book; if (b) setBook(b); }
+  S.spread = sp; S.imgW = sp.w; S.imgH = sp.h;
   if (S.imgURL) URL.revokeObjectURL(S.imgURL);
   S.imgURL = URL.createObjectURL(sp.blob);
   await setPageImage();
@@ -2832,10 +2709,7 @@ function renderSteps() {
   $('#firstSteps').hidden = next < 0;
 }
 $('#firstSteps').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (!b) return; ({ demo:() => $('#demoBtn').click(), key:() => openSettings(), photo:() => openCapture() })[b.dataset.step](); });
-function showEmpty() {
-  const b = S.index.length && S.books.find(x => x.id === S.book);   // an empty book while other books have pages
-  $('#emptyBook').hidden = !b; if (b) $('#emptyBookT').textContent = `“${b.title}” has no pages yet.`;
-  renderSteps(); updateFlip(); $('#empty').hidden = false; page.classList.remove('show'); wrap.style.width = ''; wrap.style.height = ''; updateBar(); updateProgress(); renderSide(); }
+function showEmpty() { renderSteps(); updateFlip(); $('#empty').hidden = false; page.classList.remove('show'); wrap.style.width = ''; wrap.style.height = ''; updateBar(); updateProgress(); renderSide(); }
 async function requestWake() { try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !S.wake) { S.wake = await navigator.wakeLock.request('screen'); S.wake.addEventListener('release', () => { S.wake = null; }); } } catch (e) {} }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') return; if (S.spread) requestWake(); checkTravel(); });
 addEventListener('resize', () => { applyPanels(); if (pracSheet.classList.contains('open')) renderPane(); });
@@ -3050,7 +2924,7 @@ function toggleSave() {
 /* ================= OCR corrections ================= */
 // applyCorrection(a, b, text) replaces characters, keeps their boxes, and saves the photo.
 function applyCorrection(a, b, newText) {
-  S.spread.fixed = true;   // a page from before with fixed text is not moved to the new layout (upgradeSpread)
+  S.spread.fixed = true;   // redoing Straighten or Crop would lose this, so it asks first
   const raw = S.spread.chars, chs = Array.from(String(newText).replace(/\s+/g, ''));
   const rects = rectsFor(range(a, b)), para = raw[a].para, baseLine = raw[a].line, slots = [];
   if (rects.length && chs.length) {
@@ -4388,7 +4262,7 @@ $('#modal').addEventListener('click', e => {
   if (b?.dataset.keep) return closeModal(b.dataset.keep);
   if (b?.dataset.syncsend) { const ids = [...m.querySelectorAll('[data-sync]:checked')].map(x => x.dataset.sync); closeModal(); return sendSync(ids); }
   if (b?.dataset.modal === 'say') return speak(b.dataset.say);
-  if (b?.dataset.cookie) { showCookie(); if (m.querySelector('.fortune')) S.modalDone = () => openMission(); return; }   // a slip opened from the mission goes back to it
+  if (b?.dataset.cookie) return showCookie();
   if (b?.dataset.review) { closeModal(); openReview(); }
 });
 /* ================= Rewards: fortune cookies and shop ================= */
@@ -5046,14 +4920,12 @@ function closePages() {
   pageCache.clear();
 }
 function renderPages() {
-  const list = inBook(), n = list.length, k = Object.keys(S.pend).length;
-  $('#bookBar').innerHTML = S.books.length ? `<select id="bookSel" class="booksel" aria-label="Book">${bookOptions(S.book, true)}</select>
-    <button class="btn" type="button" id="bookRename">Rename</button><button class="btn danger" type="button" id="bookDel">Delete book</button>` : '';
+  const n = S.index.length, k = Object.keys(S.pend).length;
   $('#pagesApply').hidden = !k; $('#pendN').textContent = `${k} change${k === 1 ? '' : 's'}`;
   $('#pagesTitle').textContent = 'Your pages';   // the count and storage are in the line under the title
   $('#pagesCur').hidden = !S.spread || n < 2;
-  if (!n) { $('#pgrid').innerHTML = `<p class="note">No pages in this book yet. Tap <b>Add pages</b> on the reading screen to photograph some.</p>`; return; }
-  $('#pgrid').innerHTML = list.map((e, i) => {
+  if (!n) { $('#pgrid').innerHTML = '<p class="note">No pages yet.</p>'; return; }
+  $('#pgrid').innerHTML = S.index.map((e, i) => {
     const c = pageCache.get(e.id) || {}, date = new Date(e.at || Date.now()).toLocaleDateString(undefined, { month:'short', day:'numeric' });
     const open = S.spread?.id === e.id;
     return `<div class="pcard" aria-current="${open}">
@@ -5061,7 +4933,6 @@ function renderPages() {
       <div class="meta"><button type="button" class="pname" data-pgfix="${e.id}" title="Change page number">${pageName(e, i)}</button>
         <details class="pmenu"><summary aria-label="More for this photo">⋯</summary><div class="pmenu-list">
           ${c.orig ? `<button type="button" data-orig="${e.id}">Original photo</button>` : ''}
-          ${e.demo ? '' : `<button type="button" data-move="${e.id}">Move to another book</button>`}
           <button type="button" class="del" data-del="${e.id}">Delete pages</button></div></details></div>
       <div class="ptags">${(() => { const d = S.pend[e.id] ?? c.done; return `<button type="button" class="ptag${d ? ' ok' : ''}${e.id in S.pend ? ' pend' : ''}" data-done="${e.id}" aria-pressed="${d}" title="Tap to change">${d ? 'Finished' : 'Not finished'}</button>`; })()}${open ? '<span class="ptag now">Open now</span>' : ''}${e.demo ? '<span class="ptag">Sample</span>' : ''}<span class="pdate">${esc(date)}</span></div>
     </div>`;
@@ -5085,11 +4956,10 @@ async function setPageNumber(id, value, span) {
 async function deletePage(id) {
   if (!confirm('Delete these pages and their reading progress? Saved words stay.')) return;
   const i = S.index.findIndex(x => x.id === id); if (i < 0) return;
-  const bl = inBook(), bi = bl.findIndex(x => x.id === id), next = bl[bi + 1] || bl[bi - 1];
   await idbDel('sp:' + id); S.index.splice(i, 1); await idbSet('spreads:index', S.index);
   const c = pageCache.get(id); if (c?.url) URL.revokeObjectURL(c.url); pageCache.delete(id);
   if (S.spread?.id === id) {
-    const sp = next ? await idbGet('sp:' + next.id) : null;
+    const next = S.index[Math.min(i, S.index.length - 1)], sp = next ? await idbGet('sp:' + next.id) : null;
     if (sp) await showSpread(sp);
     else { S.spread = null; S.model = null; S.info = null; S.sel = null; showEmpty(); renderInfo(); }
   }
@@ -5099,7 +4969,6 @@ $('#pgrid').addEventListener('change', e => { const inp = e.target.closest('.pgn
 $('#pgrid').addEventListener('click', async e => {
   const pf = e.target.closest('[data-pgfix]'); if (pf) { openPageFix(pf.dataset.pgfix); return; }
   const og = e.target.closest('[data-orig]'); if (og) { openOriginal(og.dataset.orig); return; }
-  const mv = e.target.closest('[data-move]'); if (mv) { e.target.closest('details')?.removeAttribute('open'); askMove(mv.dataset.move); return; }
   const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]');
   if (o) { const sp = await idbGet('sp:' + o.dataset.open); closePages(); if (sp) await showSpread(sp); }
   else if (d) deletePage(d.dataset.del);
@@ -5107,45 +4976,6 @@ $('#pgrid').addEventListener('click', async e => {
   else if (e.target.closest('[data-unfinish]')) { const id = e.target.closest('[data-unfinish]').dataset.unfinish; const sp = S.spread?.id === id ? S.spread : await idbGet('sp:' + id); if (sp) undoFinish(sp); }
 });
 $('#pagesClose').addEventListener('click', closePages);
-// The book bar at the top of Your pages: switch book, start a new one, rename, or delete one with its pages.
-$('#bookBar').addEventListener('change', async e => {
-  if (e.target.id !== 'bookSel') return;
-  let id = e.target.value;
-  if (id === '+new') { const t = await askBookTitle('New book'); if (t === undefined) { renderPages(); return; } id = addBook(t).id; }
-  S.pend = {}; await openBook(id); renderPages();
-});
-$('#bookBar').addEventListener('click', async e => {
-  if (e.target.closest('#bookRename')) {
-    const b = S.books.find(x => x.id === S.book); if (!b) return;
-    const t = await askBookTitle('Rename book', b.title); if (t?.trim()) { b.title = t.trim(); saveBooks(); renderPages(); }
-  } else if (e.target.closest('#bookDel')) {
-    const b = S.books.find(x => x.id === S.book); if (!b) return;
-    const ids = inBook().map(x => x.id);
-    if (!confirm(`Delete “${b.title}”${ids.length ? ` and its ${ids.length} photo${ids.length === 1 ? '' : 's'}` : ''}? Saved words stay.`)) return;
-    for (const id of ids) { await idbDel('sp:' + id); const c = pageCache.get(id); if (c?.url) URL.revokeObjectURL(c.url); pageCache.delete(id); }
-    S.index = S.index.filter(x => x.book !== b.id); await idbSet('spreads:index', S.index);
-    S.books = S.books.filter(x => x !== b); saveBooks(); if (S.addTo === b.id) S.addTo = null;
-    const has = x => S.index.some(e => e.book === x.id), other = realBooks().find(has) || S.books.find(has) || S.books[0];
-    S.pend = {}; await openBook(other?.id || null); renderPages(); toast('Book deleted');
-  }
-});
-// Moves one photo to another book (or a new one). If it was open, the reading screen stays in this book.
-async function askMove(id) {
-  const e = S.index.find(x => x.id === id); if (!e) return;
-  const others = realBooks().filter(b => b.id !== e.book);
-  showModal(`<h3>Move to</h3><div class="bookpick">${others.map(b => `<button class="btn" type="button" data-to="${b.id}">${esc(b.title)}</button>`).join('')}<button class="btn" type="button" data-to="+new">New book…</button></div>`);
-  $('#modal .bookpick').addEventListener('click', async ev => {
-    const b = ev.target.closest('[data-to]'); if (!b) return;
-    let to = b.dataset.to;
-    if (to === '+new') { const t = await askBookTitle('New book'); if (t === undefined) return; to = addBook(t).id; } else closeModal();
-    const from = e.book; e.book = to; S.index = sortIndex(S.index); await idbSet('spreads:index', S.index);
-    if (S.spread?.id === id) {
-      const rest = S.index.filter(x => x.book === from), sp = rest.length ? await idbGet('sp:' + rest[0].id) : null;
-      if (sp) await showSpread(sp); else setBook(to);
-    }
-    renderPages(); updateFlip(); toast(`Moved to “${bookTitle(to)}”`);
-  });
-}
 $('#pagesCur').addEventListener('click', () => $('#pgrid .pcard[aria-current="true"]')?.scrollIntoView({ behavior:'smooth', block:'center' }));
 // Finished / Not finished from the overview, applied together. Finishing here only marks the pages done:
 // its words become known as with Finish, but no pages count for today. Undo takes the words back.
@@ -5162,7 +4992,7 @@ $('#pendApply').addEventListener('click', async () => {
 });
 // The page part of the counter fixes the book page number in place; the rest opens the overview.
 function openPageFix(id) {
-  const e = id ? S.index.find(x => x.id === id) : inBook()[curPos()]; if (!e) return;
+  const e = id ? S.index.find(x => x.id === id) : S.index[curPos()]; if (!e) return;
   let span = e.last > e.page ? e.last - e.page : 0;   // a two-page photo: the second number follows the first
   showModal(`<h3>Page number</h3><form class="pgfix" id="pgFix"><button class="btn" type="button" data-pgstep="-1" aria-label="One less">−</button><input id="pgFixN" type="number" inputmode="numeric" min="1" max="9999" value="${e.page ?? ''}" aria-label="First page in this photo"><span id="pgFixL"></span><button class="btn" type="button" data-pgstep="1" aria-label="One more">+</button><button class="btn primary" type="submit">Done</button></form><div class="seg pgspan" role="group" aria-label="Pages in this photo"><button type="button" data-pgspan="0" aria-pressed="${!span}">1 page</button><button type="button" data-pgspan="1" aria-pressed="${!!span}">2 pages</button></div>`, 'pgfixm');
   const inp = $('#pgFixN'), last = () => { const l = $('#pgFixL'); if (l) l.textContent = span && parseInt(inp.value, 10) > 0 ? `– ${parseInt(inp.value, 10) + span}` : ''; };
@@ -5290,7 +5120,7 @@ const b64ToBlob = (b64, type = 'image/jpeg') => { const bin = atob(b64), u = new
 // The file's lines: one with words, stats and rewards, then one per photo in ids. Backup takes every photo; a sync file a few.
 async function pack(ids) {
   const { apiKey, aiKey, ...settings } = S.settings;
-  const parts = [JSON.stringify({ format:'reading-desk-backup', version:1, saved:new Date().toISOString(), settings, words:S.words, lex:S.lex, known:S.known, notes:S.notes, favs:S.favs, stats:S.stats, index:S.index, books:S.books }) + '\n'];
+  const parts = [JSON.stringify({ format:'reading-desk-backup', version:1, saved:new Date().toISOString(), settings, words:S.words, lex:S.lex, known:S.known, notes:S.notes, favs:S.favs, stats:S.stats, index:S.index }) + '\n'];
   let n = 0;
   for (const id of ids) {
     const sp = S.spread?.id === id ? S.spread : await idbGet('sp:' + id); if (!sp?.blob) continue;
@@ -5362,8 +5192,6 @@ async function restoreAll(file) {
     S.stats = { ...(head.stats || {}), ...S.stats, days, travel:[...new Set([...(head.stats?.travel || []), ...(S.stats.travel || [])])].sort(), ...(speed.length ? { speed } : {}), ...(nb.length ? { nb } : {}), ...(Object.keys(chars).length ? { chars } : {}) };
     if (collectOld) { busy(false); S.stats.collect = await askCollect(collectNow, collectOld); }
     if (!S.settings.apiKey && head.settings) { S.settings = { ...DEFAULTS, ...head.settings, apiKey:S.settings.apiKey, aiKey:S.settings.aiKey }; migrateBar(S.settings); } // a fresh install takes the old settings
-    for (const b of head.books || []) if (b?.id && !S.books.some(x => x.id === b.id)) S.books.push(b);   // books are merged by id
-    saveBooks(); await ensureBooks();
     S.index = sortIndex(S.index); await idbSet('spreads:index', S.index);
     saveWords(); saveLex(); saveKnown(); saveFavs(); saveStats(); saveSettings();
     busy(false); updateBar(); updateProgress(); renderSide(); updateFlip();
@@ -5380,7 +5208,7 @@ const SYNC_MORE = 5;
 const pageName = (e, i) => e.page == null ? `Pages #${i + 1}` : e.last > e.page ? `Pages ${e.page}–${e.last}` : `Page ${e.page}`;
 function openSync() {
   const cur = S.spread && !S.spread.demo ? S.spread.id : null;
-  const rows = S.index.map((e, i) => e.demo ? '' : `<label class="syncrow"><input type="checkbox" data-sync="${e.id}"${e.id === cur ? ' checked disabled' : ''}><span>${realBooks().length > 1 ? `${esc(bookTitle(e.book))} · ` : ''}${pageName(e, i)}</span>${e.id === cur ? '<span class="ptag now">Open now</span>' : ''}</label>`).join('');
+  const rows = S.index.map((e, i) => e.demo ? '' : `<label class="syncrow"><input type="checkbox" data-sync="${e.id}"${e.id === cur ? ' checked disabled' : ''}><span>${pageName(e, i)}</span>${e.id === cur ? '<span class="ptag now">Open now</span>' : ''}</label>`).join('');
   showModal(`<h3>Send to another device</h3><p class="note">Words, notebook, stats and rewards${rows ? `, with the open pages and up to ${SYNC_MORE} more` : ''}.</p>
     ${rows ? `<div class="synclist">${rows}</div>` : ''}<button class="btn primary" type="button" data-syncsend="1">Send</button>`, 'sync');
 }
@@ -5585,7 +5413,6 @@ $('#sideBack').addEventListener('click', () => toggleSide(false));
 $('#settingsBtn').addEventListener('click', openSettings);
 $('#viewBtn').addEventListener('click', e => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
 $('#capClose').addEventListener('click', closeCapture);
-$('#emptyBookBtn').addEventListener('click', openPages);
 $('#shutter').addEventListener('click', shoot);
 $('#pickBtn').addEventListener('click', () => $('#filePick').click());
 $('#busyCancel').addEventListener('click', () => { S.batchStop = true; $('#busyMsg').textContent = 'Stopping after this photo…'; $('#busyCancel').hidden = true; });
@@ -5609,19 +5436,22 @@ $('#magBtn').addEventListener('click', toggleMag);
 $('#aloudBtn').addEventListener('click', readAloud);
 $('#tiltBtn').addEventListener('click', startTilt);
 $('#tiltDone').addEventListener('click', () => endTilt(true));
-$('#strTog').addEventListener('click', () => setLook({ straighten:!S.tilt?.look.straighten }));
-$('#cropTog').addEventListener('click', () => setLook({ crop:!S.tilt?.look.crop }));
+$('#strTog').addEventListener('click', () => { const o = S.spread?.opt || {}; rebake({ straighten:!o.straighten, crop:!!o.crop }); });
+$('#cropTog').addEventListener('click', () => { const o = S.spread?.opt || {}; rebake({ straighten:!!o.straighten, crop:!o.crop }); });
 $('#tiltCancel').addEventListener('click', () => endTilt(false));
-$('#tiltReset').addEventListener('click', () => setLook({ adj:[0, 0], cleanup:0, persp:null }));
 $('#adjBar').addEventListener('input', e => { const r = e.target.closest('input[type=range]'); if (r) setTilt(+r.dataset.side, +r.value); });
-$('#adjBar').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b && S.tilt) setTilt(+b.dataset.side, (S.tilt.look.adj[+b.dataset.side] || 0) + (+b.dataset.step)); });
-$('#cleanSeg').addEventListener('click', e => { const b = e.target.closest('[data-clean]'); if (b) setLook({ cleanup:+b.dataset.clean }); });
+$('#adjBar').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b && S.tilt) setTilt(+b.dataset.side, (S.tilt.adj[+b.dataset.side] || 0) + (+b.dataset.step)); });
+$('#cleanSeg').addEventListener('click', e => { const b = e.target.closest('[data-clean]'); if (b && S.tilt) { S.tilt.cleanup = +b.dataset.clean; syncTiltUI(); drawTiltPreview(); } });
 $('#perspBtn').addEventListener('click', () => {
-  const L = S.tilt?.look; if (!L) return;
-  if (L.persp) return setLook({ persp:null });
-  const fit = fitPerspective(L);
-  if (!fit) { toast('There aren’t enough full lines of text to fix the perspective.'); return; }
-  setLook({ persp:fit, adj:L.adj.map((a, sd) => fit[sd] ? 0 : a) });   // the fit already turns the page level
+  const t = S.tilt; if (!t) return;
+  if (t.persp) { t.persp = null; t.pc = null; }
+  else {
+    const fit = fitPerspective(S.spread);
+    if (!fit) { toast('There aren’t enough full lines of text to fix the perspective.'); return; }
+    t.persp = fit; t.pc = null;
+    for (const sd of [0, 1]) if (fit[sd]) t.adj[sd] = 0; // the fit already turns the page level
+  }
+  syncTiltUI(); drawTiltPreview();
 });
 $('#streak').addEventListener('click', () => openStats('progress'));
 // The desk button opens the Desk. The alert button (🎁, 🥠 or 🪙) opens it too; a waiting cookie opens on the way.
@@ -5672,7 +5502,7 @@ if (DEBUG) window.RD = { S, errors, log, debugReport, replayVision, layoutFromVi
   rebuild, renderInfo, drawHighlights, openSpan, openSentence, showSpread, aiJSON, visionOCR, speak, readAloud,
   sealParts, claimGift, openCookie, openBag, checkAwards, festivalToday, lunarMD, deskHTML, backupAll, streak, longestStreak,
   readingSpeed, speedHTML, weekGridText, pickEmoji, buyPick, give, collect, collectFree, earnable, keysFromCode, openReview, openStats, openSpeed, openParticles, openLookalike, freqHTML, charsHTML,
-  updateProgress, saveStats, redrawDesk, dueCount, rereadPick, originOf, buildDemo, saveNewSpread, inBook, addBook, openBook, openPages, flip, displayChars, toStored, shownSize };
+  updateProgress, saveStats, redrawDesk, dueCount, rereadPick, originOf };
 
 (async function init() {
   // Ask the browser to keep this app's data even when the tablet is low on space.
@@ -5681,9 +5511,7 @@ if (DEBUG) window.RD = { S, errors, log, debugReport, replayVision, layoutFromVi
   const t0 = performance.now();
   loadDict().then(() => { S.timing = { dict:Math.round(performance.now() - t0) }; return loadParts(); }).then(() => { if (S.timing) S.timing.parts = Math.round(performance.now() - t0); });
   S.index = (await idbGet('spreads:index')) || [];
-  S.books = (await idbGet('books')) || [];
   if (!S.index.length) { const old = await idbGet('spread'); if (old && old.blob) { await saveNewSpread(old); await idbDel('spread'); } }
-  await ensureBooks();
   const cur = load('rd.cur', null), pick = S.index.find(x => x.id === cur) || S.index[S.index.length - 1];
   const sp = pick ? await idbGet('sp:' + pick.id) : null;
   if (sp && sp.blob && Array.isArray(sp.chars)) await showSpread(sp); else showEmpty();
