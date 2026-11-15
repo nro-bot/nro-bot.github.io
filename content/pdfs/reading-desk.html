@@ -261,16 +261,16 @@ body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !im
 .linklike.del{color:#B3261E;margin-left:6px}
 .pcard .row{flex-wrap:nowrap !important}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;padding:14px 20px 40px;max-width:1100px;margin:0 auto}
-.pcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column}
 .pcard[aria-current="true"]{border-color:var(--jade);box-shadow:0 0 0 2px var(--jade)}
-.pcard .thumb{border:0;padding:0;background:#111;cursor:pointer;aspect-ratio:4/3;display:block;width:100%}
+.pcard .thumb{border:0;padding:0;background:#111;cursor:pointer;aspect-ratio:4/3;display:block;width:100%;border-radius:13px 13px 0 0;overflow:hidden}
 .pcard .thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .pcard .meta{padding:9px 8px 2px 12px;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:space-between;gap:6px}
 .ptags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:2px 12px 0}
 .ptag{font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--panel-2);color:var(--muted)}
 .ptag.ok{background:var(--jade-soft);color:var(--ink)} .ptag.now{background:var(--jade);color:var(--jade-ink)}
 .pdate{font-size:13px;color:var(--muted);margin-left:auto}
-.pmenu{position:relative}
+.pmenu{position:relative}.pmenu[open]{z-index:6}   /* the open menu sits above the cards below it */
 button.ptag{border:0;font-family:inherit;cursor:pointer}.ptag.pend{outline:2px dashed var(--jade);outline-offset:1px}
 .applybar{position:sticky;bottom:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:10px 20px calc(10px + env(safe-area-inset-bottom));background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -6px 16px rgba(0,0,0,.08)}
 .applybar span{margin-right:auto;font-weight:700}
