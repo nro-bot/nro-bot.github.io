@@ -270,7 +270,8 @@ body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !im
 .ptag{font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--panel-2);color:var(--muted)}
 .ptag.ok{background:var(--jade-soft);color:var(--ink)} .ptag.now{background:var(--jade);color:var(--jade-ink)}
 .pdate{font-size:13px;color:var(--muted);margin-left:auto}
-.pmenu{position:relative}.pmenu[open]{z-index:6}   /* the open menu sits above the cards below it */
+.pmenu{position:relative}
+.pmenu[open]{z-index:6}
 button.ptag{border:0;font-family:inherit;cursor:pointer}.ptag.pend{outline:2px dashed var(--jade);outline-offset:1px}
 .applybar{position:sticky;bottom:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:10px 20px calc(10px + env(safe-area-inset-bottom));background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -6px 16px rgba(0,0,0,.08)}
 .applybar span{margin-right:auto;font-weight:700}
@@ -279,7 +280,7 @@ button.ptag{border:0;font-family:inherit;cursor:pointer}.ptag.pend{outline:2px d
 .pmenu[open] summary{background:var(--panel-2)}
 .pmenu-list{position:absolute;right:0;top:100%;z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:160px;padding:4px}
 .pmenu-list button{background:none;border:0;text-align:left;padding:10px 12px;font:inherit;font-weight:600;font-size:15px;color:var(--ink);border-radius:8px;cursor:pointer}
-.pmenu-list button:hover{background:var(--panel-2)} .pmenu-list .del{color:var(--t1)}
+.pmenu-list button:hover{background:var(--panel-2)} .pmenu-list .del,.btn.danger-text{color:var(--t1)}
 .pcard .sub{padding:0 12px;color:var(--muted);font-size:14px}
 .pcard .row{display:flex;gap:6px;padding:10px 12px 12px;flex-wrap:wrap}
 .pcard .row .btn{min-height:40px;padding:0 10px;font-size:14.5px}
@@ -387,6 +388,20 @@ button.ptag{border:0;font-family:inherit;cursor:pointer}.ptag.pend{outline:2px d
 .sentq .sb.cur .bx{border-bottom:3px solid var(--jade);background:var(--jade-soft);box-shadow:inset 0 0 0 2px var(--jade)}
 .sentq .sb.cur rt{color:var(--jade);font-weight:700}
 .sentq .sb.ok{background:var(--jade-soft);border-radius:4px}
+.cropview{position:fixed;inset:0;z-index:80;background:rgba(10,12,14,.94);display:flex;flex-direction:column;color:#fff}
+.cropview[hidden]{display:none}
+.cropview .bar2{padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;text-align:center}
+.cropview .bar3{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
+.cropview .bar3 .grow{flex:1}
+.cropstage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:20px}
+.cropbox{position:relative;overflow:hidden;touch-action:none}
+.cropbox canvas{display:block}
+.cropframe{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.6);cursor:move;touch-action:none}
+.cropframe i{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;touch-action:none}
+.cropframe i::after{content:"";position:absolute;inset:9px;background:#fff;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
+.cropframe i[data-h="nw"]{left:0;top:0;cursor:nwse-resize}.cropframe i[data-h="n"]{left:50%;top:0;cursor:ns-resize}.cropframe i[data-h="ne"]{left:100%;top:0;cursor:nesw-resize}
+.cropframe i[data-h="e"]{left:100%;top:50%;cursor:ew-resize}.cropframe i[data-h="se"]{left:100%;top:100%;cursor:nwse-resize}.cropframe i[data-h="s"]{left:50%;top:100%;cursor:ns-resize}
+.cropframe i[data-h="sw"]{left:0;top:100%;cursor:nesw-resize}.cropframe i[data-h="w"]{left:0;top:50%;cursor:ew-resize}
 .origview{position:fixed;inset:0;z-index:80;background:rgba(10,12,14,.94);display:flex;flex-direction:column}
 .origview .bar2{display:flex;justify-content:space-between;align-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;color:#fff}
 .origview .scroll2{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center}
@@ -490,6 +505,7 @@ input[type=range]{width:100%;accent-color:var(--jade)}
   padding:9px 14px;border-radius:10px;box-shadow:var(--shadow);font-weight:600;font-size:15px;line-height:1.35;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:70;max-width:min(480px,calc(100vw - 32px));text-align:left}
 #toast.warn{border-left-color:var(--saved)}
 #toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;cursor:pointer}
+#saveWarn{position:sticky;top:0;z-index:1000;padding:10px 16px;background:var(--saved);color:var(--saved-ink);font-size:15px;line-height:1.35;text-align:center}
 .toast-act{margin-left:10px;background:transparent;border:1.5px solid currentColor;color:inherit;border-radius:8px;padding:4px 12px;font:inherit;font-weight:700;cursor:pointer}
 
 @media (max-width:820px){
@@ -592,7 +608,9 @@ body.no-desk #deskBtn,body.no-alert #alertBtn,body.no-finish #finishBtn,body.no-
 .finish .stamp{width:64px;height:64px;margin:0 auto;border-radius:14px;background:var(--speck),#FCE3DF;background-size:90px,auto;color:#C8322B;border:3px solid #C8322B;transform:rotate(-6deg);display:grid;place-items:center;font-family:"Noto Serif SC",serif;font-size:36px}
 .finish .num{font-size:44px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--jade)}
 .finish .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
-.modal{z-index:80}.modal .card{position:relative;text-align:left}.modal h3{margin:0;text-align:center}
+.modal{z-index:80}
+/* Popups that open the keyboard sit near the top, so an on-screen or floating keyboard doesn't cover them. */
+.modal:has(.pgfixm){place-items:start center;padding-top:max(16px,6vh)}.modal .card{position:relative;text-align:left}.modal h3{margin:0;text-align:center}
 .modal .tasks.big{background:none;padding:0;border:0;box-shadow:none}.bigstamp~.tasks .seal{display:none}
 .modal .btn.mreward{font-size:16px;min-height:36px;padding:0 10px;background:var(--panel-2)}.modal .btn.primary.mreward{background:var(--jade)}
 .bigstamp{width:120px;height:120px;margin:4px auto 0;border-radius:20px;background:var(--speck),#F4C7C3;background-size:90px,auto;color:#C8322B;border:5px solid #C8322B;box-shadow:inset 0 0 0 4px #FFF1EE,inset 0 0 0 6px #C8322B;transform:rotate(-8deg);display:grid;place-items:center;font:900 72px/1 "Noto Serif SC","Songti SC",serif}
@@ -819,6 +837,7 @@ label.srow{cursor:pointer}
 .kstate{margin-left:auto;font-weight:400;font-size:14px;color:var(--muted)}
 .klead{margin:0;padding:12px 14px 0;font-weight:600}
 .khelp{margin:0;padding:4px 14px 0;color:var(--muted);font-size:14px}
+.leaves{padding:8px 14px;font-size:14px;color:var(--muted)} .leaves summary{cursor:pointer;font-weight:600;color:var(--ink)} .leaves ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 #scanBox{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;color:#fff;text-align:center}
 #scanBox[hidden]{display:none}
 #scanBox video{width:min(92vw,520px);max-height:62vh;border-radius:14px;background:#000;object-fit:cover}
@@ -906,6 +925,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
             <button class="btn" id="demoBtn" type="button">Try sample pages</button>
           </div>
           <ol class="steps" id="firstSteps"></ol>
+          <div class="keynote" id="copyNote" hidden><b>Looking for your pages?</b> This copy was opened from a file, and each copy keeps its own pages and words. Nothing has been deleted: they are still in the copy you used before, such as the online one. To bring them here, use Back up in that copy, then <button class="linklike" id="copyNoteBtn" type="button">Restore</button> the file here.</div>
           <div class="keynote" id="keyNote" hidden>Before photographing your own book, add your Google Cloud API key in <button class="linklike" id="keyNoteBtn" type="button">Settings</button>. The sample pages work without it.</div>
         </div>
       </div>
@@ -921,12 +941,12 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
     </div>
     <div class="adjbar" id="adjBar" role="group" aria-label="Adjust photo" hidden>
       <span class="lab">Turn each page until its lines of text run along the green lines</span>
-      <div class="adj" id="adjBake"><span class="who">Pages</span><button class="btn" id="strTog" type="button" aria-pressed="false">Straighten</button><button class="btn" id="cropTog" type="button" aria-pressed="false">Crop to text</button></div>
+      <div class="adj" id="adjBake"><button class="btn" id="strTog" type="button" aria-pressed="false">Straighten</button><span class="who">Crop</span><div class="seg" id="cropSeg" role="group" aria-label="Crop"><button type="button" data-crop="off">Off</button><button type="button" data-crop="auto" title="Crop to the text">Auto</button><button type="button" data-crop="manual" title="Drag a frame to crop">Manual</button></div></div>
       <div class="adj" id="adj0"><span class="who">Left page</span><button class="btn" type="button" data-side="0" data-step="-0.1" aria-label="Turn left page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="0" aria-label="Left page tilt"><button class="btn" type="button" data-side="0" data-step="0.1" aria-label="Turn left page clockwise">⟳</button><output>0.0°</output></div>
       <div class="adj" id="adj1"><span class="who">Right page</span><button class="btn" type="button" data-side="1" data-step="-0.1" aria-label="Turn right page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="1" aria-label="Right page tilt"><button class="btn" type="button" data-side="1" data-step="0.1" aria-label="Turn right page clockwise">⟳</button><output>0.0°</output></div>
       <div class="adj"><span class="who">Clean up</span><div class="seg" id="cleanSeg" role="group" aria-label="Clean up"><button type="button" data-clean="0">Off</button><button type="button" data-clean="1">Even</button><button type="button" data-clean="2">Strong</button></div></div>
       <button class="btn" id="perspBtn" type="button" aria-pressed="false">Fix perspective</button>
-      <button class="btn" id="tiltReset" type="button">Reset</button>
+      <button class="btn danger-text" id="tiltDelete" type="button">Delete these pages</button>
       <button class="btn" id="tiltCancel" type="button">Cancel</button>
       <button class="btn primary" id="tiltDone" type="button">Done</button>
     </div>
@@ -1036,6 +1056,13 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
       <div class="srow wrap"><span>Other device<small>Words, rewards and up to 6 pages</small></span>
         <span class="btns"><button class="btn" id="syncBtn" type="button">Send</button><button class="btn" id="syncGet" type="button">Receive</button></span></div>
       <div class="srow"><span>Anki</span><button class="btn" id="ankiBtn" type="button">Export saved words</button></div>
+      <details class="leaves"><summary>What leaves this device</summary><ul>
+        <li><b>Photos you add</b> go to Google Cloud Vision to read the text (your Cloud key).</li>
+        <li><b>Sentences you translate</b> go to Google Cloud Translation.</li>
+        <li><b>Read-aloud</b>: voices on this device send nothing. Online voices, marked in Voice, send the text being read to Google or Microsoft.</li>
+        <li><b>Stroke animations</b> download each character’s strokes from cdn.jsdelivr.net, which can see which characters you practise.</li>
+        <li>Everything else (photos, words, stats, rewards) stays in this browser unless you back it up or send it to another device.</li>
+      </ul></details>
       <p class="usage" id="usageLine"></p>
       <input type="file" id="restorePick" accept=".jsonl,.json,.txt,application/json,application/x-ndjson,text/plain" hidden>
     </div></section>
@@ -1078,6 +1105,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 <div class="finish" id="finishCard" hidden></div>
 <div class="finish modal" id="modal" hidden></div>
 <div class="sideback" id="sideBack" hidden></div>
+<div class="cropview" id="cropView" hidden><div class="bar2"><b>Drag the frame or its edges. The dimmed part is cut off.</b></div><div class="cropstage" id="cropStage"><div class="cropbox" id="cropBox"><canvas id="cropCanvas"></canvas><div class="cropframe" id="cropFrame"><i data-h="nw"></i><i data-h="n"></i><i data-h="ne"></i><i data-h="e"></i><i data-h="se"></i><i data-h="s"></i><i data-h="sw"></i><i data-h="w"></i></div></div></div><div class="bar3"><button class="btn" id="cropAuto" type="button">Start from Auto</button><button class="btn" id="cropAll" type="button">Whole photo</button><span class="grow"></span><button class="btn" id="cropCancel" type="button">Cancel</button><button class="btn primary" id="cropApply" type="button">Use this crop</button></div></div>
 <div class="origview" id="origView" hidden><div class="bar2"><b>Original photo</b><button class="btn" id="origClose" type="button">Close</button></div><div class="scroll2"><img id="origImg" alt="The photo as it was taken, before straightening and cropping"></div></div>
 <div id="busy"><div class="busy-card"><div class="spin" aria-hidden="true"></div><span id="busyMsg">Reading the pages…</span><button class="btn" id="busyCancel" type="button" hidden>Cancel</button></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -1092,7 +1120,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 /*
   READING DESK
   A reader photographs two pages of a Chinese book. The app reads the photo, shows it, and makes each word tappable.
-  Saved words go to review. Rewards encourage a short daily habit. All data stays on the device.
+  Saved words go to review. Rewards encourage a short daily habit. Words, stats and photos are stored on the device; reading photos, translation and online voices send text or images to Google (Settings → Data → What leaves this device).
 
   HOW DATA MOVES
     photo → Vision reply → characters with boxes → sentences and words → page on screen → taps → saved words → review
@@ -1168,7 +1196,30 @@ const ICON = {
 // Creates the state object S and loads saved data into it.
 const LS = { favs:'rd.favs', settings:'rd.settings', words:'rd.words', stats:'rd.stats', tcache:'rd.tcache', lex:'rd.lex', known:'rd.known', notes:'rd.notes' };
 const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
-const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+// Keys whose last save failed. Caches can be rebuilt, so only the reader's own data counts.
+const saveFails = new Map(), CACHE_KEYS = new Set([LS.tcache, LS.lex]);
+// Why a save failed: 'full' (over quota) or 'off' (storage blocked). Used for localStorage and IndexedDB alike.
+const storageFail = e => /quota/i.test(e?.name + ' ' + e?.message) ? 'full' : 'off';
+const store = (k, v) => {
+  try { localStorage.setItem(k, JSON.stringify(v)); if (saveFails.delete(k)) saveWarn(); }
+  catch (e) { if (!CACHE_KEYS.has(k)) { saveFails.set(k, storageFail(e)); saveWarn(); } }
+};
+const askBeforeLeaving = e => { e.preventDefault(); e.returnValue = ''; };
+// A banner that stays while something can't be saved. A refresh or close would lose it, so the browser also asks before leaving.
+// The leave prompt is only attached while saving fails: with it attached, some browsers can't keep the page for Back and Forward.
+function saveWarn() {
+  let b = document.getElementById('saveWarn');
+  if (!saveFails.size) { b?.remove(); removeEventListener('beforeunload', askBeforeLeaving); return; }
+  addEventListener('beforeunload', askBeforeLeaving);
+  if (!b) { b = document.createElement('div'); b.id = 'saveWarn'; b.setAttribute('role', 'alert'); document.body.prepend(b); }
+  b.textContent = [...saveFails.values()].includes('full')
+    ? 'Storage is full, so new progress isn’t being saved. Refreshing or closing will lose it. Delete some old photos in Your pages to make room.'
+    : 'This browser isn’t saving your progress (private windows and some ways of opening the file block it). Words and stats will be lost when you refresh or close.';
+}
+// Startup check: a write that can't be read back means nothing will be kept.
+try { localStorage.setItem('rd.probe', '1'); if (localStorage.getItem('rd.probe') !== '1') throw new Error('off'); localStorage.removeItem('rd.probe'); }
+catch (e) { saveFails.set('rd.probe', storageFail(e)); }
+addEventListener('DOMContentLoaded', saveWarn);
 // The AI (Gemini) features were removed. Clear what they stored: the cache of answers, and (below) the Gemini key and AI settings.
 try { localStorage.removeItem('rd.ai'); } catch (e) {}
 const DEFAULTS = {
@@ -1572,11 +1623,19 @@ async function translate(text) {
 /* ================= Speech ================= */
 // speak(text) reads with the tablet voice. It returns a promise that resolves when the voice stops.
 function loadVoices() { if ('speechSynthesis' in window) S.voices = speechSynthesis.getVoices().filter(v => /^(zh|cmn|yue)/i.test(v.lang)); }
-function pickVoice() {
-  let v = S.voices.find(x => x.voiceURI === S.settings.voiceURI);
-  if (!v) { const pref = S.settings.script === 'traditional' ? /(zh|cmn)[-_](TW|Hant)/i : /(zh|cmn)[-_](CN|Hans)|^cmn/i; v = S.voices.find(x => pref.test(x.lang)) || S.voices.find(x => /^(zh|cmn)/i.test(x.lang)) || null; }
-  return v;
+// Automatic picks the best voice, not the first: the lists often start with poor ones (Apple's novelty voices, espeak).
+// Downloaded Premium/Enhanced voices, then good voices on the device, then online neural or Google voices, then any other.
+const voiceScore = v => /\b(Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley)\b|espeak/i.test(v.name) ? 0
+  : /premium|enhanced/i.test(v.name) ? 50 : /\b(Tingting|Ting-Ting|Meijia|Mei-Jia|Lili|Yu-shu|Sinji)\b/i.test(v.name) ? 40
+  : !v.localService && /natural|google/i.test(v.name) ? 30 : v.localService ? 20 : 10;
+const voiceOnline = v => v && v.localService === false;
+const voiceWho = v => /microsoft/i.test(v.name) ? 'Microsoft' : 'Google';
+function autoVoice() {
+  const pref = S.settings.script === 'traditional' ? /(zh|cmn)[-_](TW|Hant)/i : /(zh|cmn)[-_](CN|Hans)|^cmn/i;
+  const pool = S.voices.filter(x => pref.test(x.lang)), list = pool.length ? pool : S.voices.filter(x => /^(zh|cmn)/i.test(x.lang));
+  return list.reduce((best, v) => !best || voiceScore(v) > voiceScore(best) ? v : best, null);
 }
+const pickVoice = () => S.voices.find(x => x.voiceURI === S.settings.voiceURI) || autoVoice();
 // Reads text aloud. Returns a promise that resolves when the voice is done or is stopped.
 // Chrome on Android can drop an utterance that starts right after cancel(), and can lose an utterance
 // that is not referenced. So: cancel only when something is playing, keep a reference (S.utter),
@@ -2070,7 +2129,7 @@ async function saveNewSpread(sp) {
   else if (!sp.demo) { const prev = idx.filter(x => x.page != null && !x.demo && x.book === entry.book).pop(); if (prev) entry.page = prev.page + 2; }
   idx.push(entry); idx = sortIndex(idx);
   // No automatic deleting: photos stay until you delete them in Your pages.
-  if (!(await idbSet('sp:' + sp.id, sp))) throw new Error(/quota/i.test(idbSet.err?.name + ' ' + idbSet.err?.message) ? 'STORAGE_FULL' : 'STORAGE_OFF');   // only a quota error means full
+  if (!(await idbSet('sp:' + sp.id, sp))) throw new Error(storageFail(idbSet.err) === 'full' ? 'STORAGE_FULL' : 'STORAGE_OFF');   // only a quota error means full
   await idbSet('spreads:index', idx);
   S.index = idx;
 }
@@ -2250,12 +2309,14 @@ function updateProgress() {
   const pct = Math.round(done / total * 100);
   $('#fill').style.width = pct + '%'; $('#track').setAttribute('aria-valuenow', String(pct));
   $('#pct').textContent = S.spread.done ? 'Pages finished' : `${pct}% read`;
-  if (S.spread.done) { fin.innerHTML = `${ICON.camera}<span class="lbl">Next</span>`; fin.title = 'Add the next pages'; fin.setAttribute('aria-label', 'Next pages'); }
+  // Finish is a switch: once these pages are finished it stays pressed, and tapping it again un-finishes them.
+  fin.setAttribute('aria-pressed', String(!!S.spread.done));
+  if (S.spread.done) { fin.innerHTML = `${ICON.check}<span class="lbl">Finished</span>`; fin.title = 'Finished. Tap to mark as not finished'; fin.setAttribute('aria-label', 'Finished. Tap to mark as not finished'); }
   else { fin.innerHTML = `${ICON.flag}<span class="lbl">Finish</span>`; fin.title = 'Finish these pages'; fin.setAttribute('aria-label', 'Finish these pages'); }
 }
 function finishPages() {
   if (!S.spread) return;
-  if (S.spread.done) { openCapture(); return; }
+  if (S.spread.done) { if (confirm('Mark these pages as not finished? The pages they added to your daily count and the words they marked as known are taken back.')) undoFinish(S.spread); return; }
   S.spread.done = true;
   speedFinish(S.spread, S.model);
   const { pct, added, list } = learnFromPages();
@@ -2582,16 +2643,32 @@ function turnedChars(sp) {
 }
 // Step 3. parts: one per page (sd 0, 1), or one for all the text (sd -1). r is the part's area in the turned photo,
 // clip the band of the photo it may show (up to the gutter), dx where it goes in the page as shown.
+// sp.crop: true crops to the text (Auto); a frame { x, y, w, h } in the turned photo is a manual crop.
+const isManual = c => !!c && typeof c === 'object';
 function cropFrame(sp, chars = turnedChars(sp)) {
   if (!sp.crop) return null;
+  if (isManual(sp.crop)) { const r = { ...sp.crop }; return { parts:[{ sd:-1, r, clip:[r.x, r.x + r.w], dx:0 }], w:r.w, h:r.h }; }
   const split = sideSplit(sp), sides = pagesWithText(sp), two = sides.length === 2 && !sp.onePage && !sp.vertical;
-  const parts = (two ? sides : [-1]).map(sd => {
-    const tb = textBounds(chars.filter(c => c.box && (sd < 0 || charSide(c, sp) === sd)), sp.w, sp.h), r = { x:tb.x, y:tb.y, w:tb.w, h:tb.h };
+  const ids = two ? sides : [-1], tbs = ids.map(sd => textBounds(chars.filter(c => c.box && (sd < 0 || charSide(c, sp) === sd)), sp.w, sp.h));
+  // A short page (a chapter opening or ending: its text under 60% as tall as the other's) keeps its whole half of the photo.
+  const short = i => two && tbs[i].h < tbs[1 - i].h * 0.6;
+  const parts = ids.map((sd, i) => {
+    const tb = tbs[i], r = { x:tb.x, y:tb.y, w:tb.w, h:tb.h };
     let clip = [r.x, r.x + r.w];
-    if (sd === 0) { r.w = Math.ceil(tb.right + tb.m / 2) - r.x; clip = [r.x, Math.min(r.x + r.w, Math.max(split, tb.right))]; }   // half a margin each side of the gutter
-    if (sd === 1) { const x0 = Math.floor(tb.left - tb.m / 2); r.w += r.x - x0; r.x = x0; clip = [Math.max(r.x, Math.min(split, tb.left)), r.x + r.w]; }
+    if (short(i)) {
+      if (sd === 0) { r.x = 0; r.w = Math.ceil(Math.max(split, tb.right + tb.m / 2)); clip = [0, Math.max(split, tb.right)]; }
+      else { r.x = Math.floor(Math.min(split, tb.left - tb.m / 2)); r.w = sp.w - r.x; clip = [Math.max(r.x, Math.min(split, tb.left)), sp.w]; }
+    }
+    else if (sd === 0) { r.w = Math.ceil(tb.right + tb.m / 2) - r.x; clip = [r.x, Math.min(r.x + r.w, Math.max(split, tb.right))]; }   // half a margin each side of the gutter
+    else if (sd === 1) { const x0 = Math.floor(tb.left - tb.m / 2); r.w += r.x - x0; r.x = x0; clip = [Math.max(r.x, Math.min(split, tb.left)), r.x + r.w]; }
     return { sd, r, clip };
   });
+  // Both pages share one top and bottom, so they stay level as in the photo. Cropped one by one, a page whose text
+  // starts lower (a chapter opening) was lifted up against the other. A short page's height doesn't count.
+  if (two) {
+    const tall = parts.filter((p, i) => !short(i)), y0 = Math.min(...tall.map(p => p.r.y)), y1 = Math.max(...tall.map(p => p.r.y + p.r.h));
+    for (const p of parts) { p.r.y = y0; p.r.h = y1 - y0; }
+  }
   let dx = 0; for (const p of parts) { p.dx = dx; dx += p.r.w; }
   return { parts, w:dx, h:Math.max(...parts.map(p => p.r.h)) };
 }
@@ -2682,7 +2759,7 @@ function syncTiltUI() {
   const L = S.tilt.look;
   document.querySelectorAll('#cleanSeg button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.clean === L.cleanup)));
   $('#perspBtn').setAttribute('aria-pressed', String(!!L.persp));
-  $('#strTog').setAttribute('aria-pressed', String(!!L.straighten)); $('#cropTog').setAttribute('aria-pressed', String(!!L.crop));
+  $('#strTog').setAttribute('aria-pressed', String(!!L.straighten)); const ck = isManual(L.crop) ? 'manual' : L.crop ? 'auto' : 'off'; document.querySelectorAll('#cropSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.crop === ck)));
   for (const s of [0, 1]) {
     const row = $('#adj' + s), v = L.adj[s] || 0;
     row.querySelector('input').value = v;
@@ -2703,8 +2780,56 @@ function drawTiltPreview() {
   });
 }
 function setTilt(side, v) { const L = S.tilt?.look; if (!L) return; const adj = [...L.adj]; adj[side] = Math.round(clamp(v, -10, 10) * 10) / 10; setLook({ adj }); }
+// Manual crop: the draft page uncropped (still turned, with perspective), and a frame to drag. The frame starts at the
+// manual crop, or where Auto crops. It goes into the draft, so Done saves it and Cancel drops it like the rest.
+function openCropView() {
+  const L = S.tilt?.look; if (!L || S.cropEd) return;
+  const U = renderLook(S.tilt.bmp, { ...L, crop:false }, 1, {}), f = cropFrame({ ...L, crop:true });
+  const W = L.w, H = L.h, full = { x0:0, y0:0, x1:W, y1:H };
+  const auto = f ? { x0:Math.min(...f.parts.map(p => p.r.x)), y0:Math.min(...f.parts.map(p => p.r.y)), x1:Math.max(...f.parts.map(p => p.r.x + p.r.w)), y1:Math.max(...f.parts.map(p => p.r.y + p.r.h)) } : full;
+  const m = L.crop, r = isManual(m) ? { x0:m.x, y0:m.y, x1:m.x + m.w, y1:m.y + m.h } : { ...auto };
+  // Auto's margin can run past the photo's edge (it is paper there), so the view is the photo plus that border.
+  const V = { x0:Math.min(0, auto.x0, r.x0), y0:Math.min(0, auto.y0, r.y0), x1:Math.max(W, auto.x1, r.x1), y1:Math.max(H, auto.y1, r.y1) };
+  S.cropEd = { U, V, W, H, auto, r, fill:L.fill || '#fff' };
+  $('#cropView').hidden = false; fitCropView();
+}
+function closeCropView() { S.cropEd = null; $('#cropView').hidden = true; }
+function fitCropView() {
+  const E = S.cropEd, st = $('#cropStage').getBoundingClientRect(), cs = getComputedStyle($('#cropStage'));
+  const aw = st.width - parseFloat(cs.paddingLeft) * 2, ah = st.height - parseFloat(cs.paddingTop) * 2;
+  const V = E.V, vw = V.x1 - V.x0, vh = V.y1 - V.y0; E.k = Math.min(aw / vw, ah / vh);
+  const cv = $('#cropCanvas'), w = Math.round(vw * E.k), h = Math.round(vh * E.k), dpr = devicePixelRatio || 1, s = E.k * dpr;
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  const x = cv.getContext('2d'); x.fillStyle = E.fill; x.fillRect(0, 0, cv.width, cv.height);
+  x.drawImage(E.U, -V.x0 * s, -V.y0 * s, E.W * s, E.H * s);
+  drawCropFrame();
+}
+function drawCropFrame() {
+  const E = S.cropEd, f = $('#cropFrame').style, k = E.k;
+  f.left = (E.r.x0 - E.V.x0) * k + 'px'; f.top = (E.r.y0 - E.V.y0) * k + 'px'; f.width = (E.r.x1 - E.r.x0) * k + 'px'; f.height = (E.r.y1 - E.r.y0) * k + 'px';
+}
+function cropDragStart(e) {
+  const E = S.cropEd; if (!E) return; e.preventDefault();
+  const h = e.target.dataset?.h || 'move', r0 = { ...E.r }, sx = e.clientX, sy = e.clientY, el = e.currentTarget, { x0:X0, y0:Y0, x1:W, y1:H } = E.V;
+  const min = Math.max(E.W, E.H) * 0.05;
+  el.setPointerCapture(e.pointerId);
+  const move = ev => {
+    const dx = (ev.clientX - sx) / E.k, dy = (ev.clientY - sy) / E.k, r = { ...r0 };
+    if (h === 'move') { const mx = clamp(dx, X0 - r0.x0, W - r0.x1), my = clamp(dy, Y0 - r0.y0, H - r0.y1); r.x0 += mx; r.x1 += mx; r.y0 += my; r.y1 += my; }
+    else {
+      if (h.includes('w')) r.x0 = clamp(r0.x0 + dx, X0, r0.x1 - min);
+      if (h.includes('e')) r.x1 = clamp(r0.x1 + dx, r0.x0 + min, W);
+      if (h.includes('n')) r.y0 = clamp(r0.y0 + dy, Y0, r0.y1 - min);
+      if (h.includes('s')) r.y1 = clamp(r0.y1 + dy, r0.y0 + min, H);
+    }
+    E.r = r; drawCropFrame();
+  };
+  const up = () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); };
+  el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+}
 async function endTilt(apply) {
   const t = S.tilt; if (!t) return;
+  closeCropView();
   S.tilt = null; cancelAnimationFrame(t.raf);
   $('#tiltCanvas')?.remove(); page.classList.remove('tilting'); document.body.classList.remove('tilting'); $('#adjBar').hidden = true;
   const sp = S.spread;
@@ -2721,7 +2846,7 @@ async function setPageImage() {
   const sp = S.spread; if (!sp) return;
   let url = S.imgURL;
   if (tiltOf(sp).some(Boolean) || sp.crop || cleanupLevel(sp) || perspFor(sp.persp, sp)) {
-    const key = JSON.stringify([sp.id, tiltOf(sp), sp.persp || 0, !!sp.crop, cleanupLevel(sp), sp.fill || '']);
+    const key = JSON.stringify([sp.id, tiltOf(sp), sp.persp || 0, sp.crop || false, cleanupLevel(sp), sp.fill || '']);
     if (!litCache.has(key)) {
       busy('Adjusting the photo…'); await nextFrame();
       try {
@@ -2761,13 +2886,25 @@ function renderSteps() {
   const next = steps.findIndex(x => !x[1]);
   $('#firstSteps').innerHTML = steps.map(([t, ok, act], k) => `<li class="${ok ? 'ok' : ''}${k === next ? ' next' : ''}"><span>${ok ? '✓' : k + 1}</span> ${t}${k === next ? ` <button class="btn${k === 2 || !ok ? ' primary' : ''}" type="button" data-step="${act}">${['Open them', 'Open Settings', 'Take a photo'][k]}</button>` : ''}</li>`).join('');
   $('#firstSteps').hidden = next < 0;
+  // Storage belongs to the address the app was opened from, so a downloaded copy starts empty. Say so before it alarms anyone.
+  $('#copyNote').hidden = location.protocol !== 'file:' || S.index.some(x => !x.demo);
 }
+$('#copyNoteBtn').addEventListener('click', () => $('#restorePick').click());
 $('#firstSteps').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (!b) return; ({ demo:() => $('#demoBtn').click(), key:() => openSettings(), photo:() => openCapture() })[b.dataset.step](); });
 function showEmpty() {
   const b = S.index.length && S.books.find(x => x.id === S.book);   // an empty book while other books have pages
   $('#emptyBook').hidden = !b; if (b) $('#emptyBookT').textContent = `“${b.title}” has no pages yet.`;
   renderSteps(); updateFlip(); $('#empty').hidden = false; page.classList.remove('show'); wrap.style.width = ''; wrap.style.height = ''; updateBar(); updateProgress(); renderSide(); }
-async function requestWake() { try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !S.wake) { S.wake = await navigator.wakeLock.request('screen'); S.wake.addEventListener('release', () => { S.wake = null; }); } } catch (e) {} }
+// Keeps the screen on while reading, but only until 5 minutes pass without a tap or key (reading aloud counts as use).
+// Then the tablet may sleep as usual; the next tap keeps it on again.
+const WAKE_IDLE = 5 * 60e3;
+let wakeTimer = null;
+function wakeIdle() { clearTimeout(wakeTimer); wakeTimer = setTimeout(() => { if (S.reading) return wakeIdle(); S.wake?.release().catch(() => {}); S.wake = null; }, WAKE_IDLE); }
+async function requestWake() {
+  wakeIdle();
+  try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !S.wake) { S.wake = await navigator.wakeLock.request('screen'); S.wake.addEventListener('release', () => { S.wake = null; }); } } catch (e) {}
+}
+for (const ev of ['pointerdown', 'keydown']) addEventListener(ev, () => { if (S.spread) requestWake(); }, { capture:true, passive:true });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') return; if (S.spread) requestWake(); checkTravel(); });
 addEventListener('resize', () => { applyPanels(); if (pracSheet.classList.contains('open')) renderPane(); });
 
@@ -3352,6 +3489,7 @@ function closeTop() {
   else if (open(revSheet)) closeReview();
   else if (open(pagesSheet)) closePages();
   else if (open(statSheet)) closeSheet(statSheet);
+  else if (S.cropEd) closeCropView();
   else if (S.tilt) endTilt(false);
   else if (S.mag) toggleMag();
   else if (narrow() && !side.hidden) toggleSide(false);
@@ -4256,13 +4394,13 @@ function openMission(stamp) {
   showModal(`${done ? `<div class="bigstamp${stamp ? ' press' : ''}" aria-hidden="true">读</div><h3>Mission complete</h3>` : ''}${missionHTML(true)}`, 'mission');
 }
 // How many times this fortune has come up, counting this one. A repeat is marked as lucky.
-const cookieNth = ck => collect().cookies.filter(x => x.kind === ck.kind && x.i === ck.i && x.d <= ck.d).length || 1;
+const cookieNth = ck => collect().cookies.filter(x => x.kind === ck.kind && x.i === ck.i && x.w === ck.w && x.d <= ck.d).length || 1;
 // A fortune slip. Opens today's cookie first if it is waiting.
 function showCookie(ck) {
   const t = todayStats();
   if (!ck) { ck = t.cookie || (t.sealed && openCookie()); if (!ck) return; updateProgress(); if (!S.info) renderInfo(); if ($('#desk') && !$('#desk').hidden) redrawDesk(); }
   const [zh, py, en] = ck.kind === 'cy' ? CHENGYU[ck.i % CHENGYU.length] : [];
-  showModal(`<div class="slip${ck.gold ? ' gold' : ''}">${ck.kind === 'cy' ? `<p class="cy" lang="zh">${zh}</p><p class="note">${py}</p><p>${esc(en)}</p>` : `<p>“${esc(FORTUNES[ck.i % FORTUNES.length])}”</p>`}</div>
+  showModal(`<div class="slip${ck.gold ? ' gold' : ''}">${ck.kind === 'cy' ? `<p class="cy" lang="zh">${zh}</p><p class="note">${py}</p><p>${esc(en)}</p>` : `<p>“${esc(fortuneText(ck))}”</p>`}</div>
     ${ck.gold ? '<p class="note">Golden · +5 🪙</p>' : ''}${cookieNth(ck) > 1 ? `<p class="note">🍀 Lucky repeat ×${cookieNth(ck)}</p>` : ''}${ck.kind === 'cy' ? `<button class="btn" type="button" data-modal="say" data-say="${esc(zh)}">${ICON.speaker}Listen</button>` : ''}`, 'fortune');
 }
 $('#modal').addEventListener('click', e => {
@@ -4277,7 +4415,7 @@ $('#modal').addEventListener('click', e => {
 /* ================= Rewards: fortune cookies and shop ================= */
 // A complete seal gives one cookie: English, a chengyu (1 in 7), or golden (1 in 20, +5 coins).
 // The shop sells desk items. The lucky bag gives an item the reader does not have yet.
-// The first 40 keep their places: opened cookies are stored by position in this list.
+// Opened cookies are stored by position in this list, so every fortune keeps its place: add at the end, retire in RETIRED.
 const FORTUNES = ['A word you meet today will meet you again.', 'Small pages turn into big books.', 'Your next favorite word is two pages away.',
   'Patience is the quiet teacher you already have.', 'Curiosity opens doors that effort alone cannot.', 'Today’s confusion is tomorrow’s understanding.',
   'A slow reader still reaches the last page.', 'You will understand a sentence that once looked like a wall.', 'Good things come to those who look things up.',
@@ -4307,7 +4445,89 @@ const FORTUNES = ['A word you meet today will meet you again.', 'Small pages tur
   'The story wants to be finished. Help it.', 'Two pages today beat twenty pages someday.', 'A subtitle will go by and you won’t need it.',
   'The word on the tip of your tongue is coming back with friends.', 'Write it by hand once. Your hand remembers longer.', 'Lucky numbers: 6, 8, 9, 66, 88, 168.',
   'Do not fear the four-character phrase. It fears you.', 'An unexpected red envelope of understanding is on its way.',
-  'You are the reader your younger self hoped for.'];
+  'You are the reader your younger self hoped for.',
+  // Oddly specific predictions.
+  'You will recognize a character on the side of a truck. It will mean “logistics.”', 'You will read a stranger’s tattoo. It says “soup.”',
+  'Within the week you will correct a subtitle, quietly, to no one.', 'A relative will forward you a very long message. You will get halfway. This is a record.',
+  'You will spot a typo in Chinese. Tell no one. Savor it.', 'Someone will say a chengyu at dinner and, this time, the nod will be real.',
+  'Before the month ends you will eavesdrop successfully.', 'A karaoke screen is in your future. You will keep up for one whole line.',
+  'On Thursday, a word from this book will appear on a snack wrapper.', 'Soon you will read the group chat instead of asking what happened.',
+  // Mock proverbs.
+  'He who looks up the same word five times has a loyal friend.', 'The dictionary is patient. The plot is not.',
+  'A wise reader knows many characters. A wiser one knows when to guess.', 'Even the dragon started with 一.',
+  'The ox is slow, but the ox finished the chapter.', 'She who saves forty words on one page is reading a dictionary.',
+  // Honest cookies.
+  'You will forget a word tomorrow. It’s fine. It knows the way back.', 'No prophecy today. You did the reading; that was the whole trick.',
+  'The cookie has seen your lookup count and says nothing.', 'Your fortune was written in cursive Chinese. Even the cookie can’t read it.',
+  'Outlook good. Handwriting, less so.', 'Help! I am being held inside a reading app. Send pages.', 'Another cookie tomorrow. Terms: one mission.',
+  'This cookie is real. The calories are imaginary.', 'Lucky numbers: 8, 88, 888. Unlucky number: you know the one.',
+  // Family and food.
+  'Grandma’s recipe says 适量. You now know it means “you’ll figure it out.”', 'A waiter will hand you the Chinese menu without asking. Act casual.',
+  'The day nobody compliments your Chinese is the day it got good.', 'Someone’s mother will offer you more food. You will refuse correctly, three times, and eat it anyway.',
+  'The red envelope is small, but you can finally read what’s printed on it.', 'Traditional or simplified, the dumpling tastes the same.',
+  // Language jokes.
+  '了 does not mean what you think. It does not mean what anyone thinks.', 'mā, má, mǎ, mà. One of these is your mother. Choose carefully.',
+  'There is a measure word for that. There is always a measure word for that.', '的, 地, 得: today you will pick the right one, by accident.',
+  'A character you know is hiding inside a character you don’t.', 'Two third tones in a row: you were doing it right before anyone explained it.',
+  '马马虎虎 has nothing to do with horses or tigers, and nothing to do with today’s reading.', 'Four tones, one neutral, zero excuses.',
+  // Small dares.
+  'Tomorrow: say one new word out loud to someone who didn’t ask.', 'Text someone a word from today. No context.',
+  'Tonight, name three things in the room in Chinese. The ceiling counts.', 'Trace today’s best character on your palm. Invisible ink counts.',
+  // About one of the reader's saved words: {w} is filled in when the cookie opens.
+  '{w} will turn up again within the week. Act like old friends.', 'Lucky word: {w}.', 'Use {w} in a sentence today. A muttered one counts.',
+  'Somewhere, right now, someone is saying {w}.', 'You saved {w}. It has not forgotten.', 'Learn Chinese: {w}. (You already did.)',
+  // Zen, with one real thing in it.
+  'The tea went cold. The chapter was worth it.', 'A bookmark is a promise to come back.', 'The page does not mind how long you take.',
+  'Rain outside, one lamp, one more page.', 'The river does not study the sea. It just goes.', 'Bamboo grows roots for years, then a metre in a week.',
+  'Nobody counts the strokes once the character is written.', 'A lantern lights only the next step. That is enough to walk by.',
+  'The moon in the book is the same moon.', 'Sweep one stair. Then the next.',
+  'What is the sound of one character, read?', 'Before you learned it, the word was already there.', 'The reader who hurries arrives at the same last page.',
+  'You cannot step into the same sentence twice.', 'Empty the cup. Then look up the word.',
+  'Today was enough.', 'One page. Good.', 'You came back. That is the whole method.', 'Nothing to fix today.',
+  // Chengyu, bent into fortunes.
+  'Dripping water wears through stone. The stone would like a word. (滴水穿石)', 'The frog in the well has started reading about the sky. (井底之蛙)',
+  'The old man lost his horse. You lost your place. Both turn out fine. (塞翁失马)', 'Stop waiting by the stump. The rabbit is on page 12. (守株待兔)',
+  'Today you drew the snake and left the legs off. Well done. (画蛇添足)', 'The slow bird set off early and is, frankly, smug about it. (笨鸟先飞)',
+  'The cow has heard the lute before, and is starting to enjoy it. (对牛弹琴)', 'The sheep is gone, the pen is mended, and the next sheep is very impressed. (亡羊补牢)',
+  'You had the whole bamboo in mind. The page only asked for a leaf. (胸有成竹)', 'Halfway is a fine place to rest. It is a poor place to live. (半途而废)',
+  'A thousand li began with one step. The step is still proud of itself. (千里之行，始于足下)', 'One action, two gains: a page read, a cookie opened. (一举两得)',
+  'There is a tiger crouching in your word list, and possibly a dragon. (卧虎藏龙)', 'You forgot to eat. The book is flattered. Go eat. (废寝忘食)',
+  // More oddly specific.
+  'You will understand an announcement on a train, one stop too late.', 'A shampoo bottle is about to become reading material.',
+  'A delivery driver will call. You will say 好 six times and it will work.', 'An elevator will skip the fourth floor, and you will know why.',
+  'You will notice a 福 hung upside down and know it’s on purpose.', 'You will pause a drama to read a text message on someone’s phone. Worth it.',
+  'Someone’s WeChat name will finally make sense. It’s a pun.', 'A scroll on a restaurant wall: you’ll read two characters out of four. The other two are atmosphere.',
+  'You will read the phone of the person in front of you on the subway. It’s about lunch.', 'The fine print on a soy sauce bottle will make you feel powerful.',
+  // More language.
+  '意思 has many 意思. 有意思.', 'East plus west (东西) equals “stuff.” Nobody will explain this to you.', '马上 means the horse is already saddled. The horse is not saddled.',
+  'A turkey is a fire chicken (火鸡). A kangaroo is a pocket rat (袋鼠). This language is on your side.', 'When in doubt, 个. The measure-word police are busy.',
+  'Two is 二, except when it’s 两, which is nearly always.', 'The pinyin q is not a q. The x is not an x. You have made peace with this.',
+  '一 changes its tone depending on the company it keeps. Relatable.', 'Add 吗 and it’s a question. Add 吧 and it’s a suggestion. Add 啊 and it’s your aunt.',
+  'You will lift the pen and forget the character. So does everyone; there’s a chengyu for it. (提笔忘字)', '行 can be read two ways. 行不行? 行.',
+  'The biáng in biángbiáng noodles has 58 strokes. You are excused.', 'Someone is eating vinegar (吃醋) over your reading streak.',
+  // More food and family.
+  '吃了吗 is not really about food. It is entirely about food.', 'Cut fruit will appear at your door without a word. That was the word.',
+  'You will be asked if you’ve eaten, if you’re cold, and when you’re getting married. You can now answer two.', 'Someone will say 随便 about dinner. They do not mean it.',
+  'The fight over the bill is coming. Practise 我来 and move fast.', 'An uncle will explain where a character comes from. It will be wrong and wonderful.',
+  'You will be told to wear more clothes (多穿点). Comply.', 'Drink hot water (多喝热水). The cookie agrees with your mother.',
+  'You will be offered the last dumpling. Refuse once. Only once.', 'The lazy Susan turns toward the one who knows the name of the dish.',
+  'Do not cut longevity noodles. Do not skim long sentences.', 'Grandpa’s newspaper is no longer safe from you.', '慢慢吃. Also 慢慢读.',
+  // Other funny.
+  'Fortune cookies are not from China. Neither is this advice. Read on.', 'Lucky direction: left to right. Occasionally top to bottom.',
+  'Lucky colour: red. It is always red.', 'Reply hazy. Look it up again.', 'Mercury is in retrograde. The characters are unaffected.',
+  'The cookie had something wise to say, but you just read a whole page of that.', 'The cookie is contractually obliged to say you’re doing great. You are, though.',
+  'Do not open the next cookie until tomorrow. You can’t anyway.', 'That’s it. That’s the fortune.'];
+// Fortunes that no longer come out of new cookies. They stay in the list so opened cookies still read the same.
+// These pair two ideas that don't connect (memory vs doubts, a door that opens from writing).
+const RETIRED = new Set([3, 4, 11, 14, 25, 26, 29]);
+// The text of an English cookie. A cookie about a saved word carries that word in ck.w.
+const fortuneText = ck => FORTUNES[ck.i % FORTUNES.length].replace('{w}', ck.w || '这个词');
+// Picks an English fortune. With saved words, 1 in 5 is about one of them.
+const LIVE = [...FORTUNES.keys()].filter(i => !RETIRED.has(i)), OWN = LIVE.filter(i => FORTUNES[i].includes('{w}')), PLAIN = LIVE.filter(i => !OWN.includes(i));
+function pickFortune() {
+  const any = a => a[Math.floor(Math.random() * a.length)];
+  return S.words.length && Math.random() < 1 / 5 ? { i:any(OWN), w:any(S.words).w } : { i:any(PLAIN) };
+}
 const CHENGYU = [['开卷有益', 'kāi juàn yǒu yì', 'Opening a book always does you good.'], ['温故知新', 'wēn gù zhī xīn', 'Review the old to understand the new.'],
   ['熟能生巧', 'shú néng shēng qiǎo', 'Practice makes perfect.'], ['滴水穿石', 'dī shuǐ chuān shí', 'Dripping water wears through stone.'],
   ['持之以恒', 'chí zhī yǐ héng', 'Keep at it, steadily.'], ['循序渐进', 'xún xù jiàn jìn', 'Make progress step by step.'],
@@ -4323,12 +4543,17 @@ const CHENGYU = [['开卷有益', 'kāi juàn yǒu yì', 'Opening a book always 
   ['三心二意', 'sān xīn èr yì', 'Of two minds, half-hearted.'], ['百闻不如一见', 'bǎi wén bù rú yī jiàn', 'Seeing once beats hearing a hundred times.'],
   ['卧虎藏龙', 'wò hǔ cáng lóng', 'Crouching tiger, hidden dragon: hidden talent.'], ['一日千里', 'yī rì qiān lǐ', 'A thousand li in a day: rapid progress.'],
   ['精益求精', 'jīng yì qiú jīng', 'Keep improving what is already good.'], ['心想事成', 'xīn xiǎng shì chéng', 'May your wishes come true.'],
-  ['万事如意', 'wàn shì rú yì', 'May everything go as you wish.'], ['千里之行，始于足下', 'qiān lǐ zhī xíng, shǐ yú zú xià', 'A journey of a thousand li begins with one step.']];
+  ['万事如意', 'wàn shì rú yì', 'May everything go as you wish.'], ['千里之行，始于足下', 'qiān lǐ zhī xíng, shǐ yú zú xià', 'A journey of a thousand li begins with one step.'],
+  ['日积月累', 'rì jī yuè lěi', 'Days pile up, months add up.'], ['聚沙成塔', 'jù shā chéng tǎ', 'Gather sand and it becomes a pagoda.'],
+  ['豁然开朗', 'huò rán kāi lǎng', 'Suddenly it all opens up clear.'], ['一目十行', 'yī mù shí háng', 'Ten lines at a glance.'],
+  ['囫囵吞枣', 'hú lún tūn zǎo', 'Swallowing the date whole: reading without chewing.'], ['读万卷书，行万里路', 'dú wàn juàn shū, xíng wàn lǐ lù', 'Read ten thousand books, walk ten thousand li.'],
+  ['书中自有黄金屋', 'shū zhōng zì yǒu huáng jīn wū', 'In books there are houses of gold.'], ['磨杵成针', 'mó chǔ chéng zhēn', 'Grind the iron pestle down to a needle.'],
+  ['乐在其中', 'lè zài qí zhōng', 'The joy is in the doing.'], ['水到渠成', 'shuǐ dào qú chéng', 'When the water comes, the channel forms.']];
 // Golden 1 in 20 (+5 coins); otherwise a chengyu 1 in 7; otherwise an English fortune.
 function openCookie() {
   const t = todayStats(), c = collect(); if (!t.sealed || t.cookie) return null;
   const f = S.devCookie, r = Math.random(), gold = f ? f === 'gold' : r < 1 / 20, cy = f === 'cy' || (!f && (gold ? Math.random() < 0.5 : r < 1 / 20 + 1 / 7)); S.devCookie = null;
-  const ck = { d:dayKey(), kind:cy ? 'cy' : 'en', gold, i:Math.floor(Math.random() * (cy ? CHENGYU.length : FORTUNES.length)) };
+  const ck = { d:dayKey(), kind:cy ? 'cy' : 'en', gold, ...(cy ? { i:Math.floor(Math.random() * CHENGYU.length) } : pickFortune()) };
   if (gold) c.coins += 5;
   (c.cookies || (c.cookies = [])).push(ck); t.cookie = ck; saveStats(); return ck;
 }
@@ -4336,7 +4561,7 @@ function openCookie() {
 function cookieHTML(ck) {
   if (!todayStats().sealed) return `<div class="srow"><span class="te dim">🥠</span><span class="tx">Fortune cookie<small>Complete today’s mission</small></span></div>`;
   if (!ck) return `<div class="srow"><span class="te">🥠</span><span class="tx">Fortune cookie<small>Mission complete</small></span><button class="btn primary" type="button" id="openCookie">Open</button></div>`;
-  const body = ck.kind === 'cy' ? (([zh, py, en]) => `<span class="cy" lang="zh">${zh}</span><small>${py} · ${esc(en)}</small>`)(CHENGYU[ck.i % CHENGYU.length]) : `<span class="fx">“${esc(FORTUNES[ck.i % FORTUNES.length])}”</span>`;
+  const body = ck.kind === 'cy' ? (([zh, py, en]) => `<span class="cy" lang="zh">${zh}</span><small>${py} · ${esc(en)}</small>`)(CHENGYU[ck.i % CHENGYU.length]) : `<span class="fx">“${esc(fortuneText(ck))}”</span>`;
   return `<div class="srow cookie-row${ck.gold ? ' gold' : ''}"><span class="te">🥠</span><span class="tx">${body}${ck.gold ? '<small>Golden · +5 🪙</small>' : ''}</span>${ck.kind === 'cy' ? `<button class="btn icon-btn" type="button" id="sayCookie" aria-label="Listen">${ICON.speaker}</button>` : ''}</div>`;
 }
 // Price follows size: small things 60, things for the desk 120, furniture 240.
@@ -4582,7 +4807,7 @@ function deskHTML() {
   const slots = (k, cur) => setItems(k).map((e, j) => `<span class="slot${j === 6 ? ' center' : ''}${cur ? (j < c.track.slot ? ' got' : j === c.track.slot ? ' next' : ' future') : ' future'}">${e}</span>`).join('');
   let k = c.track.set; const later = [1, 2, 3].map(() => { k = nextSet(k); return `<div><span class="note">${esc(SETS[k][0])} <span lang="zh">${SETS[k][1]}</span></span><div class="set">${slots(k, false)}</div></div>`; }).join('');
   const owned = Object.keys(c.owned), past = (c.cookies || []).slice().reverse();   // newest first, today's included once opened
-  const cookieLine = ck => `<li class="${ck.gold ? 'gold' : ''}" data-ck="${c.cookies.indexOf(ck)}">${ck.kind === 'cy' ? (([zh2, py, en]) => `<span lang="zh">${zh2}</span> <span class="note">${py} · ${esc(en)}</span>`)(CHENGYU[ck.i % CHENGYU.length]) : `“${esc(FORTUNES[ck.i % FORTUNES.length])}”`}${cookieNth(ck) > 1 ? ` <span class="note">🍀×${cookieNth(ck)}</span>` : ''}</li>`;
+  const cookieLine = ck => `<li class="${ck.gold ? 'gold' : ''}" data-ck="${c.cookies.indexOf(ck)}">${ck.kind === 'cy' ? (([zh2, py, en]) => `<span lang="zh">${zh2}</span> <span class="note">${py} · ${esc(en)}</span>`)(CHENGYU[ck.i % CHENGYU.length]) : `“${esc(fortuneText(ck))}”`}${cookieNth(ck) > 1 ? ` <span class="note">🍀×${cookieNth(ck)}</span>` : ''}</li>`;
   return `<div class="desk">
     <div class="dhead"><span class="coins">🪙 ${c.coins}</span><span class="note">${owned.length} item${owned.length === 1 ? '' : 's'}${owned.length ? ' · drag to arrange' : ''}</span>${owned.some(specialKind) ? `<button class="glamtog" type="button" data-glam="1" aria-pressed="${S.settings.glam !== false}" title="Glow on special items" aria-label="Glow on special items">✨</button>` : ''}</div>
     ${boardHTML()}
@@ -4965,8 +5190,8 @@ async function setPageNumber(id, value, span) {
   S.index = sortIndex(S.index); await idbSet('spreads:index', S.index);
   renderPages(); updateFlip();
 }
-async function deletePage(id) {
-  if (!confirm('Delete these pages and their reading progress? Saved words stay.')) return;
+async function deletePage(id, asked) {
+  if (!asked && !confirm('Delete these pages and their reading progress? Saved words stay.')) return;
   const i = S.index.findIndex(x => x.id === id); if (i < 0) return;
   const bl = inBook(), bi = bl.findIndex(x => x.id === id), next = bl[bi + 1] || bl[bi - 1];
   await idbDel('sp:' + id); S.index.splice(i, 1); await idbSet('spreads:index', S.index);
@@ -5149,11 +5374,18 @@ function openSettings() {
   const bd = backupDue(), lb = S.stats.lastBackup; $('#backupLine').textContent = bd === 'never' || !lb ? 'Not backed up yet' : `Backed up ${bd || new Date(lb + 'T12:00:00').toLocaleDateString(undefined, { month:'short', day:'numeric' })}`; $('#backupLine').style.color = bd ? 'var(--flame)' : '';
   loadVoices();
   const sel = $('#fVoice');
-  sel.innerHTML = `<option value="">Automatic</option>` + S.voices.map(v => `<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})</option>`).join('');
+  sel.innerHTML = `<option value="">Automatic</option>` + S.voices.map(v => `<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})${voiceOnline(v) ? ` · online, text is sent to ${voiceWho(v)}` : ''}</option>`).join('');
   sel.value = S.voices.some(v => v.voiceURI === st.voiceURI) ? st.voiceURI : '';
-  $('#voiceHelp').textContent = S.voices.length ? '' : 'None found. Install Chinese in Android text-to-speech.';
+  voiceHelp();
   openSheet(setSheet);
 }
+// The line under Voice: what Automatic chose, and whether the text is sent online.
+function voiceHelp() {
+  if (!S.voices.length) { $('#voiceHelp').textContent = 'None found. Install Chinese in Android text-to-speech.'; return; }
+  const uri = $('#fVoice').value, v = S.voices.find(x => x.voiceURI === uri) || autoVoice();
+  $('#voiceHelp').textContent = [uri ? '' : v ? `Using ${v.name}.` : '', voiceOnline(v) ? `Online voice: the text read aloud is sent to ${voiceWho(v)}.` : ''].filter(Boolean).join(' ');
+}
+$('#fVoice').addEventListener('change', voiceHelp);
 function applySettingsForm() {
   const st = S.settings;
   st.apiKey = $('#fKey').value.trim();
@@ -5493,9 +5725,22 @@ $('#aloudBtn').addEventListener('click', readAloud);
 $('#tiltBtn').addEventListener('click', startTilt);
 $('#tiltDone').addEventListener('click', () => endTilt(true));
 $('#strTog').addEventListener('click', () => setLook({ straighten:!S.tilt?.look.straighten }));
-$('#cropTog').addEventListener('click', () => setLook({ crop:!S.tilt?.look.crop }));
+$('#cropSeg').addEventListener('click', e => {
+  const b = e.target.closest('[data-crop]'); if (!b) return;
+  if (b.dataset.crop === 'manual') openCropView(); else setLook({ crop:b.dataset.crop === 'auto' });
+});
+$('#cropFrame').addEventListener('pointerdown', cropDragStart);
+$('#cropAuto').addEventListener('click', () => { const E = S.cropEd; if (E) { E.r = { ...E.auto }; drawCropFrame(); } });
+$('#cropAll').addEventListener('click', () => { const E = S.cropEd; if (E) { E.r = { x0:0, y0:0, x1:E.W, y1:E.H }; drawCropFrame(); } });   // the photo itself, no border
+$('#cropCancel').addEventListener('click', closeCropView);
+$('#cropApply').addEventListener('click', () => {
+  const E = S.cropEd; if (!E) return; const r = E.r; closeCropView();
+  setLook({ crop:{ x:Math.round(r.x0), y:Math.round(r.y0), w:Math.round(r.x1 - r.x0), h:Math.round(r.y1 - r.y0) } });
+});
+addEventListener('resize', () => { if (S.cropEd) fitCropView(); });
 $('#tiltCancel').addEventListener('click', () => endTilt(false));
-$('#tiltReset').addEventListener('click', () => setLook({ adj:[0, 0], cleanup:0, persp:null }));
+// Delete from the reading view: the same confirm and clean-up as the page overview.
+$('#tiltDelete').addEventListener('click', async () => { const id = S.spread?.id; if (!id || !confirm('Delete these pages and their reading progress? Saved words stay.')) return; await endTilt(false); deletePage(id, true); });
 $('#adjBar').addEventListener('input', e => { const r = e.target.closest('input[type=range]'); if (r) setTilt(+r.dataset.side, +r.value); });
 $('#adjBar').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b && S.tilt) setTilt(+b.dataset.side, (S.tilt.look.adj[+b.dataset.side] || 0) + (+b.dataset.step)); });
 $('#cleanSeg').addEventListener('click', e => { const b = e.target.closest('[data-clean]'); if (b) setLook({ cleanup:+b.dataset.clean }); });
@@ -5551,7 +5796,7 @@ async function replayVision(file) {
     await saveNewSpread(sp); busy(false); closeSheet(setSheet); await showSpread(sp); toast(`Replayed: ${chars.length} characters, ${vertical ? 'vertical' : 'horizontal'}.`);
   } catch (e) { busy(false); throw e; }
 }
-if (DEBUG) window.RD = { S, errors, log, debugReport, replayVision, layoutFromVision, parseVision, visionBlocks, isVertical, gutterInfo, fitPerspective, segmentChars, buildModel,
+if (DEBUG) window.RD = { requestWake, autoVoice, voiceScore, finishPages, openPages, openPageFix, FORTUNES, CHENGYU, RETIRED, PLAIN, pickFortune, fortuneText, showCookie, todayStats, store, LS, S, errors, log, debugReport, replayVision, layoutFromVision, parseVision, visionBlocks, isVertical, gutterInfo, fitPerspective, segmentChars, buildModel,
   rebuild, renderInfo, drawHighlights, openSpan, openSentence, showSpread, visionOCR, speak, readAloud,
   sealParts, claimGift, openCookie, openBag, checkAwards, festivalToday, lunarMD, deskHTML, backupAll, streak, longestStreak,
   readingSpeed, speedHTML, weekGridText, pickEmoji, buyPick, give, collect, collectFree, earnable, keysFromCode, openReview, openStats, openSpeed, openParticles, openLookalike, freqHTML, charsHTML,
