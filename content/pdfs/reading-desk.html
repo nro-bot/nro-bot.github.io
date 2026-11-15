@@ -921,7 +921,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
     </div>
     <div class="adjbar" id="adjBar" role="group" aria-label="Adjust photo" hidden>
       <span class="lab">Turn each page until its lines of text run along the green lines</span>
-      <div class="adj" id="adjBake" hidden><span class="who">Pages</span><button class="btn" id="strTog" type="button" aria-pressed="false">Straighten</button><button class="btn" id="cropTog" type="button" aria-pressed="false">Crop to text</button></div>
+      <div class="adj" id="adjBake"><span class="who">Pages</span><button class="btn" id="strTog" type="button" aria-pressed="false">Straighten</button><button class="btn" id="cropTog" type="button" aria-pressed="false">Crop to text</button></div>
       <div class="adj" id="adj0"><span class="who">Left page</span><button class="btn" type="button" data-side="0" data-step="-0.1" aria-label="Turn left page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="0" aria-label="Left page tilt"><button class="btn" type="button" data-side="0" data-step="0.1" aria-label="Turn left page clockwise">⟳</button><output>0.0°</output></div>
       <div class="adj" id="adj1"><span class="who">Right page</span><button class="btn" type="button" data-side="1" data-step="-0.1" aria-label="Turn right page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="1" aria-label="Right page tilt"><button class="btn" type="button" data-side="1" data-step="0.1" aria-label="Turn right page clockwise">⟳</button><output>0.0°</output></div>
       <div class="adj"><span class="who">Clean up</span><div class="seg" id="cleanSeg" role="group" aria-label="Clean up"><button type="button" data-clean="0">Off</button><button type="button" data-clean="1">Even</button><button type="button" data-clean="2">Strong</button></div></div>
@@ -2667,7 +2667,7 @@ async function startTilt() {
   S.tilt = { bmp, look, memo:{}, raf:0 };
   const pages = pagesWithText(sp), two = pages.length === 2;
   $('#perspBtn').hidden = !!sp.vertical;
-  $('#adjBake').hidden = !canLayout(sp); $('#strTog').hidden = !!sp.vertical;
+  $('#strTog').hidden = !canLayout(sp) || !!sp.vertical;   // Crop works on every page; Straighten needs the photo as taken
   $('#adjBar .lab').textContent = sp.vertical ? 'Clean up the photo' : 'Turn each page until its lines of text run along the green lines';
   for (const s of [0, 1]) {
     const row = $('#adj' + s); row.hidden = !pages.includes(s) || !!sp.vertical;
