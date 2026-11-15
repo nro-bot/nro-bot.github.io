@@ -380,6 +380,20 @@ button.ptag{border:0;font-family:inherit;cursor:pointer}.ptag.pend{outline:2px d
 .sentq .sb.cur .bx{border-bottom:3px solid var(--jade);background:var(--jade-soft);box-shadow:inset 0 0 0 2px var(--jade)}
 .sentq .sb.cur rt{color:var(--jade);font-weight:700}
 .sentq .sb.ok{background:var(--jade-soft);border-radius:4px}
+.cropview{position:fixed;inset:0;z-index:80;background:rgba(10,12,14,.94);display:flex;flex-direction:column;color:#fff}
+.cropview[hidden]{display:none}
+.cropview .bar2{padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;text-align:center}
+.cropview .bar3{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
+.cropview .bar3 .grow{flex:1}
+.cropstage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:20px}
+.cropbox{position:relative;overflow:hidden;touch-action:none}
+.cropbox canvas{display:block}
+.cropframe{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.6);cursor:move;touch-action:none}
+.cropframe i{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;touch-action:none}
+.cropframe i::after{content:"";position:absolute;inset:9px;background:#fff;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
+.cropframe i[data-h="nw"]{left:0;top:0;cursor:nwse-resize}.cropframe i[data-h="n"]{left:50%;top:0;cursor:ns-resize}.cropframe i[data-h="ne"]{left:100%;top:0;cursor:nesw-resize}
+.cropframe i[data-h="e"]{left:100%;top:50%;cursor:ew-resize}.cropframe i[data-h="se"]{left:100%;top:100%;cursor:nwse-resize}.cropframe i[data-h="s"]{left:50%;top:100%;cursor:ns-resize}
+.cropframe i[data-h="sw"]{left:0;top:100%;cursor:nesw-resize}.cropframe i[data-h="w"]{left:0;top:50%;cursor:ew-resize}
 .origview{position:fixed;inset:0;z-index:80;background:rgba(10,12,14,.94);display:flex;flex-direction:column}
 .origview .bar2{display:flex;justify-content:space-between;align-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;color:#fff}
 .origview .scroll2{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center}
@@ -913,7 +927,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
     </div>
     <div class="adjbar" id="adjBar" role="group" aria-label="Adjust photo" hidden>
       <span class="lab">Turn each page until its lines of text run along the green lines</span>
-      <div class="adj" id="adjBake" hidden><span class="who">Pages</span><button class="btn" id="strTog" type="button" aria-pressed="false">Straighten</button><button class="btn" id="cropTog" type="button" aria-pressed="false">Crop to text</button></div>
+      <div class="adj" id="adjBake" hidden><span class="who">Pages</span><button class="btn" id="strTog" type="button" aria-pressed="false">Straighten</button><span class="who">Crop</span><div class="seg" id="cropSeg" role="group" aria-label="Crop"><button type="button" data-crop="off">Off</button><button type="button" data-crop="auto" title="Crop to the text">Auto</button><button type="button" data-crop="manual" title="Drag a frame to crop">Manual</button></div></div>
       <div class="adj" id="adj0"><span class="who">Left page</span><button class="btn" type="button" data-side="0" data-step="-0.1" aria-label="Turn left page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="0" aria-label="Left page tilt"><button class="btn" type="button" data-side="0" data-step="0.1" aria-label="Turn left page clockwise">⟳</button><output>0.0°</output></div>
       <div class="adj" id="adj1"><span class="who">Right page</span><button class="btn" type="button" data-side="1" data-step="-0.1" aria-label="Turn right page counterclockwise">⟲</button><input type="range" min="-10" max="10" step="0.1" data-side="1" aria-label="Right page tilt"><button class="btn" type="button" data-side="1" data-step="0.1" aria-label="Turn right page clockwise">⟳</button><output>0.0°</output></div>
       <div class="adj"><span class="who">Clean up</span><div class="seg" id="cleanSeg" role="group" aria-label="Clean up"><button type="button" data-clean="0">Off</button><button type="button" data-clean="1">Even</button><button type="button" data-clean="2">Strong</button></div></div>
@@ -1074,6 +1088,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
 <div class="finish" id="finishCard" hidden></div>
 <div class="finish modal" id="modal" hidden></div>
 <div class="sideback" id="sideBack" hidden></div>
+<div class="cropview" id="cropView" hidden><div class="bar2"><b>Drag the frame or its edges. The dimmed part is cut off.</b></div><div class="cropstage" id="cropStage"><div class="cropbox" id="cropBox"><canvas id="cropCanvas"></canvas><div class="cropframe" id="cropFrame"><i data-h="nw"></i><i data-h="n"></i><i data-h="ne"></i><i data-h="e"></i><i data-h="se"></i><i data-h="s"></i><i data-h="sw"></i><i data-h="w"></i></div></div></div><div class="bar3"><button class="btn" id="cropAuto" type="button">Start from Auto</button><button class="btn" id="cropAll" type="button">Whole photo</button><span class="grow"></span><button class="btn" id="cropCancel" type="button">Cancel</button><button class="btn primary" id="cropApply" type="button">Apply crop</button></div></div>
 <div class="origview" id="origView" hidden><div class="bar2"><b>Original photo</b><button class="btn" id="origClose" type="button">Close</button></div><div class="scroll2"><img id="origImg" alt="The photo as it was taken, before straightening and cropping"></div></div>
 <div id="busy"><div class="busy-card"><div class="spin" aria-hidden="true"></div><span id="busyMsg">Reading the pages…</span><button class="btn" id="busyCancel" type="button" hidden>Cancel</button></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -2582,6 +2597,83 @@ function renderTilted(bmp, sp, adj, scale, fill) {
 // Straighten and Crop can be switched after import on pages that kept the photo as taken (orig, or raw: blob is that photo)
 // and the reader's reply (fta). The page is laid out again from those, so either switch can always be flipped back.
 const canRebake = sp => !!(sp?.fta && (sp.orig || sp.raw));
+// opt.crop: false (whole photo), true (Auto: to the text), or a manual frame {x, y, w, h},
+// as fractions of the uncropped layout, so the same frame is cut again on every rebake.
+const isManual = c => !!c && typeof c === 'object';
+function syncCropSeg(sp) {
+  const c = sp?.opt?.crop, k = isManual(c) ? 'manual' : c ? 'auto' : 'off';
+  document.querySelectorAll('#cropSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.crop === k)));
+}
+// Cut a frame out of a laid-out page. Characters outside it are dropped.
+function cutCrop(src, chars, f) {
+  const x = Math.round(f.x * src.width), y = Math.round(f.y * src.height);
+  const w = Math.max(10, Math.min(src.width - x, Math.round(f.w * src.width))), h = Math.max(10, Math.min(src.height - y, Math.round(f.h * src.height)));
+  const out = document.createElement('canvas'); out.width = w; out.height = h; out.getContext('2d').drawImage(src, -x, -y);
+  const kept = chars.filter(c => { if (!c.box) return true; const cx = (c.box.x0 + c.box.x1) / 2 - x, cy = (c.box.y0 + c.box.y1) / 2 - y; return cx >= 0 && cx <= w && cy >= 0 && cy <= h; });
+  kept.forEach(c => { if (c.box) { c.box.x0 -= x; c.box.x1 -= x; c.box.y0 -= y; c.box.y1 -= y; } });
+  return { chars:kept, out };
+}
+// Manual crop: the page laid out without cropping, with a frame to drag. The frame starts at the
+// last manual crop, or where Auto crops: each page of the Auto layout is the uncropped one shifted,
+// so one character on each side gives the offsets.
+async function openCropView() {
+  const sp = S.spread; if (!canRebake(sp) || S.cropEd) return;
+  busy('Preparing the photo…'); await nextFrame();
+  try {
+    const bmp = await createImageBitmap(sp.orig || sp.blob), c = document.createElement('canvas');
+    c.width = bmp.width; c.height = bmp.height; c.getContext('2d').drawImage(bmp, 0, 0);
+    const st = !!sp.opt?.straighten, one = !!sp.onePage;
+    const U = layoutFromVision(c, structuredClone(sp.fta), st, one, false), A = layoutFromVision(c, structuredClone(sp.fta), st, one, true);
+    const W = U.out.width, H = U.out.height, full = { x0:0, y0:0, x1:W, y1:H };
+    let auto = full;
+    if (U.chars.length === A.chars.length) {
+      const ix = U.chars.map((ch, i) => i).filter(i => U.chars[i].box && A.chars[i].box);
+      const side = i => U.chars[i].side, lo = ix.find(i => side(i) === Math.min(...ix.map(side))), hi = ix.findLast(i => side(i) === Math.max(...ix.map(side)));
+      if (lo != null && hi != null) {
+        const d = i => [U.chars[i].box.x0 - A.chars[i].box.x0, U.chars[i].box.y0 - A.chars[i].box.y0], [ax, ay] = d(lo), [bx, by] = d(hi);
+        auto = { x0:clamp(ax, 0, W), y0:clamp(ay, 0, H), x1:clamp(A.out.width + bx, 0, W), y1:clamp(A.out.height + by, 0, H) };
+        if (auto.x1 - auto.x0 < 20 || auto.y1 - auto.y0 < 20) auto = full;
+      }
+    }
+    const m = sp.opt?.crop, r = isManual(m) ? { x0:m.x * W, y0:m.y * H, x1:(m.x + m.w) * W, y1:(m.y + m.h) * H } : { ...auto };
+    S.cropEd = { U:U.out, auto, r };
+    $('#cropView').hidden = false; fitCropView();
+  } catch (e) { log('crop', e); toast('The photo couldn’t be prepared.'); S.cropEd = null; }
+  busy(false);
+}
+function closeCropView() { S.cropEd = null; $('#cropView').hidden = true; }
+function fitCropView() {
+  const E = S.cropEd, st = $('#cropStage').getBoundingClientRect(), cs = getComputedStyle($('#cropStage'));
+  const aw = st.width - parseFloat(cs.paddingLeft) * 2, ah = st.height - parseFloat(cs.paddingTop) * 2;
+  E.k = Math.min(aw / E.U.width, ah / E.U.height);
+  const cv = $('#cropCanvas'), w = Math.round(E.U.width * E.k), h = Math.round(E.U.height * E.k), dpr = devicePixelRatio || 1;
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  cv.getContext('2d').drawImage(E.U, 0, 0, cv.width, cv.height);
+  drawCropFrame();
+}
+function drawCropFrame() {
+  const E = S.cropEd, f = $('#cropFrame').style, k = E.k;
+  f.left = E.r.x0 * k + 'px'; f.top = E.r.y0 * k + 'px'; f.width = (E.r.x1 - E.r.x0) * k + 'px'; f.height = (E.r.y1 - E.r.y0) * k + 'px';
+}
+function cropDragStart(e) {
+  const E = S.cropEd; if (!E) return; e.preventDefault();
+  const h = e.target.dataset?.h || 'move', r0 = { ...E.r }, sx = e.clientX, sy = e.clientY, el = e.currentTarget;
+  const W = E.U.width, H = E.U.height, min = Math.max(W, H) * 0.05;
+  el.setPointerCapture(e.pointerId);
+  const move = ev => {
+    const dx = (ev.clientX - sx) / E.k, dy = (ev.clientY - sy) / E.k, r = { ...r0 };
+    if (h === 'move') { const mx = clamp(dx, -r0.x0, W - r0.x1), my = clamp(dy, -r0.y0, H - r0.y1); r.x0 += mx; r.x1 += mx; r.y0 += my; r.y1 += my; }
+    else {
+      if (h.includes('w')) r.x0 = clamp(r0.x0 + dx, 0, r0.x1 - min);
+      if (h.includes('e')) r.x1 = clamp(r0.x1 + dx, r0.x0 + min, W);
+      if (h.includes('n')) r.y0 = clamp(r0.y0 + dy, 0, r0.y1 - min);
+      if (h.includes('s')) r.y1 = clamp(r0.y1 + dy, r0.y0 + min, H);
+    }
+    E.r = r; drawCropFrame();
+  };
+  const up = () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); };
+  el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+}
 async function rebake(opt) {
   const sp = S.spread; if (!canRebake(sp)) return;
   if (sp.fixed && !confirm('This resets the text you fixed on these pages. Continue?')) return;
@@ -2590,12 +2682,13 @@ async function rebake(opt) {
   try {
     const src = sp.orig || sp.blob, bmp = await createImageBitmap(src);
     const c = document.createElement('canvas'); c.width = bmp.width; c.height = bmp.height; c.getContext('2d').drawImage(bmp, 0, 0);
-    const { chars, out } = layoutFromVision(c, structuredClone(sp.fta), opt.straighten, !!sp.onePage, opt.crop);
+    let { chars, out } = layoutFromVision(c, structuredClone(sp.fta), opt.straighten, !!sp.onePage, isManual(opt.crop) ? false : opt.crop);
+    if (isManual(opt.crop)) ({ chars, out } = cutCrop(out, chars, opt.crop));
     if (!chars.some(x => isCJK(x.ch))) throw new Error('no text');
     const blob = out === c ? src : await canvasBlob(out, 'image/jpeg', 0.9);
     Object.assign(sp, { blob, chars, w:out.width, h:out.height, opt, adj:[0, 0] }); delete sp.persp; delete sp.fixed;
     if (out === c) { delete sp.orig; sp.raw = true; } else { sp.orig = src; delete sp.raw; }
-    if (sp.onePage) sp.split = out.width;
+    if (sp.onePage) sp.split = out.width; else delete sp.split;
     for (const u of litCache.values()) URL.revokeObjectURL(u); litCache.clear();
     await idbSet('sp:' + sp.id, sp); await showSpread(sp);
   } catch (e) { log('adjust', e); toast('The photo couldn’t be adjusted.'); }
@@ -2612,7 +2705,7 @@ async function startTilt() {
   const pages = pagesWithText(sp), two = pages.length === 2;
   $('#perspBtn').hidden = !!sp.vertical;
   $('#adjBake').hidden = !canRebake(sp);
-  if (canRebake(sp)) { $('#strTog').hidden = !!sp.vertical; $('#strTog').setAttribute('aria-pressed', String(!!sp.opt?.straighten)); $('#cropTog').setAttribute('aria-pressed', String(!!sp.opt?.crop)); }
+  if (canRebake(sp)) { $('#strTog').hidden = !!sp.vertical; $('#strTog').setAttribute('aria-pressed', String(!!sp.opt?.straighten)); syncCropSeg(sp); }
   $('#adjBar .lab').textContent = sp.vertical ? 'Clean up the photo' : 'Turn each page until its lines of text run along the green lines';
   for (const s of [0, 1]) {
     const row = $('#adj' + s); row.hidden = !pages.includes(s) || !!sp.vertical;
@@ -3343,6 +3436,7 @@ function closeTop() {
   else if (open(revSheet)) closeReview();
   else if (open(pagesSheet)) closePages();
   else if (open(statSheet)) closeSheet(statSheet);
+  else if (S.cropEd) closeCropView();
   else if (S.tilt) endTilt(false);
   else if (S.mag) toggleMag();
   else if (narrow() && !side.hidden) toggleSide(false);
@@ -5436,8 +5530,23 @@ $('#magBtn').addEventListener('click', toggleMag);
 $('#aloudBtn').addEventListener('click', readAloud);
 $('#tiltBtn').addEventListener('click', startTilt);
 $('#tiltDone').addEventListener('click', () => endTilt(true));
-$('#strTog').addEventListener('click', () => { const o = S.spread?.opt || {}; rebake({ straighten:!o.straighten, crop:!!o.crop }); });
-$('#cropTog').addEventListener('click', () => { const o = S.spread?.opt || {}; rebake({ straighten:!!o.straighten, crop:!o.crop }); });
+// A manual crop belongs to one layout: switching Straighten goes back to Auto.
+$('#strTog').addEventListener('click', () => { const o = S.spread?.opt || {}; rebake({ straighten:!o.straighten, crop:isManual(o.crop) || !!o.crop }); });
+$('#cropSeg').addEventListener('click', e => {
+  const b = e.target.closest('[data-crop]'), o = S.spread?.opt || {}; if (!b) return;
+  if (b.dataset.crop === 'manual') openCropView();
+  else rebake({ straighten:!!o.straighten, crop:b.dataset.crop === 'auto' });
+});
+$('#cropFrame').addEventListener('pointerdown', cropDragStart);
+$('#cropAuto').addEventListener('click', () => { const E = S.cropEd; if (E) { E.r = { ...E.auto }; drawCropFrame(); } });
+$('#cropAll').addEventListener('click', () => { const E = S.cropEd; if (E) { E.r = { x0:0, y0:0, x1:E.U.width, y1:E.U.height }; drawCropFrame(); } });
+$('#cropCancel').addEventListener('click', closeCropView);
+$('#cropApply').addEventListener('click', () => {
+  const E = S.cropEd; if (!E) return; const { U, r } = E, o = S.spread?.opt || {};
+  closeCropView();
+  rebake({ straighten:!!o.straighten, crop:{ x:r.x0 / U.width, y:r.y0 / U.height, w:(r.x1 - r.x0) / U.width, h:(r.y1 - r.y0) / U.height } });
+});
+addEventListener('resize', () => { if (S.cropEd) fitCropView(); });
 $('#tiltCancel').addEventListener('click', () => endTilt(false));
 $('#adjBar').addEventListener('input', e => { const r = e.target.closest('input[type=range]'); if (r) setTilt(+r.dataset.side, +r.value); });
 $('#adjBar').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b && S.tilt) setTilt(+b.dataset.side, (S.tilt.adj[+b.dataset.side] || 0) + (+b.dataset.step)); });
