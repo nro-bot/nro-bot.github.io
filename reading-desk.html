@@ -260,6 +260,7 @@ button.tag{font-family:inherit;color:inherit;cursor:pointer}
 body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !important}
 .stagebar .btn,.stagebar .seg{background:var(--panel);box-shadow:var(--shadow)}
 /* Script switch: 繁 | 简 under the page, the one-time offer above it, dots beside repainted characters, and the peek label. */
+.scriptseg{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
 .scriptseg button{padding:0 13px;font:700 18px/1 "Noto Serif SC","Songti SC",serif;position:relative}
 .scriptseg button.rp::after{content:"";position:absolute;top:7px;right:4px;width:6px;height:6px;border-radius:50%;background:#7BE0B5}
 .swapoffer{position:absolute;right:12px;bottom:72px;z-index:5;width:min(390px,calc(100% - 24px));background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.22);padding:14px 16px;display:grid;gap:8px;font-size:15px;line-height:1.4}
@@ -1602,10 +1603,16 @@ function buildModel(raw) {
 function rebuild() {
   if (!S.spread) return;
   const raw = displayChars(S.spread); let m = buildModel(raw);
-  S.printed = printedScript(raw); S.swap = null;
-  if (swapWanted(S.printed)) {   // the page in your script: the model holds the converted characters, the photo is repainted to match
+  // A page whose script can't be told (too few characters that differ) counts as yours when the switch is always shown.
+  S.printed = printedScript(raw) || (S.settings.swapAlways && S.dictState === 'ready' ? learnerScript() : null); S.swap = null;
+  if (swapWanted()) {   // the page in the other script: the photo is repainted to match
     const t = swapTargets(m);
-    if (t.size) { m = buildModel(raw.map((c, i) => t.has(i) ? { ...c, ch:t.get(i) } : c)); S.swap = { map:t, from:new Map([...t.keys()].map(i => [i, raw[i].ch])) }; }
+    if (t.size) {
+      S.swap = { map:t, from:new Map([...t.keys()].map(i => [i, raw[i].ch])), to:flipOf(S.printed) };
+      // The words you tap, save and know are always in the script you're learning: converted for a foreign book;
+      // for a book in your own script shown in the other one, only the photo changes (the word card shows the other form in grey).
+      if (S.swap.to === learnerScript()) m = buildModel(raw.map((c, i) => t.has(i) ? { ...c, ch:t.get(i) } : c));
+    }
   }
   S.model = m; drawTints(); drawHighlights(); updateProgress(); updateScriptSeg(); paintSwap();
 }
@@ -2447,8 +2454,10 @@ const learnerScript = () => S.settings.script === 'traditional' ? 't' : 's';
 const scriptName = k => k === 't' ? '繁體' : '简体';
 const entriesBoth = w => S.dictS ? [...(S.dictS.get(w) || []), ...(S.dictT.get(w) || [])] : [];
 const flipOf = k => k === 's' ? 't' : 's';
-// The switch shows on a page printed in the other script, or on every page with Settings "Always show 繁 | 简".
-const otherScript = () => !!(S.spread && S.printed && (S.printed !== learnerScript() || S.settings.swapAlways));
+// foreign: this page is printed in the other script from the one you're learning.
+// The switch shows on a foreign page, or on every page with Settings "Always show 繁 | 简".
+const foreign = () => !!S.printed && S.printed !== learnerScript();
+const otherScript = () => !!(S.spread && S.printed && (foreign() || S.settings.swapAlways));
 function printedScript(raw) {
   if (S.dictState !== 'ready') return null;
   let t = 0, s = 0;
@@ -2462,7 +2471,7 @@ function printedScript(raw) {
 const PREFER_T = { 里:'裡', 后:'後', 云:'雲', 余:'餘', 范:'範', 准:'準' };
 // The characters of a word in the other script: the whole word from the dictionary when it has it, else character by character.
 function convertWord(text, pys, to) {
-  const from = to === 's' ? 't' : 's', chs = Array.from(text);
+  const from = flipOf(to), chs = Array.from(text);
   // when a form is also right as it is (家 is 家 in both, though it also stands for 傢), keep it unless the reading says otherwise
   // ...except a few where the pinyin can't tell and the other meaning is far more common (里 inside is 裡; 后 after is 後).
   const pick = (w, py) => rankEntries(entriesBoth(w).filter(e => e[from] === w), py || '').map(r => ({ ...r, sc:r.sc + (r.e[to] === w ? 1 : 0) + (to === 't' && PREFER_T[w] === r.e[to] ? 1.5 : 0) })).sort((x, y) => y.sc - x.sc || x.i - y.i)[0]?.e[to];
@@ -2484,23 +2493,23 @@ function swapTargets(m) {
   return map;
 }
 // On or off for this book: your choice for it, else the Settings default (Ask counts as off until you answer).
-const bookKey = () => S.book || 'none';
+const bookKey = () => (foreign() ? '' : 'own:') + (S.book || 'page:' + (S.spread?.id ?? ''));
 function swapChoice() { return (S.settings.swapBook || {})[bookKey()]; }
-function swapWanted(printed) {
-  if (!printed || (printed === learnerScript() && !S.settings.swapAlways)) return false;
+function swapWanted() {
+  if (!otherScript()) return false;
   const ch = swapChoice(); if (ch) return ch === 'on';
-  return printed !== learnerScript() && S.settings.swapMode === 'always';   // a book in your own script starts as printed
+  return foreign() && S.settings.swapMode === 'always';   // a book in your own script starts as printed
 }
 function setSwapChoice(on) {
   S.settings.swapBook = { ...(S.settings.swapBook || {}), [bookKey()]:on ? 'on' : 'off' }; saveSettings();
   S.sel = null; S.info = null; peek(false); rebuild(); renderInfo();
-  if (on && S.swap && !S.settings.swapHinted) { S.settings.swapHinted = true; saveSettings(); toast(`Shown in ${scriptName(flipOf(S.printed))}. Hold two fingers on the page to see it as printed.`, 5000); }
+  if (on && S.swap && !S.settings.swapHinted) { S.settings.swapHinted = true; saveSettings(); toast(`Shown in ${scriptName(S.swap.to)}. Hold 繁 | 简 to see the page as printed.`, 5000); }
 }
 function updateScriptSeg() {
-  const seg = $('#scriptSeg'), show = otherScript(), on = show && swapWanted(S.printed);
+  const seg = $('#scriptSeg'), show = otherScript(), on = show && swapWanted();
   seg.hidden = !show;
   seg.querySelectorAll('button').forEach(b => { const mine = b.dataset.script === (on ? flipOf(S.printed) : S.printed); b.setAttribute('aria-pressed', String(mine)); b.classList.toggle('rp', mine && !!S.swap); });
-  const offer = $('#swapOffer'), ask = show && S.printed !== learnerScript() && !swapChoice() && (S.settings.swapMode || 'ask') === 'ask';
+  const offer = $('#swapOffer'), ask = show && foreign() && !swapChoice() && (S.settings.swapMode || 'ask') === 'ask';
   offer.hidden = !ask;
   if (ask) {
     const me = scriptName(learnerScript());
@@ -2513,9 +2522,17 @@ function updateScriptSeg() {
     });
   }
 }
-$('#scriptSeg').addEventListener('click', e => { const b = e.target.closest('[data-script]'); if (b && otherScript()) setSwapChoice(b.dataset.script !== S.printed); });
+// Tap 繁 or 简 to switch. Press and hold anywhere on the switch to see the page as printed; let go to go back.
+let segHold = null, segPeeked = false;
+$('#scriptSeg').addEventListener('pointerdown', e => { segPeeked = false; clearTimeout(segHold); if (S.swap) segHold = setTimeout(() => { segPeeked = true; peek(true); }, 350); });
+for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) $('#scriptSeg').addEventListener(ev, () => { clearTimeout(segHold); peek(false); });
+$('#scriptSeg').addEventListener('contextmenu', e => e.preventDefault());   // no long-press menu on the buttons
+$('#scriptSeg').addEventListener('click', e => {
+  if (segPeeked) { segPeeked = false; return; }   // that was a hold, not a tap
+  const b = e.target.closest('[data-script]'); if (b && otherScript()) setSwapChoice(b.dataset.script !== S.printed);
+});
 $('#swapOffer').addEventListener('click', e => { const b = e.target.closest('[data-swap]'); if (b) setSwapChoice(b.dataset.swap === 'on'); });
-// See the page as printed while two fingers (or the Shift key) are held down.
+// See the page as printed while the switch (or the Shift key) is held down.
 function peek(on) {
   on = !!on && !!S.swap; if (on === !!S.peek) return;
   S.peek = on;
@@ -2532,10 +2549,10 @@ let swapJob = 0;
 async function paintSwap() {
   const job = ++swapJob, base = S.baseURL;
   if (!S.swap || !base) { S.swapURL = null; if (base && S.shownURL !== base) { S.shownURL = base; img.src = base; } return; }
-  const key = base + '|' + flipOf(S.printed) + '|' + [...S.swap.map].map(([i, ch]) => i + ch).join(',');
+  const key = base + '|' + S.swap.to + '|' + [...S.swap.map].map(([i, ch]) => i + ch).join(',');
   let url = swapCache.get(key);
   if (!url) {
-    try { url = await renderSwap(base, S.swap); } catch (e) { log('swap', String(e?.message || e)); return; }
+    try { url = await renderSwap(base, S.swap, { chars:S.model.chars, imgW:S.imgW, vertical:!!S.spread?.vertical }); } catch (e) { log('swap', String(e?.message || e)); return; }
     swapCache.set(key, url);
     if (swapCache.size > 6) { const [k, u] = swapCache.entries().next().value; if (u !== url) URL.revokeObjectURL(u); swapCache.delete(k); }
   }
@@ -2543,23 +2560,23 @@ async function paintSwap() {
   S.swapURL = url;
   if (!S.peek) { S.shownURL = url; img.src = url; }
 }
-async function renderSwap(baseURL, swap) {
+async function renderSwap(baseURL, swap, page) {   // page: the model's characters, size and direction when asked
   const pic = new Image(); pic.src = baseURL; await pic.decode();
-  const W = pic.naturalWidth, H = pic.naturalHeight, k = W / S.imgW;
+  const W = pic.naturalWidth, H = pic.naturalHeight, k = W / page.imgW;
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const g = cv.getContext('2d', { willReadFrequently:true }); g.drawImage(pic, 0, 0);
   const FAM = { s:'"Noto Serif SC","Noto Serif CJK SC","Songti SC","STSong",serif', t:'"Noto Serif TC","Noto Serif CJK TC","Songti TC","PMingLiU","Noto Serif SC",serif' };
-  const fam = FAM[flipOf(S.printed)], famFrom = FAM[S.printed];
+  const fam = FAM[swap.to], famFrom = FAM[flipOf(swap.to)];
   try { const txt = [...swap.map.values()].join('') + '国说时间东这长岛动强', old = [...swap.from.values()].join(''); await Promise.all([500, 700].flatMap(wt => [document.fonts.load(`${wt} 64px ${fam}`, txt), document.fonts.load(`${wt} 64px ${famFrom}`, old)])); } catch (e) {}
   // One size per paragraph, from its typical character box (the whole page's when the paragraph is short).
-  const chars = S.model.chars, side = c => Math.max(c.box.x1 - c.box.x0, c.box.y1 - c.box.y0) * k;
+  const chars = page.chars, side = c => Math.max(c.box.x1 - c.box.x0, c.box.y1 - c.box.y0) * k;
   const all = chars.filter(c => c.box && isCJK(c.ch)), byPara = new Map();
   for (const c of all) (byPara.get(c.para) || byPara.set(c.para, []).get(c.para)).push(side(c));
   const pageSide = median(all.map(side));
   const mc = document.createElement('canvas').getContext('2d'); mc.font = `500 200px ${fam}`;
   const em = median(Array.from('国说时间东这长岛动强').map(ch => { const t = mc.measureText(ch); return Math.max(t.actualBoundingBoxLeft + t.actualBoundingBoxRight, t.actualBoundingBoxAscent + t.actualBoundingBoxDescent); })) / 200 || 0.9;
   // Bold or regular is decided per paragraph (a heading is bold, its body isn't), from how heavy its printed characters are.
-  const vert = !!S.spread?.vertical, ctr = c => ({ x:(c.box.x0 + c.box.x1) / 2 * k, y:(c.box.y0 + c.box.y1) / 2 * k });
+  const vert = page.vertical, ctr = c => ({ x:(c.box.x0 + c.box.x1) / 2 * k, y:(c.box.y0 + c.box.y1) / 2 * k });
   // The slope of the line around a character (lines curve near the spine), so the new one tilts with its neighbours.
   const slope = i => {
     const pts = []; for (let q = Math.max(0, i - 5); q <= Math.min(chars.length - 1, i + 5); q++) { const c = chars[q]; if (c.box && c.line === chars[i].line && isCJK(c.ch)) pts.push(ctr(c)); }
@@ -3230,7 +3247,7 @@ function toggleMag() {
 const pagePointers = new Set();
 page.addEventListener('pointerdown', e => {
   pagePointers.add(e.pointerId);
-  if (pagePointers.size > 1) { if (press) { clearTimeout(press.t); press = null; } hideLoupe(); return; }   // two fingers: a peek or a pinch, never a tap
+  if (pagePointers.size > 1) { if (press) { clearTimeout(press.t); press = null; } hideLoupe(); return; }   // two fingers: a pinch, never a tap
   if (!S.model || S.tilt || (e.pointerType === 'mouse' && e.button !== 0)) return;
   const p = { x:e.clientX, y:e.clientY, long:false, moved:false };
   p.t = setTimeout(() => { if (!p.moved) { p.long = true; hideLoupe(); onLong(p.x, p.y); } }, 450);
@@ -3253,11 +3270,6 @@ page.addEventListener('pointerup', e => {
   press = null;
 });
 page.addEventListener('pointercancel', e => { pagePointers.delete(e.pointerId); hideLoupe(); if (press) { clearTimeout(press.t); press = null; } });
-// Hold two fingers on the page to see it as printed; let go to go back. Touch events, because a pinch may cancel the pointers.
-let peekTimer = null;
-page.addEventListener('touchstart', e => { if (e.touches.length === 2 && S.swap) { clearTimeout(peekTimer); peekTimer = setTimeout(() => peek(true), 150); } }, { passive:true });
-for (const ev of ['touchend', 'touchcancel']) page.addEventListener(ev, e => { if (e.touches.length < 2) { clearTimeout(peekTimer); peek(false); } }, { passive:true });
-page.addEventListener('touchmove', e => { if (e.touches.length === 2 && !S.peek) clearTimeout(peekTimer); }, { passive:true });   // moving apart is a pinch
 page.addEventListener('pointerleave', () => { if (S.mag && !press) hideLoupe(); });
 // Swipe left or right on the page to flip between saved photos.
 let swipe = null;
@@ -3855,7 +3867,7 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
   } else if (e.key === ' ' && S.info) { speak(S.info.text); e.preventDefault(); }
   else if ((e.key === 's' || e.key === 'S') && !e.ctrlKey && !e.metaKey) toggleSave();
-  else if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.shiftKey && otherScript()) setSwapChoice(!swapWanted(S.printed));
+  else if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.shiftKey && otherScript()) setSwapChoice(!swapWanted());
   else if (e.key === 'Enter' && S.info?.span) openSentence(S.model.chars[S.info.span.a].s);
 });
 
@@ -5816,16 +5828,23 @@ document.querySelectorAll('input[name=fToneCol]').forEach(r => r.addEventListene
 function applySettingsForm() {
   const st = S.settings;
   st.apiKey = $('#fKey').value.trim();
-  const swapBefore = [st.script, st.swapMode || 'ask', !!st.swapAlways].join();
-  st.script = radioVal('fScript', 'simplified'); st.swapMode = radioVal('fSwapMode', 'ask'); st.swapAlways = $('#fSwapAlways').checked;
-  if ((st.swapMode || 'ask') !== swapBefore.split(',')[1]) st.swapBook = {};   // a new default applies to every book again
+  const scriptBefore = st.script, modeBefore = st.swapMode || 'ask', alwaysBefore = !!st.swapAlways;
+  st.script = radioVal('fScript', 'simplified');
+  st.swapMode = radioVal('fSwapMode', 'ask');
+  st.swapAlways = $('#fSwapAlways').checked;
+  if (st.swapMode !== modeBefore) st.swapBook = Object.fromEntries(Object.entries(st.swapBook || {}).filter(([k]) => k.startsWith('own:')));   // a new default applies to every foreign book again
+  // "Always show" alone changes only whether the switch shows, unless this book has a saved choice to apply
+  const swapChanged = st.script !== scriptBefore || st.swapMode !== modeBefore || (st.swapAlways !== alwaysBefore && !!swapChoice());
   st.toneCol = radioVal('fToneCol', 'pleco'); applyToneCol(); st.facing = radioVal('fFacing', 'environment'); st.infoPos = radioVal('fInfoPos', 'top');
   const tonesBefore = st.spokenTones !== false; st.sentPinyin = $('#fSentPy').checked; st.glam = $('#fGlam').checked; st.writeLookup = $('#fWriteLookup').checked; st.spokenTones = $('#fTones').checked; st.devVision = $('#fDevVision').checked; st.markUnsure = $('#fUnsure').checked; try { if ($('#fDebug').checked !== DEBUG && localStorage.getItem('rd.debug') !== ($('#fDebug').checked ? '1' : '0')) { localStorage.setItem('rd.debug', $('#fDebug').checked ? '1' : '0'); toast('Debug mode changes after you reload the app.'); } } catch (e) {} st.colorWords = $('#fColor').checked; st.autoplay = $('#fAuto').checked;
   st.straighten = $('#fStraight').checked; st.shadow = $('#fShadow').checked; st.dayStart = +$('#fDayStart').value; st.strokeCheck = $('#fStrokeCheck').value; st.iconActs = $('#fIconActs').checked; st.barHide = BAR_ITEMS.filter(k => !$('#fBar_' + k).checked);
   st.rate = clamp(parseFloat($('#fRate').value) || 0.85, 0.5, 1.2);
   st.goal = clamp(parseInt($('#fGoal').value, 10) || 4, 1, 60);
   st.voiceURI = $('#fVoice').value;
-  saveSettings(); updateBar(); updateFlip(); if (tonesBefore !== st.spokenTones || swapBefore !== [st.script, st.swapMode, !!st.swapAlways].join()) rebuild(); updateProgress(); drawTints(); drawHighlights(); renderInfo();
+  saveSettings(); updateBar(); updateFlip();
+  if (tonesBefore !== st.spokenTones || swapChanged) rebuild();   // rebuild draws tints, highlights and progress itself
+  else { updateProgress(); drawTints(); drawHighlights(); if (S.spread) updateScriptSeg(); }
+  renderInfo();
 }
 
 /* ================= Backup and restore ================= */
