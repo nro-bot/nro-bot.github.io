@@ -260,6 +260,7 @@ button.tag{font-family:inherit;color:inherit;cursor:pointer}
 body.tilting .flip,body.tilting .counter,body.tilting .stagebar{display:none !important}
 .stagebar .btn,.stagebar .seg{background:var(--panel);box-shadow:var(--shadow)}
 /* Script switch: 繁 | 简 under the page, the one-time offer above it, dots beside repainted characters, and the peek label. */
+.scriptseg{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
 .scriptseg button{padding:0 13px;font:700 18px/1 "Noto Serif SC","Songti SC",serif;position:relative}
 .scriptseg button.rp::after{content:"";position:absolute;top:7px;right:4px;width:6px;height:6px;border-radius:50%;background:#7BE0B5}
 .swapoffer{position:absolute;right:12px;bottom:72px;z-index:5;width:min(390px,calc(100% - 24px));background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.22);padding:14px 16px;display:grid;gap:8px;font-size:15px;line-height:1.4}
@@ -1047,6 +1048,7 @@ body:not(.info-left) #info.is-idle{height:auto;max-height:50vh}
     <section class="sgroup"><h3>Reading</h3><div class="scard">
       <div class="srow"><label for="fGoal">Daily goal <small>pages</small></label><input id="fGoal" type="number" min="1" max="60" step="1" inputmode="numeric"></div>
       <div class="srow"><span>Characters<small>The script you’re learning</small></span><span class="segr"><label><input type="radio" name="fScript" value="simplified">简体</label><label><input type="radio" name="fScript" value="traditional">繁體</label></span></div>
+      <label class="srow"><span>Always show 繁 | 简<small>The switch under every page, also for books in your own script</small></span><input class="sw" id="fSwapAlways" type="checkbox"></label>
       <div class="srow"><span>Books in the other script<small>Show their pages in your script</small></span><span class="segr"><label><input type="radio" name="fSwapMode" value="ask">Ask</label><label><input type="radio" name="fSwapMode" value="always">Always</label><label><input type="radio" name="fSwapMode" value="never">Never</label></span></div>
       <div class="srow"><label for="fDayStart">New day starts</label><select id="fDayStart"><option value="20">8 pm</option><option value="0">Midnight</option><option value="4">4 am</option></select></div>
       <label class="srow"><span>Icon-only buttons<small>Listen, Save, Write… as just their symbols</small></span><input class="sw" id="fIconActs" type="checkbox"></label>
@@ -1449,20 +1451,23 @@ async function loadParts() {
   }
   S.partsState = 'failed';
 }
+// The other script's form, worked out from the text itself: traditional for a simplified word, simplified for a traditional one.
+// The dictionary lists only characters that occur in each form, so both directions work with the same lookup.
+const otherOf = (r, text) => r.e.s === text ? r.e.t : r.e.s;
 function altChar(c, py) {
-  const r = rankEntries(lookup(c), py || '')[0];
-  if (!r) return c;
-  return S.settings.script === 'traditional' ? r.e.s : r.e.t;
+  const r = rankEntries(entriesBoth(c).filter(e => e.s === c || e.t === c), py || '')[0];
+  return r ? otherOf(r, c) : c;
 }
-// Traditional form for a simplified word (or simplified for a traditional book). Empty if the same.
+// The word in the other script (simplified next to a traditional word, traditional next to a simplified one). Empty if the same.
 function altForm(text, pys) {
   if (!hasCJK(text) || S.dictState !== 'ready') return '';
-  const r = rankEntries(lookup(text), (pys || []).join(' '))[0];
-  let out = r ? (S.settings.script === 'traditional' ? r.e.s : r.e.t) : Array.from(text).map((c, i) => isCJK(c) ? altChar(c, pys?.[i]) : c).join('');
+  const r = rankEntries(entriesBoth(text).filter(e => e.s === text || e.t === text), (pys || []).join(' '))[0];
+  let out = r ? otherOf(r, text) : Array.from(text).map((c, i) => isCJK(c) ? altChar(c, pys?.[i]) : c).join('');
   if (Array.from(out).length !== Array.from(text).length) out = Array.from(text).map((c, i) => isCJK(c) ? altChar(c, pys?.[i]) : c).join('');
   return out !== text ? out : '';
 }
-const altLabel = () => S.settings.script === 'traditional' ? 'Simplified' : 'Traditional';
+// "Traditional" or "Simplified": which script a form shown beside a word is in.
+const altLabel = alt => Array.from(alt || '').some(c => entriesBoth(c).some(e => e.t === c && e.s !== c)) ? 'Traditional' : 'Simplified';
 function partGloss(c) {
   const d = S.parts?.get(c);
   if (d?.definition) return d.definition.split(/[;,]/)[0].trim();
@@ -1598,10 +1603,16 @@ function buildModel(raw) {
 function rebuild() {
   if (!S.spread) return;
   const raw = displayChars(S.spread); let m = buildModel(raw);
-  S.printed = printedScript(raw); S.swap = null;
-  if (swapWanted(S.printed)) {   // the page in your script: the model holds the converted characters, the photo is repainted to match
+  // A page whose script can't be told (too few characters that differ) counts as yours when the switch is always shown.
+  S.printed = printedScript(raw) || (S.settings.swapAlways && S.dictState === 'ready' ? learnerScript() : null); S.swap = null;
+  if (swapWanted()) {   // the page in the other script: the photo is repainted to match
     const t = swapTargets(m);
-    if (t.size) { m = buildModel(raw.map((c, i) => t.has(i) ? { ...c, ch:t.get(i) } : c)); S.swap = { map:t, from:new Map([...t.keys()].map(i => [i, raw[i].ch])) }; }
+    if (t.size) {
+      S.swap = { map:t, from:new Map([...t.keys()].map(i => [i, raw[i].ch])), to:flipOf(S.printed) };
+      // The words you tap, save and know are always in the script you're learning: converted for a foreign book;
+      // for a book in your own script shown in the other one, only the photo changes (the word card shows the other form in grey).
+      if (S.swap.to === learnerScript()) m = buildModel(raw.map((c, i) => t.has(i) ? { ...c, ch:t.get(i) } : c));
+    }
   }
   S.model = m; drawTints(); drawHighlights(); updateProgress(); updateScriptSeg(); paintSwap();
 }
@@ -2442,7 +2453,11 @@ function toggleSide(open) {
 const learnerScript = () => S.settings.script === 'traditional' ? 't' : 's';
 const scriptName = k => k === 't' ? '繁體' : '简体';
 const entriesBoth = w => S.dictS ? [...(S.dictS.get(w) || []), ...(S.dictT.get(w) || [])] : [];
-const otherScript = () => !!(S.spread && S.printed && S.printed !== learnerScript());
+const flipOf = k => k === 's' ? 't' : 's';
+// foreign: this page is printed in the other script from the one you're learning.
+// The switch shows on a foreign page, or on every page with Settings "Always show 繁 | 简".
+const foreign = () => !!S.printed && S.printed !== learnerScript();
+const otherScript = () => !!(S.spread && S.printed && (foreign() || S.settings.swapAlways));
 function printedScript(raw) {
   if (S.dictState !== 'ready') return null;
   let t = 0, s = 0;
@@ -2453,17 +2468,19 @@ function printedScript(raw) {
   }
   return t >= 3 && t > s * 2 ? 't' : s >= 3 && s > t * 2 ? 's' : null;
 }
+const PREFER_T = { 里:'裡', 后:'後', 云:'雲', 余:'餘', 范:'範', 准:'準' };
 // The characters of a word in the other script: the whole word from the dictionary when it has it, else character by character.
 function convertWord(text, pys, to) {
-  const from = to === 's' ? 't' : 's', chs = Array.from(text);
+  const from = flipOf(to), chs = Array.from(text);
   // when a form is also right as it is (家 is 家 in both, though it also stands for 傢), keep it unless the reading says otherwise
-  const pick = (w, py) => rankEntries(entriesBoth(w).filter(e => e[from] === w), py || '').map(r => ({ ...r, sc:r.sc + (r.e[to] === w ? 1 : 0) })).sort((x, y) => y.sc - x.sc || x.i - y.i)[0]?.e[to];
+  // ...except a few where the pinyin can't tell and the other meaning is far more common (里 inside is 裡; 后 after is 後).
+  const pick = (w, py) => rankEntries(entriesBoth(w).filter(e => e[from] === w), py || '').map(r => ({ ...r, sc:r.sc + (r.e[to] === w ? 1 : 0) + (to === 't' && PREFER_T[w] === r.e[to] ? 1.5 : 0) })).sort((x, y) => y.sc - x.sc || x.i - y.i)[0]?.e[to];
   const whole = chs.length > 1 ? pick(text, (pys || []).join(' ')) : null;
   if (whole && Array.from(whole).length === chs.length) return Array.from(whole);
   return chs.map((c, i) => isCJK(c) ? pick(c, pys?.[i]) || c : c);
 }
 function swapTargets(m) {
-  const to = learnerScript(), map = new Map();
+  const to = flipOf(S.printed), map = new Map();
   for (const w of m.words) {
     if (!hasCJK(w.text)) continue;
     const out = convertWord(w.text, w.idx.map(i => m.chars[i].py), to);
@@ -2476,22 +2493,23 @@ function swapTargets(m) {
   return map;
 }
 // On or off for this book: your choice for it, else the Settings default (Ask counts as off until you answer).
-const bookKey = () => S.book || 'none';
+const bookKey = () => (foreign() ? '' : 'own:') + (S.book || 'page:' + (S.spread?.id ?? ''));
 function swapChoice() { return (S.settings.swapBook || {})[bookKey()]; }
-function swapWanted(printed) {
-  if (!printed || printed === learnerScript()) return false;
-  const ch = swapChoice(); return ch ? ch === 'on' : S.settings.swapMode === 'always';
+function swapWanted() {
+  if (!otherScript()) return false;
+  const ch = swapChoice(); if (ch) return ch === 'on';
+  return foreign() && S.settings.swapMode === 'always';   // a book in your own script starts as printed
 }
 function setSwapChoice(on) {
   S.settings.swapBook = { ...(S.settings.swapBook || {}), [bookKey()]:on ? 'on' : 'off' }; saveSettings();
   S.sel = null; S.info = null; peek(false); rebuild(); renderInfo();
-  if (on && S.swap && !S.settings.swapHinted) { S.settings.swapHinted = true; saveSettings(); toast(`Shown in ${scriptName(learnerScript())}. Hold two fingers on the page to see it as printed.`, 5000); }
+  if (on && S.swap && !S.settings.swapHinted) { S.settings.swapHinted = true; saveSettings(); toast(`Shown in ${scriptName(S.swap.to)}. Hold 繁 | 简 to see the page as printed.`, 5000); }
 }
 function updateScriptSeg() {
-  const seg = $('#scriptSeg'), show = otherScript(), on = show && swapWanted(S.printed);
+  const seg = $('#scriptSeg'), show = otherScript(), on = show && swapWanted();
   seg.hidden = !show;
-  seg.querySelectorAll('button').forEach(b => { const mine = b.dataset.script === (on ? learnerScript() : S.printed); b.setAttribute('aria-pressed', String(mine)); b.classList.toggle('rp', mine && !!S.swap); });
-  const offer = $('#swapOffer'), ask = show && !swapChoice() && (S.settings.swapMode || 'ask') === 'ask';
+  seg.querySelectorAll('button').forEach(b => { const mine = b.dataset.script === (on ? flipOf(S.printed) : S.printed); b.setAttribute('aria-pressed', String(mine)); b.classList.toggle('rp', mine && !!S.swap); });
+  const offer = $('#swapOffer'), ask = show && foreign() && !swapChoice() && (S.settings.swapMode || 'ask') === 'ask';
   offer.hidden = !ask;
   if (ask) {
     const me = scriptName(learnerScript());
@@ -2504,9 +2522,17 @@ function updateScriptSeg() {
     });
   }
 }
-$('#scriptSeg').addEventListener('click', e => { const b = e.target.closest('[data-script]'); if (b && otherScript()) setSwapChoice(b.dataset.script === learnerScript()); });
+// Tap 繁 or 简 to switch. Press and hold anywhere on the switch to see the page as printed; let go to go back.
+let segHold = null, segPeeked = false;
+$('#scriptSeg').addEventListener('pointerdown', e => { segPeeked = false; clearTimeout(segHold); if (S.swap) segHold = setTimeout(() => { segPeeked = true; peek(true); }, 350); });
+for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) $('#scriptSeg').addEventListener(ev, () => { clearTimeout(segHold); peek(false); });
+$('#scriptSeg').addEventListener('contextmenu', e => e.preventDefault());   // no long-press menu on the buttons
+$('#scriptSeg').addEventListener('click', e => {
+  if (segPeeked) { segPeeked = false; return; }   // that was a hold, not a tap
+  const b = e.target.closest('[data-script]'); if (b && otherScript()) setSwapChoice(b.dataset.script !== S.printed);
+});
 $('#swapOffer').addEventListener('click', e => { const b = e.target.closest('[data-swap]'); if (b) setSwapChoice(b.dataset.swap === 'on'); });
-// See the page as printed while two fingers (or the Shift key) are held down.
+// See the page as printed while the switch (or the Shift key) is held down.
 function peek(on) {
   on = !!on && !!S.swap; if (on === !!S.peek) return;
   S.peek = on;
@@ -2523,10 +2549,10 @@ let swapJob = 0;
 async function paintSwap() {
   const job = ++swapJob, base = S.baseURL;
   if (!S.swap || !base) { S.swapURL = null; if (base && S.shownURL !== base) { S.shownURL = base; img.src = base; } return; }
-  const key = base + '|' + learnerScript() + '|' + [...S.swap.map].map(([i, ch]) => i + ch).join(',');
+  const key = base + '|' + S.swap.to + '|' + [...S.swap.map].map(([i, ch]) => i + ch).join(',');
   let url = swapCache.get(key);
   if (!url) {
-    try { url = await renderSwap(base, S.swap); } catch (e) { log('swap', String(e?.message || e)); return; }
+    try { url = await renderSwap(base, S.swap, { chars:S.model.chars, imgW:S.imgW, vertical:!!S.spread?.vertical }); } catch (e) { log('swap', String(e?.message || e)); return; }
     swapCache.set(key, url);
     if (swapCache.size > 6) { const [k, u] = swapCache.entries().next().value; if (u !== url) URL.revokeObjectURL(u); swapCache.delete(k); }
   }
@@ -2534,34 +2560,47 @@ async function paintSwap() {
   S.swapURL = url;
   if (!S.peek) { S.shownURL = url; img.src = url; }
 }
-async function renderSwap(baseURL, swap) {
+async function renderSwap(baseURL, swap, page) {   // page: the model's characters, size and direction when asked
   const pic = new Image(); pic.src = baseURL; await pic.decode();
-  const W = pic.naturalWidth, H = pic.naturalHeight, k = W / S.imgW;
+  const W = pic.naturalWidth, H = pic.naturalHeight, k = W / page.imgW;
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const g = cv.getContext('2d', { willReadFrequently:true }); g.drawImage(pic, 0, 0);
   const FAM = { s:'"Noto Serif SC","Noto Serif CJK SC","Songti SC","STSong",serif', t:'"Noto Serif TC","Noto Serif CJK TC","Songti TC","PMingLiU","Noto Serif SC",serif' };
-  const fam = FAM[learnerScript()], famFrom = FAM[learnerScript() === 's' ? 't' : 's'];
+  const fam = FAM[swap.to], famFrom = FAM[flipOf(swap.to)];
   try { const txt = [...swap.map.values()].join('') + '国说时间东这长岛动强', old = [...swap.from.values()].join(''); await Promise.all([500, 700].flatMap(wt => [document.fonts.load(`${wt} 64px ${fam}`, txt), document.fonts.load(`${wt} 64px ${famFrom}`, old)])); } catch (e) {}
   // One size per paragraph, from its typical character box (the whole page's when the paragraph is short).
-  const chars = S.model.chars, side = c => Math.max(c.box.x1 - c.box.x0, c.box.y1 - c.box.y0) * k;
+  const chars = page.chars, side = c => Math.max(c.box.x1 - c.box.x0, c.box.y1 - c.box.y0) * k;
   const all = chars.filter(c => c.box && isCJK(c.ch)), byPara = new Map();
   for (const c of all) (byPara.get(c.para) || byPara.set(c.para, []).get(c.para)).push(side(c));
   const pageSide = median(all.map(side));
   const mc = document.createElement('canvas').getContext('2d'); mc.font = `500 200px ${fam}`;
   const em = median(Array.from('国说时间东这长岛动强').map(ch => { const t = mc.measureText(ch); return Math.max(t.actualBoundingBoxLeft + t.actualBoundingBoxRight, t.actualBoundingBoxAscent + t.actualBoundingBoxDescent); })) / 200 || 0.9;
   // Bold or regular is decided per paragraph (a heading is bold, its body isn't), from how heavy its printed characters are.
-  const jobs = [...swap.map].map(([i, ch]) => { const c = chars[i], ps = byPara.get(c.para); return { c, ch, old:swap.from.get(i), side:ps && ps.length >= 4 ? median(ps) : pageSide, b:{ x0:c.box.x0 * k, y0:c.box.y0 * k, x1:c.box.x1 * k, y1:c.box.y1 * k } }; });
-  for (const j of jobs) j.m = repaintChar(g, j.b, j.ch, j.old, j.side, em, fam, famFrom, W, H, null);
+  const vert = page.vertical, ctr = c => ({ x:(c.box.x0 + c.box.x1) / 2 * k, y:(c.box.y0 + c.box.y1) / 2 * k });
+  // The slope of the line around a character (lines curve near the spine), so the new one tilts with its neighbours.
+  const slope = i => {
+    const pts = []; for (let q = Math.max(0, i - 5); q <= Math.min(chars.length - 1, i + 5); q++) { const c = chars[q]; if (c.box && c.line === chars[i].line && isCJK(c.ch)) pts.push(ctr(c)); }
+    if (pts.length < 3) return 0;
+    const u = pts.map(p2 => vert ? p2.y : p2.x), v = pts.map(p2 => vert ? p2.x : p2.y), mu = u.reduce((a, x) => a + x, 0) / u.length, mv = v.reduce((a, x) => a + x, 0) / v.length;
+    let num = 0, den = 0; u.forEach((x, q) => { num += (x - mu) * (v[q] - mv); den += (x - mu) ** 2; });
+    const a = den ? Math.atan(num / den) : 0; return clamp(vert ? -a : a, -0.3, 0.3);
+  };
+  const jobs = [...swap.map].map(([i, ch]) => {
+    const c = chars[i], ps = byPara.get(c.para), sd = ps && ps.length >= 4 ? median(ps) : pageSide, b = { x0:c.box.x0 * k, y0:c.box.y0 * k, x1:c.box.x1 * k, y1:c.box.y1 * k };
+    const others = chars.filter((o, q) => q !== i && o.box && o.box.x1 * k > b.x0 - sd && o.box.x0 * k < b.x1 + sd && o.box.y1 * k > b.y0 - sd && o.box.y0 * k < b.y1 + sd).map(ctr);
+    return { c, ch, old:swap.from.get(i), side:sd, b, opt:{ angle:slope(i), others } };
+  });
+  for (const j of jobs) j.m = repaintChar(g, j.b, j.ch, j.old, j.side, em, fam, famFrom, W, H, null, j.opt);
   const boldPara = new Map();
-  for (const j of jobs) if (j.m) (boldPara.get(j.c.para) || boldPara.set(j.c.para, []).get(j.c.para)).push(j.m.photo / j.m.bold);
+  for (const j of jobs) if (j.m?.photo && j.m.bold) (boldPara.get(j.c.para) || boldPara.set(j.c.para, []).get(j.c.para)).push(j.m.photo / j.m.bold);
   // A photo's blur makes everything measure heavier, so compare with the page itself: a paragraph clearly heavier than the page's text is bold.
   const pageRatio = median([...boldPara.values()].flat());
   for (const [p2, r] of boldPara) boldPara.set(p2, median(r) >= pageRatio * 1.3);
-  for (const j of jobs) repaintChar(g, j.b, j.ch, j.old, j.side, em, fam, famFrom, W, H, boldPara.get(j.c.para) ? 700 : 500);
+  for (const j of jobs) repaintChar(g, j.b, j.ch, j.old, j.side, em, fam, famFrom, W, H, boldPara.get(j.c.para) ? 700 : 500, j.opt);
   return URL.createObjectURL(await canvasBlob(cv, 'image/jpeg', 0.92));
 }
 // With wt null it only measures: the photo's ink, and the printed character drawn bold, both at the halfway darkness.
-function repaintChar(g, b, ch, old, side, em, fam, famFrom, W, H, wt) {
+function repaintChar(g, b, ch, old, side, em, fam, famFrom, W, H, wt, opt = {}) {
   let size = side / em * 0.95;
   const cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, half = size * 0.6, pad = Math.ceil(Math.max(6, size * 0.2));
   const X0 = Math.max(0, Math.floor(Math.min(b.x0, cx - half)) - pad), Y0 = Math.max(0, Math.floor(Math.min(b.y0, cy - half)) - pad);
@@ -2571,10 +2610,20 @@ function repaintChar(g, b, ch, old, side, em, fam, famFrom, W, H, wt) {
   for (let j = 0; j < n; j++) L[j] = 0.299 * px[j * 4] + 0.587 * px[j * 4 + 1] + 0.114 * px[j * 4 + 2];
   const paperL = (() => { const s = Float32Array.from(L).sort(); return s[Math.floor(n * 0.9)]; })();
   const dark = new Uint8Array(n); for (let j = 0; j < n; j++) dark[j] = L[j] < paperL - 45 ? 1 : 0;
-  // the printed character: dark pixels inside its own box (1 px margin), so a neighbour's strokes are never erased
+  // The printed character: whole strokes (connected dark pixels), each given to the character whose centre is nearest.
+  // On a sloping or curved line the boxes overlap, so "dark pixels in the box" would take bits of the neighbours too.
   const bx0 = Math.max(0, Math.floor(b.x0 - X0) - 1), by0 = Math.max(0, Math.floor(b.y0 - Y0) - 1), bx1 = Math.min(w, Math.ceil(b.x1 - X0) + 1), by1 = Math.min(h, Math.ceil(b.y1 - Y0) + 1);
-  const own = new Uint8Array(n), inkL = [];
-  for (let y = by0; y < by1; y++) for (let x = bx0; x < bx1; x++) { const j = y * w + x; if (dark[j]) { own[j] = 1; inkL.push(j); } }
+  const others = (opt.others || []).map(o => ({ x:o.x - X0, y:o.y - Y0 })), tx = cx - X0, ty = cy - Y0;
+  const mine = (x, y) => { const dm = (x - tx) ** 2 + (y - ty) ** 2; return others.every(o => (x - o.x) ** 2 + (y - o.y) ** 2 > dm); };
+  const own = new Uint8Array(n), inkL = [], seen = new Uint8Array(n), stack = [];
+  for (let y0 = by0; y0 < by1; y0++) for (let x0 = bx0; x0 < bx1; x0++) {
+    const j0 = y0 * w + x0; if (!dark[j0] || seen[j0]) continue;
+    const comp = []; seen[j0] = 1; stack.push(j0);
+    while (stack.length) { const j = stack.pop(); comp.push(j); const x = j % w, y = (j / w) | 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= w || Y >= h) continue; const q = Y * w + X; if (dark[q] && !seen[q]) { seen[q] = 1; stack.push(q); } } }
+    let sx = 0, sy = 0; for (const j of comp) { sx += j % w; sy += (j / w) | 0; }
+    if (mine(sx / comp.length, sy / comp.length)) for (const j of comp) { const x = j % w, y = (j / w) | 0; if (mine(x, y) || (x >= bx0 && x < bx1 && y >= by0 && y < by1)) { own[j] = 1; inkL.push(j); } }
+  }
   if (!inkL.length) return;
   { let ax0 = w, ay0 = h, ax1 = 0, ay1 = 0; for (const j of inkL) { const x = j % w, y = (j / w) | 0; if (x < ax0) ax0 = x; if (x > ax1) ax1 = x; if (y < ay0) ay0 = y; if (y > ay1) ay1 = y; }
     const inkSide = Math.max(ax1 - ax0 + 1, ay1 - ay0 + 1), mg = g.measureText ? (() => { const c = document.createElement('canvas').getContext('2d'); c.font = `500 100px ${fam}`; const t = c.measureText(ch); return Math.max(t.actualBoundingBoxLeft + t.actualBoundingBoxRight, t.actualBoundingBoxAscent + t.actualBoundingBoxDescent) / 100; })() : em;
@@ -2586,12 +2635,13 @@ function repaintChar(g, b, ch, old, side, em, fam, famFrom, W, H, wt) {
   const R = Math.max(5, Math.round(size * 0.18));
   for (let y = Math.max(0, by0 - R); y < Math.min(h, by1 + R); y++) for (let x = Math.max(0, bx0 - R); x < Math.min(w, bx1 + R); x++) { const j = y * w + x; if (dark[j] || (x >= bx0 - 2 && x < bx1 + 2 && y >= by0 - 2 && y < by1 + 2)) continue; ring.push(j); }
   const plane = fitPlane(ring, w, px), resid = ring.length ? Math.min(3, Math.sqrt(ring.reduce((a, j) => { const v = L[j] - planeL(plane, j % w, (j / w) | 0); return a + v * v; }, 0) / ring.length)) : 0;
-  // A character drawn centred on the old box: its coverage, softened a touch like the camera's.
+  // A character drawn centred on the old box and tilted like its line: its coverage, softened a touch like the camera's.
   const draw = (c2, wt, f2) => {
     const gc = document.createElement('canvas'); gc.width = w; gc.height = h;
     const gx = gc.getContext('2d', { willReadFrequently:true }); gx.font = `${wt} ${size}px ${f2}`; gx.fillStyle = '#fff';
     const t = gx.measureText(c2);
-    gx.fillText(c2, cx - X0 - (t.actualBoundingBoxRight - t.actualBoundingBoxLeft) / 2, cy - Y0 - (t.actualBoundingBoxDescent - t.actualBoundingBoxAscent) / 2);
+    gx.translate(cx - X0, cy - Y0); if (opt.angle) gx.rotate(opt.angle);   // tilted like its line
+    gx.fillText(c2, -(t.actualBoundingBoxRight - t.actualBoundingBoxLeft) / 2, -(t.actualBoundingBoxDescent - t.actualBoundingBoxAscent) / 2);
     const ga = gx.getImageData(0, 0, w, h).data, A0 = new Float32Array(n);
     for (let j = 0; j < n; j++) A0[j] = ga[j * 4 + 3] / 255;
     return soften(A0, w, h);
@@ -2600,8 +2650,8 @@ function repaintChar(g, b, ch, old, side, em, fam, famFrom, W, H, wt) {
   // How heavy the print is: the photo's ink against the printed character drawn by us.
   // Both are measured halfway between paper and ink, where the camera's blur neither thickens nor thins a stroke.
   const inkLum = 0.299 * ink[0] + 0.587 * ink[1] + 0.114 * ink[2], mid = (paperL + inkLum) / 2;
-  let photo = 0; for (let y = by0; y < by1; y++) for (let x = bx0; x < bx1; x++) if (L[y * w + x] < mid) photo++;
-  if (!wt) { const bold = old ? area(draw(old, 700, famFrom)) : 0; return photo && bold ? { photo, bold } : null; }
+  let photo = 0; for (const j of inkL) if (L[j] < mid) photo++;
+  if (!wt) { const bold = old ? area(draw(old, 700, famFrom)) : 0; return { photo, bold }; }
   const fitA = old ? area(draw(old, wt, famFrom)) : 0, A = draw(ch, wt, fam);
   const f = photo && fitA ? clamp(photo / fitA, 0.6, 1) : 1;   // still heavier than the print: lighter strokes
   for (let j = 0; j < n; j++) A[j] = A[j] < 0.02 ? 0 : Math.min(1, A[j] * 1.15 * f);
@@ -3197,7 +3247,7 @@ function toggleMag() {
 const pagePointers = new Set();
 page.addEventListener('pointerdown', e => {
   pagePointers.add(e.pointerId);
-  if (pagePointers.size > 1) { if (press) { clearTimeout(press.t); press = null; } hideLoupe(); return; }   // two fingers: a peek or a pinch, never a tap
+  if (pagePointers.size > 1) { if (press) { clearTimeout(press.t); press = null; } hideLoupe(); return; }   // two fingers: a pinch, never a tap
   if (!S.model || S.tilt || (e.pointerType === 'mouse' && e.button !== 0)) return;
   const p = { x:e.clientX, y:e.clientY, long:false, moved:false };
   p.t = setTimeout(() => { if (!p.moved) { p.long = true; hideLoupe(); onLong(p.x, p.y); } }, 450);
@@ -3220,11 +3270,6 @@ page.addEventListener('pointerup', e => {
   press = null;
 });
 page.addEventListener('pointercancel', e => { pagePointers.delete(e.pointerId); hideLoupe(); if (press) { clearTimeout(press.t); press = null; } });
-// Hold two fingers on the page to see it as printed; let go to go back. Touch events, because a pinch may cancel the pointers.
-let peekTimer = null;
-page.addEventListener('touchstart', e => { if (e.touches.length === 2 && S.swap) { clearTimeout(peekTimer); peekTimer = setTimeout(() => peek(true), 150); } }, { passive:true });
-for (const ev of ['touchend', 'touchcancel']) page.addEventListener(ev, e => { if (e.touches.length < 2) { clearTimeout(peekTimer); peek(false); } }, { passive:true });
-page.addEventListener('touchmove', e => { if (e.touches.length === 2 && !S.peek) clearTimeout(peekTimer); }, { passive:true });   // moving apart is a pinch
 page.addEventListener('pointerleave', () => { if (S.mag && !press) hideLoupe(); });
 // Swipe left or right on the page to flip between saved photos.
 let swipe = null;
@@ -3427,9 +3472,9 @@ function partsHTML(inf) {
     const py = inf.pys[i] || '', r = rankEntries(lookup(c), py)[0], g = r ? usefulDefs(r.e).slice(0, 2).join('; ') : '', tc = toneClass(py);
     const alt = altChar(c, py), pl = partsLine(c), altPl = alt !== c ? partsLine(alt) : '';
     if (single && !pl && !altPl) return '';
-    if (single) return `<div class="part single">${pl ? `<span class="pl">${pl}</span>` : ''}${altPl && altPl !== pl ? `<span class="pl">${altLabel()} <span lang="zh">${esc(alt)}</span>: ${altPl}</span>` : ''}</div>`;
-    const more = (pl ? `<span class="pl">${pl}</span>` : '') + (altPl && altPl !== pl ? `<span class="pl">${altLabel()} ${esc(alt)}: ${altPl}</span>` : '');
-    return `<div class="part"><span class="c ${tc}" lang="zh">${esc(c)}${alt !== c ? `<span class="alt" title="${altLabel()} form">${esc(alt)}</span>` : ''}</span>
+    if (single) return `<div class="part single">${pl ? `<span class="pl">${pl}</span>` : ''}${altPl && altPl !== pl ? `<span class="pl">${altLabel(alt)} <span lang="zh">${esc(alt)}</span>: ${altPl}</span>` : ''}</div>`;
+    const more = (pl ? `<span class="pl">${pl}</span>` : '') + (altPl && altPl !== pl ? `<span class="pl">${altLabel(alt)} ${esc(alt)}: ${altPl}</span>` : '');
+    return `<div class="part"><span class="c ${tc}" lang="zh">${esc(c)}${alt !== c ? `<span class="alt" title="${altLabel(alt)} form">${esc(alt)}</span>` : ''}</span>
       <span class="p">${esc(py)}</span><span class="g">${esc(g || '—')}</span>
       ${more ? `<details class="plx"><summary>Parts</summary>${more}</details>` : ''}</div>`;
   }).join('');
@@ -3582,7 +3627,7 @@ function _renderInfo(inf) {
   const chs = Array.from(inf.text), saved = isSaved(inf.text), name = S.lex[inf.text]?.name, wn = writtenNote(inf.text);
   info.innerHTML = `<div class="info-main word">
       <div class="ih">
-        <div class="hz${chs.length > 5 ? ' s' : chs.length > 3 ? ' m' : ''}" lang="zh">${hzSpans(chs, inf.pys)}${(() => { const a = altForm(inf.text, inf.pys); return a ? `<span class="alt" title="${altLabel()} form">${esc(a)}</span>` : ""; })()}</div>
+        <div class="hz${chs.length > 5 ? ' s' : chs.length > 3 ? ' m' : ''}" lang="zh">${hzSpans(chs, inf.pys)}${(() => { const a = altForm(inf.text, inf.pys); return a ? `<span class="alt" title="${altLabel(a)} form">${esc(a)}</span>` : ""; })()}</div>
         <div class="pyrow"><span class="pyl">${pySpans(inf.pys)}</span><button class="btn icon-btn say write" type="button" data-act="practice" aria-label="Practice writing" title="Practice writing"><span lang="zh">写</span></button></div>
         <div class="tags">${name ? '<span class="tag">Name</span>' : ''}${hasCJK(inf.text) ? (n => n ? `<button type="button" class="tag" data-act="examples" title="Show the example sentences">${n} example${n === 1 ? '' : 's'}</button>` : '<span class="tag" style="opacity:.55">No examples</span>')(exFor(inf.text).length) : ''}${wn ? '<span class="tag">Written</span>' : ''}${isChengyu(inf.text) ? '<span class="tag" lang="zh">成语</span>' : ''}${isTitleSpan(inf.span) ? '<span class="tag">Title</span>' : ''}${inf.span && range(inf.span.a, inf.span.b).some(i => unsure(S.model.chars[i])) ? '<span class="tag">OCR unsure</span>' : ''}</div><div hidden>${isKnown(inf.text) ? '<span class="tag">Known</span>' : ''}</div>${wn ? `<div class="altlab">Written style · everyday: <span lang="zh">${esc(wn)}</span></div>` : ''}
       </div>
@@ -3822,7 +3867,7 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
   } else if (e.key === ' ' && S.info) { speak(S.info.text); e.preventDefault(); }
   else if ((e.key === 's' || e.key === 'S') && !e.ctrlKey && !e.metaKey) toggleSave();
-  else if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.shiftKey && otherScript()) setSwapChoice(!swapWanted(S.printed));
+  else if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.shiftKey && otherScript()) setSwapChoice(!swapWanted());
   else if (e.key === 'Enter' && S.info?.span) openSentence(S.model.chars[S.info.span.a].s);
 });
 
@@ -4081,7 +4126,7 @@ function renderPane() {
   const size = Math.max(200, Math.min(320, pane.clientWidth - 40, Math.round(innerHeight * 0.42)));
   S.practiceChar = clamp(S.practiceChar, 0, Math.max(0, chs.length - 1));
   pane.innerHTML = `
-    <div class="p-head"><div class="hz" lang="zh">${hzSpans(allCh, pys)}</div><div class="pyl">${pySpans(pys)}</div>${(() => { const a = altForm(w.w, pys); return a ? `<div class="altlab">${altLabel()}: <span lang="zh">${esc(a)}</span></div>` : ""; })()}<div class="g">${esc(myGloss(w))}</div>${(() => { const ch = chs[S.practiceChar], pl = ch ? partsLine(ch) : ""; return pl ? `<div class="altlab">${esc(ch)} = ${pl}</div>` : ""; })()}</div>
+    <div class="p-head"><div class="hz" lang="zh">${hzSpans(allCh, pys)}</div><div class="pyl">${pySpans(pys)}</div>${(() => { const a = altForm(w.w, pys); return a ? `<div class="altlab">${altLabel(a)}: <span lang="zh">${esc(a)}</span></div>` : ""; })()}<div class="g">${esc(myGloss(w))}</div>${(() => { const ch = chs[S.practiceChar], pl = ch ? partsLine(ch) : ""; return pl ? `<div class="altlab">${esc(ch)} = ${pl}</div>` : ""; })()}</div>
     ${chs.length > 1 ? `<div class="charpick">${chs.map((c, i) => `<button type="button" data-ci="${i}" aria-pressed="${i === S.practiceChar}" aria-label="Practice ${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}
     <div class="tzg" style="width:${size}px;height:${size}px">
       ${GRID_SVG}
@@ -5756,7 +5801,7 @@ function openSettings() {
   $('#fKey').value = st.apiKey;
   $('#fKey').type = 'password';
   document.querySelectorAll('[data-show]').forEach(b => { b.textContent = 'Show'; });
-  radio('fScript', st.script); radio('fSwapMode', st.swapMode || 'ask'); radio('fToneCol', st.toneCol || 'pleco'); radio('fFacing', st.facing); radio('fInfoPos', st.infoPos);
+  radio('fScript', st.script); radio('fSwapMode', st.swapMode || 'ask'); $('#fSwapAlways').checked = !!st.swapAlways; radio('fToneCol', st.toneCol || 'pleco'); radio('fFacing', st.facing); radio('fInfoPos', st.infoPos);
   $('#fSentPy').checked = !!st.sentPinyin; $('#fGlam').checked = st.glam !== false; $('#fWriteLookup').checked = !!st.writeLookup; $('#fTones').checked = st.spokenTones !== false; $('#fDevVision').checked = !!st.devVision; $('#fUnsure').checked = st.markUnsure !== false; $('#fDebug').checked = DEBUG; $('#fColor').checked = !!st.colorWords; $('#fAuto').checked = !!st.autoplay;
   $('#fStraight').checked = !!st.straighten; $('#fShadow').checked = !!st.shadow; $('#fDayStart').value = String(st.dayStart ?? 20); $('#fStrokeCheck').value = st.strokeCheck || 'normal'; $('#fIconActs').checked = !!st.iconActs;
   BAR_ITEMS.forEach(k => { $('#fBar_' + k).checked = !(st.barHide || []).includes(k); });
@@ -5783,15 +5828,23 @@ document.querySelectorAll('input[name=fToneCol]').forEach(r => r.addEventListene
 function applySettingsForm() {
   const st = S.settings;
   st.apiKey = $('#fKey').value.trim();
-  const swapBefore = [st.script, st.swapMode || 'ask'].join();
-  st.script = radioVal('fScript', 'simplified'); st.swapMode = radioVal('fSwapMode', 'ask');
-  if ((st.swapMode || 'ask') !== swapBefore.split(',')[1]) st.swapBook = {};   // a new default applies to every book again st.toneCol = radioVal('fToneCol', 'pleco'); applyToneCol(); st.facing = radioVal('fFacing', 'environment'); st.infoPos = radioVal('fInfoPos', 'top');
+  const scriptBefore = st.script, modeBefore = st.swapMode || 'ask', alwaysBefore = !!st.swapAlways;
+  st.script = radioVal('fScript', 'simplified');
+  st.swapMode = radioVal('fSwapMode', 'ask');
+  st.swapAlways = $('#fSwapAlways').checked;
+  if (st.swapMode !== modeBefore) st.swapBook = Object.fromEntries(Object.entries(st.swapBook || {}).filter(([k]) => k.startsWith('own:')));   // a new default applies to every foreign book again
+  // "Always show" alone changes only whether the switch shows, unless this book has a saved choice to apply
+  const swapChanged = st.script !== scriptBefore || st.swapMode !== modeBefore || (st.swapAlways !== alwaysBefore && !!swapChoice());
+  st.toneCol = radioVal('fToneCol', 'pleco'); applyToneCol(); st.facing = radioVal('fFacing', 'environment'); st.infoPos = radioVal('fInfoPos', 'top');
   const tonesBefore = st.spokenTones !== false; st.sentPinyin = $('#fSentPy').checked; st.glam = $('#fGlam').checked; st.writeLookup = $('#fWriteLookup').checked; st.spokenTones = $('#fTones').checked; st.devVision = $('#fDevVision').checked; st.markUnsure = $('#fUnsure').checked; try { if ($('#fDebug').checked !== DEBUG && localStorage.getItem('rd.debug') !== ($('#fDebug').checked ? '1' : '0')) { localStorage.setItem('rd.debug', $('#fDebug').checked ? '1' : '0'); toast('Debug mode changes after you reload the app.'); } } catch (e) {} st.colorWords = $('#fColor').checked; st.autoplay = $('#fAuto').checked;
   st.straighten = $('#fStraight').checked; st.shadow = $('#fShadow').checked; st.dayStart = +$('#fDayStart').value; st.strokeCheck = $('#fStrokeCheck').value; st.iconActs = $('#fIconActs').checked; st.barHide = BAR_ITEMS.filter(k => !$('#fBar_' + k).checked);
   st.rate = clamp(parseFloat($('#fRate').value) || 0.85, 0.5, 1.2);
   st.goal = clamp(parseInt($('#fGoal').value, 10) || 4, 1, 60);
   st.voiceURI = $('#fVoice').value;
-  saveSettings(); updateBar(); updateFlip(); if (tonesBefore !== st.spokenTones || swapBefore !== [st.script, st.swapMode].join()) rebuild(); updateProgress(); drawTints(); drawHighlights(); renderInfo();
+  saveSettings(); updateBar(); updateFlip();
+  if (tonesBefore !== st.spokenTones || swapChanged) rebuild();   // rebuild draws tints, highlights and progress itself
+  else { updateProgress(); drawTints(); drawHighlights(); if (S.spread) updateScriptSeg(); }
+  renderInfo();
 }
 
 /* ================= Backup and restore ================= */
